@@ -1,0 +1,55 @@
+cutting plane
+symmetrical plane
+roi plane
+
+roi box
+
+contour
+raw
+
+arrow and sphere
+
+legend to control length
+legend to control alpha
+
+distance map
+
+sort
+ann
+contour
+clustering
+symmetry
+roi
+cutting plane
+distancemap
+
+
+Functions:
+load data: sort + symmetry + clustering + contour + roi +ann + cuttingplane + distancemap
+display mode: none
+
+1. sort original data + data format generation
+2. detecting symmetrical patterns 
+3. clustering generation
+4. contours generation + density on each contour
+5. data on cutting plane generation and contours
+6. roi for contour and raw data and cutting plane data
+7. ann for roi contour and roi raw data and cutting plane data
+8. distance map for cos distance
+
+# of cluster: clusterig + ann + cuttingplane
+magnitude encode: none
+generate contours: contour + ann +roi
+roi box: roi + ann 
+symmetry plane: symmetry + ann + roi + clustering 
+cutting plane: ann + cuttingplane
+vector for distance map: distancemap
+standard plane for distance map: distancemap
+
+
+/-----------------------------07140216-------
+update ROI //done
+update EMclustering //done
+update contour (sorted) //done
+update color.cpp (add gray when cluster is -1)//done
+update svSlice.cpp //done

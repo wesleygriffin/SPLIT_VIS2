@@ -1,0 +1,7 @@
+#ifndef SV_CONFIG_H
+#define SV_CONFIG_H
+
+#define BIN_DIR "@CMAKE_INSTALL_PREFIX@/bin"
+#define SRC_DIR "@CMAKE_CURRENT_SOURCE_DIR@"
+
+#endif // SV_CONFIG_H

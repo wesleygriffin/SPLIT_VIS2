@@ -1,0 +1,15 @@
+Build the program:
+    VTK_DIR=LOCATION_TO_VTK cmake -H. -Bbuild
+    cd build && make && make install && cd ..
+
+Run the program:
+    bin/splitToolkit <CONFIG_FILE>
+
+To update contour, clustering and rendering, please modify and save config
+file first and then press "u" or "U" button.
+If you'd like to load a different data, please run a new program. 
+
+Key:
+"u" or "U": re-load config file
+"s" or "S": enable/disable summary glyphs
+
