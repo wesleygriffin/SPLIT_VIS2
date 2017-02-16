@@ -1,9 +1,9 @@
 #ifndef __SV_CONTOUR_H
 #define __SV_CONTOUR_H
 
-#ifdef _VTK
+//#ifdef _VTK
 
-#include "vtkContourFilter.h"
+#include <vtkContourFilter.h>
 #include "vtkUnstructuredGridReader.h"
 #include "vtkDelaunay2D.h"
 #include "vtkDataSetSurfaceFilter.h"
@@ -14,7 +14,7 @@
 #include "vtkPoints.h"
 #include "vtkPolygon.h"
 
-#endif
+//#endif
 
 
 #include <fstream>
