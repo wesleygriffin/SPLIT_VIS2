@@ -4,7 +4,7 @@ Build the program:
 
 Run the program:
     export TOOL_DIRECTORY=YOUR_LOCATION
-    LD_LIBRARY_PATH=/usr/lib64/vtk bin/splitToolkit <CONFIG_FILE>
+    LD_LIBRARY_PATH=LOCATION_TO_VTK bin/splitToolkit <CONFIG_FILE>
 
 To update contour, clustering and rendering, please modify and save config
 file first and then press "u" or "U" button.
