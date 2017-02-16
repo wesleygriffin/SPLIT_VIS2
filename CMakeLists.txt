@@ -29,15 +29,6 @@ add_executable(Contour ${Contour_SOURCES})
 target_link_libraries(Contour ${VTK_LIBRARIES})
 install(TARGETS Contour RUNTIME DESTINATION bin)
 
-ExternalProject_Add(ann
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/ann_1.1.1
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND make linux-g++
-    BUILD_IN_SOURCE 1
-    INSTALL_COMMAND "")
-ExternalProject_Get_Property(ann SOURCE_DIR)
-set(ANN_LIBRARIES ${SOURCE_DIR}/lib/libANN.a CACHE STRING "" FORCE)
-
 ExternalProject_Add(glui
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/glui-2.35
     CONFIGURE_COMMAND ""
