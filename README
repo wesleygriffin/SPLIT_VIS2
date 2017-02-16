@@ -3,7 +3,8 @@ Build the program:
     cd build && make && make install && cd ..
 
 Run the program:
-    bin/splitToolkit <CONFIG_FILE>
+    export TOOL_DIRECTORY=YOUR_LOCATION
+    LD_LIBRARY_PATH=/usr/lib64/vtk bin/splitToolkit <CONFIG_FILE>
 
 To update contour, clustering and rendering, please modify and save config
 file first and then press "u" or "U" button.
