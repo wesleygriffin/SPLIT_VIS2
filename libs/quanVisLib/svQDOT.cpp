@@ -43,7 +43,7 @@ void svQDOT::SetVTK(svChar *rawdir, svChar *rawfile, svChar *dir,
   sprintf(sortfile, "%s/%s/%s", dir, rawfile, sortFile);//sort.txt
 
   char *input = new char[50];
-  sprintf(input, "../preprocessing/generateVTK/input");
+  sprintf(input, "${TOOL_DIRECTORY}/preprocessing/generateVTK/input");
   
   ofstream readinput(input);
   
@@ -57,7 +57,7 @@ void svQDOT::SetVTK(svChar *rawdir, svChar *rawfile, svChar *dir,
   if(!infile.is_open())
   {
     char *str = new char[2048];
-    sprintf(str, "./genVTK %s/%s %s/%s/%s %s/%s/ %s/%s/%s %s/%s/%s ../preprocessing/generateVTK/input", 
+    sprintf(str, "${TOOL_DIRECTORY}/bin/genVTK %s/%s %s/%s/%s %s/%s/ %s/%s/%s %s/%s/%s ${TOOL_DIRECTORY}/preprocessing/generateVTK/input", 
 		  rawdir, rawfile, 
                   dir, rawfile, sortFile,
                   dir, rawfile, 

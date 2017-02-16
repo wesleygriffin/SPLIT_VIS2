@@ -62,9 +62,9 @@ void svContour::ComputeContours(char *vtkfName, char *contourfName, float contou
       char *exe = new char[2048];
 	  //char *contourname = new char[400];
 	  //sprintf(contourname, "%s/%s/%s", field->dataDir, field->dataFile, outContourfname); //contour.txt
-      sprintf(exe, "./Contour %s %s %g", 
+      sprintf(exe, "${TOOL_DIRECTORY}/bin/Contour %s %s %g", 
 	      vtkfName, contourfName, contourValue);
-cerr<<exe<<endl;		  
+//cerr<<exe<<endl;		  
       system(exe); 
  //    cerr<<exe<<endl;
 /*----------------------------------------------------------------*/
@@ -205,7 +205,7 @@ void svKmeans::ComputeClusters(char *datafName, char *clusterfName,
 		//{	
 			char *exe = new char[2048];
 			
-			sprintf(exe, "./kmlsample -d %d -k %d -max %d -df %s > %s 2>&1",  
+			sprintf(exe, "${TOOL_DIRECTORY}/bin/kmlsample -d %d -k %d -max %d -df %s > %s 2>&1",  
 			dim,
 			numCluster,
 			dataSize,
