@@ -75,6 +75,232 @@ svVector3 svAverage(const svVector3& v1, const svVector3& v2)
   return normalize(v1+v2);
 }
 
+
+
+//----------------------------------------------------------
+svVector3 GetVertical(svVector3 pos, svVector3 dir,  ViewProperty &property)
+{
+    GLfloat *invert_tb= new GLfloat[16];
+    svVector3 p,p2;
+
+//    svVector3 y;
+    svVector3 v;
+     v[0]  = dir[0] + pos[0];
+     v[1] = dir[1] + pos[1];
+     v[2] = dir[2] + pos[2];
+ //   y[0]=0;y[1]=1;y[2]=0;
+//    svVector3 x;
+  //  x[0]=1;x[1]=0;x[2]=0;
+//
+                p2[0]  = pos[0] * property.tm[0] +
+                            pos[1] * property.tm[4] +
+                            pos[2] * property.tm[8] +
+                            property.tm[12] ;
+                p2[1]  = pos[0] * property.tm[1] +
+                            pos[1] * property.tm[5] +
+                            pos[2] * property.tm[9] +
+                            property.tm[13];
+                p2[2]  = pos[0] * property.tm[2] +
+                            pos[1] * property.tm[6] +
+                            pos[2] * property.tm[10] +
+                            property.tm[14] ;
+
+
+                p[0]  = v[0] * property.tm[0] +
+                            v[1] * property.tm[4] +
+                            v[2] * property.tm[8] +
+                            property.tm[12] ;
+                p[1]  = v[0] * property.tm[1] +
+                            v[1] * property.tm[5] +
+                            v[2] * property.tm[9] +
+                            property.tm[13];
+                p[2]  = v[0] * property.tm[2] +
+                            v[1] * property.tm[6] +
+                            v[2] * property.tm[10] +
+                            property.tm[14] ;
+//        p = normalize(p);
+
+
+             GLdouble objx, objy, objz;
+             objx = (GLdouble)p2[0];
+             objy = (GLdouble)p2[1];
+             objz = (GLdouble)p2[2];
+             GLdouble winx1, winy1, winz1, winx2, winy2, winz2;
+             gluProject(objx, objy, objz, property.mvmatrix, property.projmatrix, property.viewport,
+                     &winx1, &winy1, &winz1);
+
+             objx = (GLdouble)p[0];
+             objy = (GLdouble)p[1];
+             objz = (GLdouble)p[2];
+             gluProject(objx, objy, objz, property.mvmatrix, property.projmatrix, property.viewport,
+                     &winx2, &winy2, &winz2);
+for(int ii=0;ii<4;ii++)
+cerr<<property.viewport[ii]<<" ";
+cerr<<endl;
+cerr<<objx<<" "<<objy<<" "<<objz<<endl;
+cerr<<winx1<<" "<<winy1<<" "<<winx2<<" "<<winy2<<endl;;
+             GLdouble vx = winy1 - winy2;
+             GLdouble vy = winx2 - winx1;
+             double sum = vx*vx + vy*vy;
+             sum = sqrt(sum);
+             vx = vx/sum;
+             vy = vy/sum;
+cerr<<vx<<" "<<vy<<endl;
+             vx = vx + winx1;
+             vy = vy + winy1;
+             glReadPixels((int)vx, (int)vy, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT,&winz1); 
+             gluUnProject( vx, vy, winz1, property.mvmatrix, property.projmatrix, property.viewport,
+                        &objx, &objy, &objz);
+
+
+    if(!invert_matrix(property.tm, invert_tb)) {
+        printf("Erron in inverting transform matrix\n");
+   }
+
+        svVector3 r2;
+        r2[0]=objx;r2[1]=objy;r2[2]=objz;
+        svVector3 r;
+
+    r[0] = r2[0] * invert_tb[0] +
+            r2[1] * invert_tb[4] +
+            r2[2] * invert_tb[8] +
+            invert_tb[12];
+
+   r[1] = r2[0] * invert_tb[1] +
+            r2[1] * invert_tb[5] +
+            r2[2] * invert_tb[9] +
+            invert_tb[13];
+
+    r[2] = r2[0] * invert_tb[2] +
+            r2[1] * invert_tb[6] +
+            r2[2] * invert_tb[10] +
+            invert_tb[14];
+
+    r[0] = r[0] - pos[0];
+    r[1] = r[1] - pos[1];
+    r[2] = r[2] - pos[2];
+    r = normalize(r);
+
+        delete [] invert_tb;
+        return r;
+
+}
+svVector3 GetVerticalByeye(svVector3 pos, svVector3 v, ViewProperty &property)
+//svVector3 eye,
+//                     svVector3 pos, 
+//                     svVector3 v, 
+//                     GLfloat *tm)
+{
+/*    GLfloat tm[16];
+    for(int i=0;i<4;i++)
+    {
+          for(int j=0;j<4;j++)
+          {
+             tm[4*j+i] = property.tm[4*i+j];
+          }
+    }
+
+    for(int i=0;i<4;i++)
+    {
+          for(int j=0;j<4;j++)
+          {
+            property. tm[4*i+j] = tm[4*i+j];
+          }
+    }
+*/
+
+    GLfloat *invert_tb= new GLfloat[16];
+    svVector3 p,p2;
+
+
+                p2[0]  = pos[0] * property.tm[0] +
+                            pos[1] *property. tm[4] +
+                            pos[2] *property. tm[8] +
+                           property. tm[12] ;
+                p2[1]  = pos[0] *property. tm[1] +
+                            pos[1] * property.tm[5] +
+                            pos[2] * property.tm[9] +
+                            property.tm[13];
+                p2[2]  = pos[0] * property.tm[2] +
+                            pos[1] * property.tm[6] +
+                            pos[2] * property.tm[10] +
+                            property.tm[14] ;
+
+
+                p[0]  = v[0] * property.tm[0] +
+                            v[1] * property.tm[4] +
+                            v[2] * property.tm[8] +
+                            property.tm[12] ;
+                p[1]  = v[0] * property.tm[1] +
+                            v[1] * property.tm[5] +
+                            v[2] * property.tm[9] +
+                            property.tm[13];
+                p[2]  = v[0] * property.tm[2] +
+                            v[1] * property.tm[6] +
+                            v[2] * property.tm[10] +
+                            property.tm[14] ;
+
+        p.normalize();
+    property.eye[0] = p2[0];
+    property.eye[1] = p2[1];
+    svVector3 e = property.eye - p2;
+    e.normalize();
+//cerr<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
+////cerr<<"e "<<e[0]<<" "<<e[1]<<" "<<e[2]<<endl;
+        svVector3 v2 = cross(e, p);
+         v2.normalize();
+//cerr<<v2[0]<<" "<<v2[1]<<" "<<v2[2]<<endl;
+    if(!invert_matrix(property.tm, invert_tb)) {
+        printf("Erron in inverting transform matrix\n");
+   }
+
+      v2 = v2 + p2;
+
+        svVector3 r;
+
+    r[0] = v2[0] * invert_tb[0] +
+            v2[1] * invert_tb[4] +
+            v2[2] * invert_tb[8] +
+            invert_tb[12];
+
+   r[1] = v2[0] * invert_tb[1] +
+            v2[1] * invert_tb[5] +
+            v2[2] * invert_tb[9] +
+            invert_tb[13];
+
+    r[2] = v2[0] * invert_tb[2] +
+            v2[1] * invert_tb[6] +
+            v2[2] * invert_tb[10] +
+            invert_tb[14];
+     r = r - pos;
+     r.normalize();
+/*
+for(int i=0;i<16;i++)
+    cerr<<invert_tb[i]<<" ";cerr<<endl;
+for(int i=0;i<16;i++)
+    cerr<<property.tm[i]<<" ";cerr<<endl;
+//   r.normalize();
+cerr<<r[0]<<" "<<r[1]<<" "<<r[2]<<endl;
+                r2[0]  = r[0] * property.tm[0] +
+                            r[1] * property.tm[4] +
+                            r[2] * property.tm[8] +
+                            property.tm[12] ;
+                r2[1]  = r[0] * property.tm[1] +
+                            r[1] * property.tm[5] +
+                            r[2] * property.tm[9] +
+                            property.tm[13];
+                r2[2]  = r[0] * property.tm[2] +
+                            r[1] * property.tm[6] +
+                            r[2] * property.tm[10] +
+                            property.tm[14] ;
+//r2.normalize();
+cerr<<r2[0]<<" "<<r2[1]<<" "<<r2[2]<<endl;
+*/
+        delete [] invert_tb;
+        return r;
+
+}
+
 double GetDot(svVector3 a, svVector3 b)
 {
 	double c;
@@ -282,6 +508,8 @@ GLboolean invert_matrix( const GLfloat *m, GLfloat *out )
 #define SWAP_ROWS(a, b) { GLfloat *_tmp = a; (a)=(b); (b)=_tmp; }
 #define MAT(m,r,c) (m)[(c)*4+(r)]
 
+//for(int i=0;i<16;i++)cerr<<m[i]<<" ";cerr<<endl;
+
  GLfloat wtmp[4][8];
  GLfloat m0, m1, m2, m3, s;
  GLfloat *r0, *r1, *r2, *r3;
@@ -308,8 +536,9 @@ GLboolean invert_matrix( const GLfloat *m, GLfloat *out )
  if (fabs(r3[0])>fabs(r2[0])) SWAP_ROWS(r3, r2);
  if (fabs(r2[0])>fabs(r1[0])) SWAP_ROWS(r2, r1);
  if (fabs(r1[0])>fabs(r0[0])) SWAP_ROWS(r1, r0);
- if (0.0 == r0[0])  return GL_FALSE;
-
+//cerr<<r0[0]<<endl;
+ if (fabs(0.0 - r0[0])<1e-10)  return GL_FALSE;
+//cerr<<"done"<<endl;
  /* eliminate first variable     */
  m1 = r1[0]/r0[0]; m2 = r2[0]/r0[0]; m3 = r3[0]/r0[0];
  s = r0[1]; r1[1] -= m1 * s; r2[1] -= m2 * s; r3[1] -= m3 * s;

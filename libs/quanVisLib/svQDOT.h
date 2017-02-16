@@ -48,6 +48,7 @@ class svQDOT : public svVectorField
 	int GetPlaneIndex(svVector3 p);
 	svScalar GetMaxDensitybyLayer(char *densityfName, int layer);
 
+        svVector3 GetPlaneDir(){return plane_dir;}
 	virtual svInt GetPlaneNum(){return plane_num;}
         svInt GetNumPower(){return numPower;}
         svScalar GetScaling(){return scaling;}	

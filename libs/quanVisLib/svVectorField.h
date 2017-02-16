@@ -40,6 +40,15 @@ typedef struct _ContourProperty {
    
 } ContourProperty; 
 
+typedef struct _SymmetryProperty{
+
+   svChar *datafile;
+   svChar *outputfile;
+   svVector3Array pos;
+   svVector3Array dir;
+
+} SymmetryProperty;
+
 /*
 typedef enum {
   //SV_CONTOUR_LOCAL = 0,
@@ -184,10 +193,20 @@ class svVectorField {
 //					char *infile, char *outfile);
 	} *kmeans;
 	friend struct svKmeans;
+
+    struct svSymmetry{
+       svVectorField *field;
+       svSymmetry(svVectorField *inputfield);
+
+       void ComputeSymmetry(SymmetryProperty &property);
+
+    } *symmetry;
+    friend struct svSymmetry;
    
 };
 
 typedef svVectorField::svKmeans svKmeans;
 typedef svVectorField::svContour svContour;
+typedef svVectorField::svSymmetry svSymmetry;
 }
 #endif // __SV_VECTORFIELD_H

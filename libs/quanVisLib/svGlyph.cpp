@@ -59,6 +59,7 @@ svGlyph::svGlyph()
       clusterLabel = NULL;
       roiLabel = NULL;
       visibleLabel = NULL;
+      sampleLabel = NULL;
 
       glyphColors = NULL;
       glyphWidth = NULL;
@@ -211,7 +212,8 @@ void svGlyph::New(svVectorField* f, int numPlane)
      clusterLabel = new svIntArray[seed_num];
      roiLabel = new svIntArray[seed_num];
      visibleLabel = new svIntArray[seed_num];
-     
+     sampleLabel = new svIntArray[seed_num];     
+
      glyphColors = new svVector4Array[seed_num];
      glyphWidth = new svScalarArray[seed_num];
 
@@ -245,7 +247,8 @@ void svGlyph::SetData(char *infName, int seed)
                 clusterLabel[layer].add(-1);
                 roiLabel[layer].add(true);
                 visibleLabel[layer].add(true);
-              
+                sampleLabel[layer].add(1);              
+
                svVector4 color;
                color[0]=1;color[1]=1;color[2]=1;color[3]=1;
                glyphColors[layer].add(color);
@@ -254,7 +257,21 @@ void svGlyph::SetData(char *infName, int seed)
         //glyphSize = glyphSize + glyph[layer].size();
   //cerr<<"setdata"<<endl; 
         infile.close();
-
+/*
+        svSymmetry *symmetry = new svSymmetry(field);
+        svVector3 pdir1, pdir2, ppos1, ppos2;
+        pdir1[0]=1;pdir1[1]=1;pdir1[2]=0;
+        pdir2[0]=-1;pdir2[1]=1;pdir2[2]=0;
+        ppos1[0]=0;ppos1[1]=0;ppos1[2]=0;
+        ppos2[0]=0;ppos2[1]=0;ppos2[2]=0;
+        SymmetryProperty pro;
+        pro.dir.add(normalize(pdir1));pro.dir.add(normalize(pdir2));
+        pro.pos.add(ppos1);pro.pos.add(ppos2);
+        pro.datafile=strdup(infName);
+        pro.outputfile=strdup("tmpfile");
+        symmetry->ComputeSymmetry(pro);
+        delete symmetry;
+*/
        // DisableColor();
 }
 
@@ -288,7 +305,8 @@ void svGlyph::ResetData(int seed)
 	clusterLabel[layer].free();
 	roiLabel[layer].free();
 	visibleLabel[layer].free();
-	
+        sampleLabel[layer].free();	
+
 	glyphColors[layer].free();
 }
 
@@ -369,7 +387,7 @@ void svGlyph::GenerateContours(ContourProperty &property) //const
        {
         for(int i=0;i<property.contourValues[j].size();i++)
         {
-          //   cerr<<i<<" "<<j<<" "<<property.contourValues[j][i]<<" "<<property.vtkdir<<endl;
+             cerr<<i<<" "<<j<<" "<<property.contourValues[j][i]<<" "<<property.vtkdir<<endl;
              GenerateContour(property.outputfile, property.vtkdir,
 				              j, property.contourValues[j][i]);
          }
@@ -446,6 +464,75 @@ void svGlyph::GenerateClusters(KmeansProperty & property)// const
       }*/
 }
 
+void svGlyph::SetSampling(SymmetryProperty property, svInt frequency)
+{
+   svSymmetry *symmetry = new svSymmetry(field);
+
+//cerr<<seed_num<<endl;
+   for(int i=0;i<seed_num;i++)
+   {
+       if(glyph[i].size()>0)
+       {
+        char *symmetrystr = new char[200];
+        for(int j=0;j<200;j++) symmetrystr[j] = '\0';
+        for(int j=0;j<property.dir.size();j++)
+        {
+            sprintf(symmetrystr, "%s(%0.2f%0.2f%0.2f%0.2f%0.2f%0.2f)", symmetrystr,
+                  property.pos[j][0], property.pos[j][1], property.pos[j][2],
+                  property.dir[j][0], property.dir[j][1], property.dir[j][2]);
+        }
+       // cerr<<property.outputfile<<endl;
+        sprintf(property.outputfile,"%s/%d_%d_%s.txt", 
+                property.datafile, i, glyph[i].size(), 
+                symmetrystr);
+//cerr<<property.outputfile<<endl;
+
+       delete [] symmetrystr;
+        ifstream infile(property.outputfile);
+        if(!infile.is_open())
+        {
+               infile.close();
+               sprintf(property.datafile, "%s/input.txt",property.datafile);
+  //             cerr<<property.datafile<<endl;
+               ofstream outfile(property.datafile);
+               outfile<<glyph[i].size()<<endl;
+               for(int j=0;j<glyph[i].size();j++)
+               {
+                    outfile<<glyph[i][j][0]<<" "<<glyph[i][j][1]<<" "<<glyph[i][j][2]<<" "
+                         <<dir[i][j][0]<<" "<<dir[i][j][1]<<" "<<dir[i][j][2]<<" "
+                         <<mag[i][j]<<endl;
+               }
+               outfile.close();
+               // cerr<<property.datafile<<endl;
+
+               symmetry->ComputeSymmetry(property);
+                //cerr<<property.datafile<<endl;
+
+        }
+        else 
+           infile.close();
+
+infile.open(property.outputfile);
+        int n;
+        infile>>n;
+        
+        for(int j=0;j<glyph[i].size();j++)
+        {
+           int ii;
+           infile>>ii;
+           if(ii%frequency == 0)
+                 sampleLabel[i][j] = 1;
+           else
+                 sampleLabel[i][j] = 0;
+        } 
+
+        infile.close();
+   }
+  }
+
+   delete symmetry;
+}
+
 void svGlyph::SetROI()
 {
 	for(int i=0;i<seed_num;i++)
@@ -463,7 +550,7 @@ void svGlyph::SetROI(svScalar mag1, svScalar mag2)
     {
          for(int j=0;j<glyph[i].size();j++)
          {
-               if(mag[i][j] > mag1 && mag[i][j] < mag2)
+               if(mag[i][j] >= mag1 && mag[i][j] <= mag2)
                {
                   roiLabel[i][j] = true;
                }
@@ -572,6 +659,13 @@ void svGlyph::clean()
     visibleLabel=NULL;
   };
 
+
+  if(sampleLabel!=NULL) {
+       for(int i=0;i<seed_num;i++)
+               sampleLabel[i].free();
+       delete [] sampleLabel;
+       sampleLabel=NULL;
+  }
   
 
 
@@ -682,6 +776,18 @@ void svGlyph::DisableColor()
   ENABLE_COLOR = false;
 }
 
+void svGlyph::SetColor(svVector4 color)
+{
+     for(int i=0;i<seed_num;i++)
+     {
+          for(int j=0;j<glyph[i].size();j++)
+         {
+             glyphColors[i][j] = color;
+         }
+     }
+
+}
+
 void svGlyph::SetColorByCluster()
 {
      svColors *color = new svColors();
@@ -695,10 +801,76 @@ void svGlyph::SetColorByCluster()
      }
      delete color;
 }
+void svGlyph::SetColorByCluster(svIntArray cluster)
+{
+     svColors *color = new svColors();
+     for(int i=0;i<seed_num;i++)
+     {
+          for(int j=0;j<glyph[i].size();j++)
+         {
+              bool flag = false;
+              int c = clusterLabel[i][j];
+              for(int t=0;t<cluster.size();t++)
+              {
+                   if(c == cluster[t])
+                   {
+                           flag = true;break;
+                   }
+              }
+             if(flag)
+             glyphColors[i][j] = color->GetDiscreteColors(c);
+         }
+     }
+     delete color;
+}
 
 void svGlyph::Generate()
 {
   //BuildDisplayListFromStore();
+}
+
+void svGlyph::DrawSilkPlane(svVector3 planeDir)
+{
+  glLineWidth(1.0);
+  if(field!=NULL)
+       field->GetBoundingBox(&lbbox,&rbbox);
+
+   glEnable(GL_POLYGON_OFFSET_FILL);
+   glPolygonOffset(1.0, 1.0); 
+    for(int i=0;i<seed_num;i++)
+    {
+        if(glyph[i].size()>0)
+        {
+             glColor4f(render_property.color[0],
+                    render_property.color[1],
+                    render_property.color[2],
+                  render_property.color[3]);
+             glBegin(GL_QUADS);
+             if(planeDir[2] == 1.)
+             {
+                 glVertex3f(lbbox[0],lbbox[1],glyph[i][0][2]);
+                 glVertex3f(rbbox[0],lbbox[1],glyph[i][0][2]);
+                 glVertex3f(rbbox[0],rbbox[1],glyph[i][0][2]);
+                 glVertex3f(lbbox[0],rbbox[1],glyph[i][0][2]);
+             }     
+             glEnd();
+             glColor4f(1-render_property.color[0],
+                    1-render_property.color[1],
+                    1-render_property.color[2],
+                  render_property.color[3]);
+             glBegin(GL_LINE_LOOP);
+             if(planeDir[2] == 1.)
+             {
+                 glVertex3f(lbbox[0],lbbox[1],glyph[i][0][2]);
+                 glVertex3f(rbbox[0],lbbox[1],glyph[i][0][2]);
+                 glVertex3f(rbbox[0],rbbox[1],glyph[i][0][2]);
+                 glVertex3f(lbbox[0],rbbox[1],glyph[i][0][2]);
+             }
+             glEnd();
+        }
+    }
+   glDisable(GL_POLYGON_OFFSET_FILL);
+
 }
 
 void svGlyph::Render()
@@ -814,7 +986,7 @@ void svGlyph::GenerateContour(char *contourfile, char *vtkdir, int layer, float 
                 char *vtkName = new char[200];
                 sprintf(vtkName, "%s/%d.vtk", vtkdir, layer);
 
-               // cerr<<vtkName<<" "<<contourValue<<endl;
+                cerr<<vtkName<<" "<<contourValue<<endl;
                 svContour *contourField = new svContour(field);
                 contourField->ComputeContours(vtkName, contourfile, contourValue);
 

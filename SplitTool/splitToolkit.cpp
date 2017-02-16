@@ -581,7 +581,7 @@ void init(char *configfname)//rbfname, char *cpname)
   summaryglyph->New(flow_field, flow_field->GetPlaneNum());
   if(configproperty.isContour)
   { cerr<<"isContour"<<endl;
-       directglyph->GenerateContours(configproperty.contourproperty);//cerr<<"done"<<endl;
+       directglyph->GenerateContours(configproperty.contourproperty);cerr<<"done"<<endl;
        summaryglyph->GenerateContours(configproperty.contourproperty); 
   }
   else

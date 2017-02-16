@@ -1,5 +1,5 @@
 #datadir:
-/home/wng2/Active/Projects/SDoS/nobackup/spin_data
+/home/davinci/Documents/henan/NIST/data/2014Mar
 #dataname:
 spin_proj_norm_vs_pos_p_v_z_10z
 #folderToStoreFiles:
@@ -8,7 +8,7 @@ tmp
 #planeDirection 0 0 1
 #planeDistance 0.25
 #ifcontour:
-1
+0
 #contours:
 1
 G R 0.5

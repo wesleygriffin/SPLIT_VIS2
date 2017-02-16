@@ -44,12 +44,15 @@ class svGlyph : public svPrimitive
   virtual void ResetCluster();
   
   virtual void SetData(char *infName, int seed);
-  
+ 
+  virtual void SetSampling(SymmetryProperty property, svInt frequency);
+ 
   //void SetContourProperty(ContourProperty & property);
   //void SetKmeansProperty(KmeansProperty & property);
   
   virtual void SetROI(); //default ROI
   virtual void SetROI(svScalar mag1, svScalar mag2);
+
   virtual void SetLineColorFromVec3(svVector3Array *vec3in);
 
   virtual ~svGlyph();
@@ -65,6 +68,7 @@ class svGlyph : public svPrimitive
 
 // Rendering
   virtual void Render();
+  virtual void DrawSilkPlane(svVector3 planeDir);
 
   virtual void RemovePoint(svInt lineIndex);
   // Not implemented: remove a glyph
@@ -73,7 +77,9 @@ class svGlyph : public svPrimitive
   virtual void EnableColor();
   virtual void EnableColor(svInt colorModel, svFloat minValue, svFloat maxValue);
   virtual void DisableColor();
+  virtual void SetColor(svVector4 color);
   virtual void SetColorByCluster();
+  virtual void SetColorByCluster(svIntArray cluster);
   // colorModel: SV_GRAY, SV_LOCS
   
   virtual void EnableLineWidth(svFloat minlw, svFloat maxlw);
@@ -93,7 +99,7 @@ class svGlyph : public svPrimitive
     
    svVector3Array *GetGlyphs() const {return glyph;}
 
-
+   virtual void SetAlpha(svScalar a){alpha =a;}
    virtual void SetRadius(svScalar radius){glyphRadius = radius;}
    virtual void SetScale(svScalar scale){glyphScale = scale;}
    virtual svIntArray* GetClusterLabels(){return clusterLabel;}
@@ -121,16 +127,16 @@ class svGlyph : public svPrimitive
   svScalarArray  *mag;   // magnitude
 
   svInt glyphSize;
-    svScalar   glyphScale;
-        svScalar   glyphRadius;
-
+  svScalar   glyphScale;
+  svScalar   glyphRadius;
 
   int maxClusterLabel;
 
   svIntArray    *clusterLabel;   // store cluster result
   svIntArray    *roiLabel; //inside roi; boolean
   svIntArray    *visibleLabel;
-
+  svIntArray    *sampleLabel;
+ 
   svVector4Array *glyphColors;
   svScalarArray  *glyphWidth;
  

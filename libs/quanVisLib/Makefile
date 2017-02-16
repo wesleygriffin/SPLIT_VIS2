@@ -18,9 +18,9 @@ else
 endif
 
 ifeq ($(wildcard $(VTKPath)), $(VTKPath))
-	CXX = g++ -D_VTK
+	CXX = g++ -O3 -fopenmp -D_VTK
 else
-	CXX=g++ 
+	CXX=g++ -O3 -fopenmp
 endif
 #CXX=g++ 
 
@@ -60,7 +60,12 @@ svDisc.cpp\
 svAnalyticField.cpp \
 svPrimitive.cpp\
 svGlyph.cpp\
-svSummaryGlyph.cpp
+svSummaryGlyph.cpp\
+svCylinderGlyph.cpp\
+svBarGlyph.cpp\
+svBendBar.cpp\
+svSplitVectorsBar.cpp\
+svDirectBar.cpp
 
 #svQDOTField.cpp \
 #svMesh.cpp \
@@ -93,7 +98,12 @@ svDisc.o\
 svAnalyticField.o \
 svPrimitive.o\
 svGlyph.o\
-svSummaryGlyph.o
+svSummaryGlyph.o\
+svCylinderGlyph.o\
+svBarGlyph.o\
+svBendBar.o\
+svSplitVectorsBar.o\
+svDirectBar.o
 
 #svQDOTField.o \
 #svMesh.o
@@ -188,6 +198,16 @@ svMap.o: svMap.cpp svMap.h svType.h svVectorMatrix.h svArray.h svVectorField.h s
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svMap.o svMap.cpp
 svGlyph.o: svGlyph.cpp svGlyph.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svGlyph.o svGlyph.cpp
+svCylinderGlyph.o: svCylinderGlyph.cpp svCylinderGlyph.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svCylinderGlyph.o svCylinderGlyph.cpp
+svBarGlyph.o: svBarGlyph.cpp svBarGlyph.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svBarGlyph.o svBarGlyph.cpp
+svBendBar.o: svBendBar.cpp svBendBar.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svBendBar.o svBendBar.cpp
+svDirectBar.o: svDirectBar.cpp svDirectBar.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svDirectBar.o svDirectBar.cpp
+svSplitVectorsBar.o: svSplitVectorsBar.cpp svSplitVectorsBar.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svSplitVectorsBar.o svSplitVectorsBar.cpp
 svDirectArrow.o: svDirectArrow.cpp svDirectArrow.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svDirectArrow.o svDirectArrow.cpp
 svSummarGlyph.o: svSummarGlyph.cpp svSummarGlyph.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h

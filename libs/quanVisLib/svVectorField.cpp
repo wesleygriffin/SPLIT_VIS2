@@ -31,7 +31,7 @@ svContour::svContour(svVectorField *inputField)
 
 void svContour::ComputeContours(char *vtkfName, char *contourfName, float contourValue)
 {
-#ifdef _VTK
+//#ifdef _VTK
 //  char *outfilename = new char[1024];
 //  sprintf(outfilename, "%s/preprocessing/generateContours/input", LIB_DIR);
 
@@ -62,9 +62,9 @@ void svContour::ComputeContours(char *vtkfName, char *contourfName, float contou
       char *exe = new char[2048];
 	  //char *contourname = new char[400];
 	  //sprintf(contourname, "%s/%s/%s", field->dataDir, field->dataFile, outContourfname); //contour.txt
-      sprintf(exe, "../bin/Contour %s %s %g", 
+      sprintf(exe, "./Contour %s %s %g", 
 	      vtkfName, contourfName, contourValue);
-		  
+cerr<<exe<<endl;		  
       system(exe); 
  //    cerr<<exe<<endl;
 /*----------------------------------------------------------------*/
@@ -72,7 +72,7 @@ void svContour::ComputeContours(char *vtkfName, char *contourfName, float contou
   //delete [] contourname; 
   delete [] exe;
 
-#endif
+//#endif
 }
 /*contour end*/
 
@@ -205,7 +205,7 @@ void svKmeans::ComputeClusters(char *datafName, char *clusterfName,
 		//{	
 			char *exe = new char[2048];
 			
-			sprintf(exe, "../bin/kmlsample -d %d -k %d -max %d -df %s > %s 2>&1",  
+			sprintf(exe, "./kmlsample -d %d -k %d -max %d -df %s > %s 2>&1",  
 			dim,
 			numCluster,
 			dataSize,
@@ -238,6 +238,103 @@ void svKmeans::ComputeClusters(char *datafName, char *clusterfName,
 
 /*KMeans end*/
 
+/*Symmetry*/
+svSymmetry::svSymmetry(svVectorField *inputfield)
+{
+    field = inputfield;
+}
+
+//constrain: only allow symmetry patterns 
+void svSymmetry::ComputeSymmetry(SymmetryProperty &property)
+{
+   vector<int> index;
+   svVector3Array pos;
+
+   ifstream infile(property.datafile);
+//cerr<<property.datafile<<endl;
+   int n;
+   infile>>n;
+//   pos.resize(n);
+   for(int i=0;i<n;i++)
+   {//cerr<<i<<" "<<pos[i][0]<<" "<<n<<endl;
+       double tmp[4];
+       svVector3 p;
+       infile>>p[0]>>p[1]>>p[2]
+             >>tmp[0]>>tmp[1]>>tmp[2]>>tmp[3];
+       index.push_back(-1);
+       pos.add(p);
+
+      // cerr<<i<<" "<<pos[i][0]<<" "<<pos[i][1]<<" "<<pos[i][2]<<endl;
+   }
+   
+   infile.close();
+//cerr<<property.datafile<<endl;
+   int count = -1;
+   for(int i=0;i<n;i++)
+   { //cerr<<i<<endl;
+        vector<int> symmetryindex;
+        if(index[i] == -1)
+        {
+            // #pragma omp for
+             for(int j=0;j<n;j++)
+             {//cerr<<"==="<<endl;
+                for(int t =0;t<property.pos.size();t++)
+                {
+                 //    svVector3 p1 = pos[i] - property.pos[t];
+                 //    svVector3 p2 = pos[j] - property.pos[t];
+                     svVector3 p = normalize(pos[i] - pos[j]);
+                     svScalar d1 = (pos[i][0] - property.pos[t][0])*(pos[i][0] - property.pos[t][0])
+                      +(pos[i][1] - property.pos[t][1])*(pos[i][1] - property.pos[t][1])
+                      +(pos[i][2] - property.pos[t][2])*(pos[i][2] - property.pos[t][2]);
+                     svScalar d2 = (pos[j][0] - property.pos[t][0])*(pos[j][0] - property.pos[t][0])
+                      +(pos[j][1] - property.pos[t][1])*(pos[j][1] - property.pos[t][1])
+                      +(pos[j][2] - property.pos[t][2])*(pos[j][2] - property.pos[t][2]);
+
+                /*     if(pos[i][0] == 11 && pos[i][1] == 18
+                        && pos[j][0] == -18 && pos[j][1] == -11)
+                     {
+                          cerr<<p[0]<<" "<<p[1]<<" "<<p[2]<<" "<<fabs(dot(p, property.dir[t]))<<" "<<fabs(dot(normalize(pos[i] - pos[j]), property.dir[t]))<<endl;
+                     }
+*/
+                     if(fabs(fabs(dot(p, property.dir[t]))-1.) <0.000001
+                    && fabs(d1-d2)<0.000001)
+                   // &&fabs(dot(normalize(pos[i] - pos[j]), property.dir[t]))<0.0000001)
+                     {
+                        symmetryindex.push_back(j);
+                        if(index[j] > -1)
+                        {
+                              index[i] = index[j];
+                        }
+                     }
+
+                }
+             }
+             if(index[i] == -1)
+             {
+                  count++;
+                  index[i] = count;
+             }
+             for(int j=0;j<symmetryindex.size();j++)
+             {
+                  index[symmetryindex[j]] = index[i];
+             }
+      //       cerr<<symmetryindex.size()<<endl;
+        }
+        symmetryindex.clear();
+   }
+//cerr<<property.outputfile<<endl;
+   ofstream outfile(property.outputfile);
+   outfile<<count+1<<endl;
+   for(int i=0;i<n;i++)
+   //      outfile<<pos[i][0]<<" "<<pos[i][1]<<" "<<pos[i][2]<<" "<<index[i]<<endl;
+            outfile<<index[i]<<endl;
+   outfile.close();
+
+   pos.free();
+   index.clear();
+}
+
+/*Symmetry end*/
 
 //
 // svVectorField Methods

@@ -1,0 +1,218 @@
+#!smake
+#  @@ Makefile for flow vis lib
+#  @@ Jian Chen (jichen@umbc.edu)
+#
+
+MACHINE= $(shell uname -s)
+VTKPath = /usr/include/vtk
+#VTKPath = /usr/include/vtk
+
+ifeq ($(MACHINE),Darwin)
+	ifeq ($(wildcard /usr/include/vtk), /usr/include/vtk)
+	OPENGL_INC= -FOpenGL -I./LU -I./jcUtil -I/usr/include/vtk 
+	OPENGL_LIB= -framework OpenGL -framework GLUT -framework Cocoa 
+	LLDLIBS = -L./jcUtil -L./LU -L/usr/lib64/vtk -lvtkCommon -lvtkHybrid -lLU -ljcUtil-1.0  -lm
+	else
+	OPENGL_INC= -FOpenGL -I./LU -I./jcUtil
+	OPENGL_LIB= -framework OpenGL -framework GLUT -framework Cocoa 
+	LLDLIBS = -L./jcUtil -L./LU -lLU -ljcUtil-1.0  -lm
+	endif
+else
+	ifeq ($(wildcard /usr/include/vtk), /usr/include/vtk)
+	OPENGL_INC= -I/usr/include -I./LU -I./jcUtil -I/usr/include/vtk -I../ann_1.1.1/include
+	OPENGL_LIB= -L/usr/lib64  -L/usr/lib64/vtk -L../ann_1.1.1/lib
+	LLDLIBS = -L./jcUtil -L./LU -L/usr/lib64/vtk  -lANN -lvtkCommon -lvtkHybrid -ljcUtil-1.0 -lglut -lGL -lGLU -lGL -lXmu -lXext -lX11 -lm
+	else
+	OPENGL_INC= -I/usr/include -I./LU -I./jcUtil  -I../ann_1.1.1/include
+	OPENGL_LIB= -L/usr/lib64 -L../ann_1.1.1/lib
+	LLDLIBS = -L./jcUtil -L./LU -ljcUtil-1.0 -lglut -lGL -lGLU -lGL -lXmu -lXext -lX11 -lANN -lm
+	endif
+endif
+
+ifeq ($(wildcard /usr/include/vtk), /usr/include/vtk)
+	CXX = g++ -D_VTK
+else
+	CXX=g++ 
+endif
+
+COMPILER_FLAGS= -g
+
+INCPATH= $(OPENGL_INC)
+LIBS= $(OPENGL_LIB) $(LLDLIBS) 
+
+TARGETS = libsvl-1.0.a
+
+SRCS =svVectorField.cpp \
+svUtil.cpp \
+svPrimitive.cpp \
+svParticle.cpp \
+svLut.cpp \
+svGlyph.cpp \
+svAnalyticField.cpp \
+ivview.cpp \
+ivTrackball.cpp \
+svrbf.cpp \
+svYellowBlue.cpp \
+svQDOTNorm.cpp  \
+QDOTdataNorm.cpp \
+svBaseColor.cpp \
+svBoySurface.cpp \
+svContour.cpp \
+svCut.cpp\
+svOutline.cpp\
+svMagnitude.cpp\
+svStickyPane.cpp\
+svClockGlyph.cpp\
+svIconGlyph.cpp\
+svArrowGlyph.cpp\
+svSlice.cpp\
+svROIbox.cpp\
+svANN.cpp\
+svQDOTdistancefunction.cpp\
+svQDOTaggregation.cpp\
+svQDOTdistancemap.cpp\
+readdata.cpp\
+svQDOT2dmapping.cpp
+
+OBJECTS = svVectorField.o \
+svUtil.o \
+svPrimitive.o \
+svParticle.o \
+svLut.o \
+svGlyph.o \
+svAnalyticField.o \
+ivview.o \
+ivTrackball.o \
+svrbf.o \
+svYellowBlue.o \
+QDOTdataNorm.o \
+svQDOTNorm.o \
+svBaseColor.o \
+svBoySurface.o \
+svContour.o \
+svCut.o\
+svOutline.o\
+svMagnitude.o\
+svStickyPane.o\
+svClockGlyph.o\
+svIconGlyph.o\
+svArrowGlyph.o\
+svSlice.o\
+svROIbox.o\
+svANN.o\
+svQDOTdistancefunction.o\
+svQDOTaggregation.o\
+svQDOTdistancemap.o\
+readdata.o\
+svQDOT2dmapping.o
+
+default: $(TARGETS)
+
+OBJS = $(SRCS:.cpp=.o)
+.SUFFIXES: .o .cpp
+
+.cpp.o:
+	$(CXX) -c $(COMPILER_FLAGS) $(INCLUDE) -o $@ $< 
+
+$(TARGETS): $(OBJECTS)
+	ar -ruv libsvl-1.0.a *.o
+
+install:
+	cp ./libsvl-1.0.a ../lib
+
+svVectorField.o: svVectorField.cpp svException.h  svVectorField.h  svType.h svVectorMatrix.h svParticle.h svArray.h 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svVectorField.o svVectorField.cpp
+
+svUtil.o: svUtil.cpp svUtil.h svVectorField.h svType.h svVectorMatrix.h svParticle.h svArray.h 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svUtil.o svUtil.cpp
+
+svPrimitive.o: svPrimitive.cpp svPrimitive.h svVectorField.h  svType.h svVectorMatrix.h svParticle.h svArray.h svLut.h svException.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svPrimitive.o svPrimitive.cpp
+
+svParticle.o: svParticle.cpp svParticle.h svType.h svVectorMatrix.h \
+svVectorField.h svArray.h 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svParticle.o svParticle.cpp
+
+svLut.o: svLut.cpp svLut.h svType.h svVectorMatrix.h svUtil.h \
+svVectorField.h svParticle.h svArray.h 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svLut.o svLut.cpp
+
+svYellowBlue.o: svYellowBlue.cpp svYellowBlue.h svType.h svVectorMatrix.h svUtil.h \
+svVectorField.h svParticle.h svArray.h 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svYellowBlue.o svYellowBlue.cpp
+
+svGlyph.o: svGlyph.cpp svGlyph.h svArray.h svVectorMatrix.h svType.h \
+svParticle.h svVectorField.h svPrimitive.h svLut.h svException.h  svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svGlyph.o svGlyph.cpp
+
+svAnalyticField.o: svAnalyticField.cpp svAnalyticField.h svType.h \
+svVectorMatrix.h svArray.h svParticle.h svVectorField.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svAnalyticField.o svAnalyticField.cpp
+
+ivview.o: ivview.cpp ivview.h svType.h svVectorMatrix.h 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ivview.o ivview.cpp
+
+ivTrackball.o: ivTrackball.cpp ivTrackball.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ivTrackball.o ivTrackball.cpp
+
+svrbf.o: svrbf.cpp svrbf.h svAnalyticField.h svType.h svVectorMatrix.h svArray.h \
+svParticle.h svVectorField.h svException.h svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svrbf.o svrbf.cpp
+
+svQDOTNorm.o: svQDOTNorm.cpp svQDOTNorm.h svAnalyticField.h svType.h \
+svVectorMatrix.h svArray.h svParticle.h svVectorField.h svException.h svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svQDOTNorm.o svQDOTNorm.cpp
+
+QDOTdataNorm.o: QDOTdataNorm.cpp QDOTdataNorm.h svType.h svVectorMatrix.h svArray.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o QDOTdataNorm.o QDOTdataNorm.cpp
+
+svBaseColor.o: svBaseColor.cpp svBaseColor.h svType.h svVectorMatrix.h svArray.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svBaseColor.o svBaseColor.cpp
+
+svBoySurface.o: svBoySurface.cpp svBoySurface.h svType.h svVectorMatrix.h svArray.h svBaseColor.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svBoySurface.o svBoySurface.cpp
+
+svContour.o: svContour.cpp svContour.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
+	$(CXX) -c -Wno-deprecated $(CXXFLAGS) $(INCPATH) -o svContour.o svContour.cpp
+
+svCut.o: svCut.cpp svCut.h svType.h svVectorMatrix.h svArray.h svVectorField.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svCut.o svCut.cpp
+
+svOutline.o: svOutline.cpp svOutline.h svType.h svVectorMatrix.h svArray.h svVectorField.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svOutline.o svOutline.cpp
+svMagnitude.o: svMagnitude.cpp svMagnitude.h svType.h svVectorMatrix.h svArray.h svVectorField.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svMagnitude.o svMagnitude.cpp
+svStickyPane.o: svStickyPane.cpp svStickyPane.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svStickyPane.o svStickyPane.cpp
+svClip.o: svClip.cpp svClip.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svClip.o svClip.cpp
+
+svClockGlyph.o: svClockGlyph.cpp svClockGlyph.h svArray.h svVectorMatrix.h \
+svType.h svParticle.h svVectorField.h svPrimitive.h svLut.h svException.h svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svClockGlyph.o svClockGlyph.cpp
+
+svIconGlyph.o: svIconGlyph.cpp svIconGlyph.h svArray.h svVectorMatrix.h \
+svType.h svParticle.h svVectorField.h svPrimitive.h svLut.h svException.h svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svIconGlyph.o svIconGlyph.cpp
+
+svArrowGlyph.o: svArrowGlyph.cpp svArrowGlyph.h svArray.h svVectorMatrix.h \
+svType.h svParticle.h svVectorField.h svPrimitive.h svLut.h svException.h svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svArrowGlyph.o svArrowGlyph.cpp
+svSlice.o: svSlice.cpp svSlice.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svSlice.o svSlice.cpp
+svROIbox.o: svROIbox.cpp svROIbox.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svROIbox.o svROIbox.cpp
+svANN.o: svANN.cpp svANN.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svANN.o svANN.cpp
+svQDOTdistancefunction.o: svQDOTdistancefunction.cpp svQDOTdistancefunction.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svQDOTdistancefunction.o svQDOTdistancefunction.cpp
+svQDOTaggregation.o: svQDOTaggregation.cpp svQDOTaggregation.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svQDOTaggregation.o svQDOTaggregation.cpp
+svQDOTdistancemap.o: svQDOTdistancemap.cpp svQDOTdistancemap.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svQDOTdistancemap.o svQDOTdistancemap.cpp
+readdata.o: readdata.cpp readdata.h svType.h svVectorMatrix.h svArray.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o readdata.o readdata.cpp
+svQDOT2dmapping.o: svQDOT2dmapping.cpp svQDOT2dmapping.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svQDOT2dmapping.o svQDOT2dmapping.cpp
+clean:
+	rm -f $(OBJS) $(TARGETS) *~

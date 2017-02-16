@@ -91,8 +91,9 @@ void svSummaryGlyph::Generate(float alpha)
         denDistribute[i].add(0);
       }
   }
+//cerr<<"done1"<<endl;
   for(int i=0;i<seed_num;i++)
-  {
+  {//cerr<<i<<endl;
      for(int j=0;j<glyph[i].size();j++)
      {
          int in = clusterLabel[i][j]+1;
@@ -106,6 +107,7 @@ void svSummaryGlyph::Generate(float alpha)
          summaryDen[in] = summaryDen[in] + mag[i][j];
 
          int num = getNumOfIntegerDigits(mag[i][j]);
+         if(numPower-num-scaling-1>=0)
          denDistribute[in][numPower-num-scaling-1]++;
 
          count[in] ++;

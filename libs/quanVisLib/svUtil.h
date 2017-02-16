@@ -21,6 +21,14 @@ namespace __svl_lib {
 #define svMin(a,b)                (((a) < (b)) ? (a) : (b))
 #define svClamp(v, min_v, max_v)  { v = svMax(svMin(v, max_v), min_v); }
 
+
+typedef struct ViewProperty{
+   GLint viewport[4];
+   GLdouble mvmatrix[16];
+   GLdouble projmatrix[16];
+   GLfloat tm[16];
+   svVector3 eye;
+}ViewProperty;
 	
 template <class T> inline
   void svSwap(T & a, T & b)
@@ -32,6 +40,13 @@ svVector3 svGetRotatePoint(const svVector3& start, const svVector3& org,
 svVector3 svGetNorm(const svVector3& v1, const svVector3& v0,
                     const svVector3& v2);
 svVector3 svAverage(const svVector3& v1, const svVector3& v2);
+
+
+//---------the following by Henan----------------
+
+svVector3 GetVertical(svVector3 pos, svVector3 dir,  ViewProperty &property);
+svVector3 GetVerticalByeye(svVector3 pos, svVector3 v, ViewProperty &property);
+
 bool rayTriangleIntersect(svVector3 rPos, svVector3 rDir, 
 			svVector3 pPos0, svVector3 pPos1, svVector3 pPos2,
 			svVector3 pDir, svScalar &distance, svVector3 &pos) ;

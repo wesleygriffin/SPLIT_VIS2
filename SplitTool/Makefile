@@ -18,20 +18,20 @@ else
 	LLDLIBS = -lglui  -lsvl-1.0 -lLU -ljcUtil-1.0 -lglut -lGL -lGLU -lGL -lXmu -lXext -lX11 -lANN -lm
 endif
 
-CXX=g++
+CXX=g++ -O3 -fopenmp
 
 COMPILER_FLAGS= -g
 
 INCLUDE= $(OPENGL_INC)
 LIBS= $(OPENGL_LIB) $(LLDLIBS)
 
-TARGETS = splitToolkit
+TARGETS = splitToolkit splitToolkitmono
 
 #SRCS = qdotFile.cpp qdotVis.cpp qdotGUI.cpp qdotFunction.cpp
 #OBJECTS = qdotFile.o qdotVis.o qdotGUI.o qdotFunction.o
 
-SRCS=splitToolkit.cpp
-OBJECTS=splitToolkit.o
+SRCS=splitToolkit.cpp  splitToolkitmono.cpp
+OBJECTS=splitToolkit.o splitToolkitmono.o
 
 default: $(TARGETS)
 
@@ -44,6 +44,8 @@ OBJS = $(SRCS:.cpp=.o)
 splitToolkit: splitToolkit.o
 	$(CXX) $(COMPILER_FLAGS) $(LIBS) splitToolkit.o -o splitToolkit -lglui -lsvl-1.0 -lLU -ljcUtil-1.0 -lANN -lm
 
+splitToolkitmono: splitToolkitmono.o
+	$(CXX) $(COMPILER_FLAGS) $(LIBS) splitToolkitmono.o -o splitToolkitmono -lglui -lsvl-1.0 -lLU -ljcUtil-1.0 -lANN -lm
 
 clean:
 	rm -f $(OBJS) $(TARGETS) *~ \.*.swo \.*.swp

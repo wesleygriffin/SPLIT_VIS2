@@ -72,7 +72,7 @@ ExternalProject_Add(kmlocal
     BUILD_COMMAND make
     BUILD_IN_SOURCE 1
     INSTALL_COMMAND ${CMAKE_COMMAND} -E copy <SOURCE_DIR>/bin/kmlsample
-        ${CMAKE_CURRENT_BINARY_DIR})
+        ${CMAKE_CURRENT_BINARY_DIR}/../bin/)
 
 set(svl_SOURCES
     libs/quanVisLib/svUtil.cpp
@@ -99,6 +99,10 @@ set(svl_SOURCES
     libs/quanVisLib/svPrimitive.cpp
     libs/quanVisLib/svGlyph.cpp
     libs/quanVisLib/svSummaryGlyph.cpp
+    libs/quanVisLib/svBarGlyph.cpp
+    libs/quanVisLib/svBendBar.cpp
+    libs/quanVisLib/svSplitVectorsBar.cpp
+    libs/quanVisLib/svDirectBar.cpp
     libs/quanVisLib/svUtil.h
     libs/quanVisLib/svLut.h
     libs/quanVisLib/svParticle.h
@@ -122,7 +126,11 @@ set(svl_SOURCES
     libs/quanVisLib/svAnalyticField.h
     libs/quanVisLib/svPrimitive.h
     libs/quanVisLib/svGlyph.h
-    libs/quanVisLib/svSummaryGlyph.h)
+    libs/quanVisLib/svSummaryGlyph.h
+    libs/quanVisLib/svBarGlyph.h
+    libs/quanVisLib/svBendBar.h
+    libs/quanVisLib/svSplitVectorsBar.h
+    libs/quanVisLib/svDirectBar.h)
 
 configure_file(libs/quanVisLib/svConfig.h.in
     ${CMAKE_CURRENT_BINARY_DIR}/svConfig.h)

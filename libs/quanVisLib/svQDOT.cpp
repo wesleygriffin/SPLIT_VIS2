@@ -1,5 +1,4 @@
 #include "svQDOT.h"
-#include "svConfig.h"
 
 namespace __svl_lib {
 
@@ -58,14 +57,12 @@ void svQDOT::SetVTK(svChar *rawdir, svChar *rawfile, svChar *dir,
   if(!infile.is_open())
   {
     char *str = new char[2048];
-    sprintf(str, "%s/genVTK %s/%s %s/%s/%s %s/%s/ %s/%s/%s %s/%s/%s %s/preprocessing/generateVTK/input", 
-            BIN_DIR,
+    sprintf(str, "./genVTK %s/%s %s/%s/%s %s/%s/ %s/%s/%s %s/%s/%s ../preprocessing/generateVTK/input", 
 		  rawdir, rawfile, 
                   dir, rawfile, sortFile,
                   dir, rawfile, 
                   dir, rawfile, formatFile,
-                  dir, rawfile, densityFile,
-                  SRC_DIR); 
+                  dir, rawfile, densityFile); 
 	cerr<<"======> " << str<<endl;
     system(str);
     delete [] str;

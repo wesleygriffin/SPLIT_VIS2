@@ -30,7 +30,7 @@ svContour::svContour()
 //Contour generation using VTK
 void svContour::Get2DContour(char *infile,  double density) //density is only the ratio
 {
-#ifdef _VTK
+//#ifdef _VTK
         vtkUnstructuredGridReader *pl3d = vtkUnstructuredGridReader::New();
         pl3d->SetFileName(infile);
         pl3d->SetScalarsName("density");
@@ -144,7 +144,7 @@ void svContour::Get2DContour(char *infile,  double density) //density is only th
 
 
 
-#endif
+//#endif
 /*	polygon->Delete();cerr<<"1"<<endl;
 	pd->Delete();cerr<<"1"<<endl;
 	filter->Delete();cerr<<"1"<<endl;
