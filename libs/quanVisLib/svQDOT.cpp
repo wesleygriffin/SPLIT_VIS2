@@ -1,4 +1,5 @@
 #include "svQDOT.h"
+#include "svConfig.h"
 
 namespace __svl_lib {
 
@@ -43,7 +44,7 @@ void svQDOT::SetVTK(svChar *rawdir, svChar *rawfile, svChar *dir,
   sprintf(sortfile, "%s/%s/%s", dir, rawfile, sortFile);//sort.txt
 
   char *input = new char[50];
-  sprintf(input, "${TOOL_DIRECTORY}/preprocessing/generateVTK/input");
+  sprintf(input, "%s/preprocessing/generateVTK/input", SRC_DIR);
   
   ofstream readinput(input);
   
@@ -57,12 +58,12 @@ void svQDOT::SetVTK(svChar *rawdir, svChar *rawfile, svChar *dir,
   if(!infile.is_open())
   {
     char *str = new char[2048];
-    sprintf(str, "${TOOL_DIRECTORY}/bin/genVTK %s/%s %s/%s/%s %s/%s/ %s/%s/%s %s/%s/%s ${TOOL_DIRECTORY}/preprocessing/generateVTK/input", 
-		  rawdir, rawfile, 
+    sprintf(str, "%s/genVTK %s/%s %s/%s/%s %s/%s/ %s/%s/%s %s/%s/%s %s/preprocessing/generateVTK/input", 
+		  BIN_DIR, rawdir, rawfile, 
                   dir, rawfile, sortFile,
                   dir, rawfile, 
                   dir, rawfile, formatFile,
-                  dir, rawfile, densityFile); 
+                  dir, rawfile, densityFile, SRC_DIR); 
 	cerr<<"======> " << str<<endl;
     system(str);
     delete [] str;

@@ -10,6 +10,7 @@
 #include <sys/stat.h>
 #include "svException.h"
 #include "svVectorField.h"
+#include "svConfig.h"
 
 using namespace std;
 
@@ -62,8 +63,8 @@ void svContour::ComputeContours(char *vtkfName, char *contourfName, float contou
       char *exe = new char[2048];
 	  //char *contourname = new char[400];
 	  //sprintf(contourname, "%s/%s/%s", field->dataDir, field->dataFile, outContourfname); //contour.txt
-      sprintf(exe, "${TOOL_DIRECTORY}/bin/Contour %s %s %g", 
-	      vtkfName, contourfName, contourValue);
+      sprintf(exe, "%s/Contour %s %s %g", 
+	      BIN_DIR, vtkfName, contourfName, contourValue);
 //cerr<<exe<<endl;		  
       system(exe); 
  //    cerr<<exe<<endl;
@@ -205,8 +206,9 @@ void svKmeans::ComputeClusters(char *datafName, char *clusterfName,
 		//{	
 			char *exe = new char[2048];
 			
-			sprintf(exe, "${TOOL_DIRECTORY}/bin/kmlsample -d %d -k %d -max %d -df %s > %s 2>&1",  
-			dim,
+			sprintf(exe, "%s/kmlsample -d %d -k %d -max %d -df %s > %s 2>&1",  
+			BIN_DIR,
+            dim,
 			numCluster,
 			dataSize,
 			datafName,
