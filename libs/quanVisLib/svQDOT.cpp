@@ -36,14 +36,14 @@ void svQDOT::SetVTK(svChar *rawdir, svChar *rawfile, svChar *dir,
                                         svVector3 pdir, svScalar pdis)
 {
   //generate sorted file and vtk file	  
-  char *folderstr = new char[200];
+  char folderstr[200];
   sprintf(folderstr, "%s/%s", dir, rawfile);
   mkdir(folderstr, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);  
 
-  char *sortfile = new char[200];
+  char sortfile[200];
   sprintf(sortfile, "%s/%s/%s", dir, rawfile, sortFile);//sort.txt
 
-  char *input = new char[50];
+  char input[50];
   sprintf(input, "%s/preprocessing/generateVTK/input", SRC_DIR);
   
   ofstream readinput(input);
@@ -57,23 +57,20 @@ void svQDOT::SetVTK(svChar *rawdir, svChar *rawfile, svChar *dir,
   ifstream infile(sortfile);
   if(!infile.is_open())
   {
-    char *str = new char[2048];
+    char str[2048];
     sprintf(str, "%s/genVTK %s/%s %s/%s/%s %s/%s/ %s/%s/%s %s/%s/%s %s/preprocessing/generateVTK/input", 
 		  BIN_DIR, rawdir, rawfile, 
                   dir, rawfile, sortFile,
                   dir, rawfile, 
                   dir, rawfile, formatFile,
-                  dir, rawfile, densityFile, SRC_DIR); 
+                  dir, rawfile, densityFile,
+          SRC_DIR); 
 	cerr<<"======> " << str<<endl;
     system(str);
-    delete [] str;
   }
   infile.close(); 
   
   
-  delete [] input;
-  delete [] folderstr;
-  delete [] sortfile;
 }
 /*
 void svQDOT::SetClusterInput(svInt isRaw, svIntArray & layer, svIntArray *roi, 
