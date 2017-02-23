@@ -93,9 +93,11 @@ void svSummaryGlyph::Generate(float alpha)
   }
 //cerr<<"done1"<<endl;
   for(int i=0;i<seed_num;i++)
-  {//cerr<<i<<endl;
+  {//cerr<<i<<endl
      for(int j=0;j<glyph[i].size();j++)
      {
+		 if(visibleLabel[i][j])
+		 {
          int in = clusterLabel[i][j]+1;
          
          summaryPos[in][0] = summaryPos[in][0] + glyph[i][j][0];  
@@ -111,6 +113,7 @@ void svSummaryGlyph::Generate(float alpha)
          denDistribute[in][numPower-num-scaling-1]++;
 
          count[in] ++;
+	     }
      } 
   }  
 
