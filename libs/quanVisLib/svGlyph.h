@@ -52,6 +52,8 @@ class svGlyph : public svPrimitive
   
   virtual void SetROI(); //default ROI
   virtual void SetROI(svScalar mag1, svScalar mag2);
+  
+  virtual void SetVisible(svScalar z1, svScalar z2);
 
   virtual void SetLineColorFromVec3(svVector3Array *vec3in);
 
