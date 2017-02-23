@@ -533,6 +533,24 @@ infile.open(property.outputfile);
    delete symmetry;
 }
 
+
+void svGlyph::SetVisible(svScalar z1, svScalar z2)
+{
+	for(int i =0;i<seed_num;i++)
+	{
+		for(int j=0;j<glyph[i].size();j++)
+		{
+			if(i>=z1 && i<=z2)
+			{
+				visibleLabel[i][j] = true;
+			}
+			else
+			{
+				visibleLabel[i][j] = false;
+			}
+		}
+	}
+}
 void svGlyph::SetROI()
 {
 	for(int i=0;i<seed_num;i++)
