@@ -82,6 +82,10 @@ GLuint image_height;
 GLint nx, ny, nz;
 Trackball trackball;
 
+double zmin;
+double zmax;
+double zshuffle;
+
 void InitLight()
 {
   //setting of lighting
@@ -200,7 +204,70 @@ void key(unsigned char key, int x, int y)
         case 'U':
                Update();
                break;
-
+               
+        case  'l':
+               cout<<"Please input the index of the min layer"<<endl;
+               cin>>zmin;
+               cout<<"Please input the index of the  max layer"<<endl;
+               cin>>zmax;
+                directglyph->SetVisible(zmin, zmax);
+               directglyph->Generate();
+               summaryglyph->SetVisible(zmin, zmax);
+               summaryglyph->Generate(1);
+               cout<<"zmin "<<zmin<<", zmax "<<zmax<<endl;
+               break;   
+        case 'z':
+				zmin--;
+               directglyph->SetVisible(zmin, zmax);
+               directglyph->Generate();
+               summaryglyph->SetVisible(zmin, zmax);
+               summaryglyph->Generate(1);
+               cout<<"zmin "<<zmin<<", zmax "<<zmax<<endl;
+               break;
+        case 'Z':
+               zmin++;
+               directglyph->SetVisible(zmin, zmax);
+               directglyph->Generate();
+               summaryglyph->SetVisible(zmin, zmax);
+               summaryglyph->Generate(1);
+               cout<<"zmin "<<zmin<<", zmax "<<zmax<<endl;
+               break;
+               
+        case 'x': zmax--;
+                directglyph->SetVisible(zmin, zmax);
+               directglyph->Generate();
+               summaryglyph->SetVisible(zmin, zmax);
+               summaryglyph->Generate(1);
+                cout<<"zmin "<<zmin<<", zmax "<<zmax<<endl;
+                break;
+        case 'X':
+                zmax++;
+                directglyph->SetVisible(zmin, zmax);
+               directglyph->Generate();
+               summaryglyph->SetVisible(zmin, zmax);
+               summaryglyph->Generate(1);
+                cout<<"zmin "<<zmin<<", zmax "<<zmax<<endl;
+                break;
+                
+        case 't':zmin = zmin - 1;
+                zmax = zmax - 1;
+                directglyph->SetVisible(zmin, zmax);
+               directglyph->Generate();
+               summaryglyph->SetVisible(zmin, zmax);
+               summaryglyph->Generate(1);
+                cout<<"zmin "<<zmin<<", zmax "<<zmax<<endl;
+                break; 
+        case 'T':
+                zmin = zmin + 1;
+                zmax = zmax + 1;
+                directglyph->SetVisible(zmin, zmax);
+               directglyph->Generate();
+               summaryglyph->SetVisible(zmin, zmax);
+               summaryglyph->Generate(1);
+                cout<<"zmin "<<zmin<<", zmax "<<zmax<<endl;
+                break;
+                    
+                
         case '\033':
         case 'q':
         case 'Q':
@@ -505,6 +572,9 @@ void Config(char *configfname, ConfigProperty &property)
 	property.step2_kmeansproperty.file1 = strdup(str);
 	sprintf(str, "%s/%s/output.txt", property.storeDir, property.rawFile);
 	property.step2_kmeansproperty.file2 = strdup(str);
+
+    zmin=0;
+    zmax = flow_field->GetPlaneNum()-1;
 
     delete [] str;	
 	infile.close();
