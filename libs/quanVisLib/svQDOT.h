@@ -52,6 +52,7 @@ class svQDOT : public svVectorField
 	virtual svInt GetPlaneNum(){return plane_num;}
         svInt GetNumPower(){return numPower;}
         svScalar GetScaling(){return scaling;}	
+        svScalar GetZdistance(){return zdistance;}
     virtual ~svQDOT(){}
 	
 protected:
