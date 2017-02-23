@@ -85,7 +85,7 @@ void svDirectArrow::Generate() // this read specific data format
 		//cerr<<i<<" "<<glyph[i].size()<<endl;
 		for(int j=0;j<glyph[i].size();j++)
 		{
-			if(roiLabel[i][j])
+			if(visibleLabel[i][j])
 			{
 			glColor4f(glyphColors[i][j][0],glyphColors[i][j][1],glyphColors[i][j][2],alpha);
 
