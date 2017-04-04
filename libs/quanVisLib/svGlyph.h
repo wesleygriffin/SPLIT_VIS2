@@ -1,7 +1,7 @@
 
 #ifndef __SV_GLYPH_H
 #define __SV_GLYPH_H
-
+//#include "dual_depth_peeling.h"
 #include "svArray.h"
 #include "svVectorField.h"
 #include "svParticle.h"
@@ -17,10 +17,27 @@
 #define DEFAULT_GLYPH_RADIUS 300
 #define DEFAULT_DISPLAYLIST 5
 
-
-
 // TODO: make good glyphs
 namespace __svl_lib {
+
+
+typedef struct DirectProperty{
+  svScalar UnitHeight;
+  svScalar width;
+  svScalar shift;
+}DirectProperty;
+
+
+typedef struct SplitVectorsProperty{
+  svScalar shiftexp;
+  svScalar expHeight;
+  svScalar coeHeight;
+  svScalar expWidth;
+  svScalar coeWidth;
+  svVector4 coeColor;
+  svVector4 expColor;
+} SplitVectorsProperty;
+
 
 class svGlyph : public svPrimitive
 {
@@ -44,16 +61,22 @@ class svGlyph : public svPrimitive
   virtual void ResetCluster();
   
   virtual void SetData(char *infName, int seed);
- 
+
+  virtual void SetSampling(svInt frequency); 
   virtual void SetSampling(SymmetryProperty property, svInt frequency);
  
   //void SetContourProperty(ContourProperty & property);
   //void SetKmeansProperty(KmeansProperty & property);
+
+  virtual void ResetVisible();
+  virtual void SetVisible(int contour);
+  virtual void SetVisible(svScalar z1, svScalar z2);
   
+  virtual void SetContourLabel();
+
+
   virtual void SetROI(); //default ROI
   virtual void SetROI(svScalar mag1, svScalar mag2);
-  
-  virtual void SetVisible(svScalar z1, svScalar z2);
 
   virtual void SetLineColorFromVec3(svVector3Array *vec3in);
 
@@ -62,6 +85,7 @@ class svGlyph : public svPrimitive
 
 // Generate
   virtual void Generate();
+  virtual void GenerateClusters(svChar *inf);
   virtual void GenerateClusters(svIntArray *cluster);
   virtual void GenerateContours(ContourProperty & property);// const;
   virtual void GenerateClusters(KmeansProperty & property);// const;
@@ -70,6 +94,9 @@ class svGlyph : public svPrimitive
 
 // Rendering
   virtual void Render();
+  virtual void DrawGrid(svVector3 startPos, svVector3 dir1, svVector3 dir2,
+                       svScalar stepD1, svScalar stepD2,
+                       svInt stepN1, svInt stepN2);
   virtual void DrawSilkPlane(svVector3 planeDir);
 
   virtual void RemovePoint(svInt lineIndex);
@@ -81,11 +108,13 @@ class svGlyph : public svPrimitive
   virtual void DisableColor();
   virtual void SetColor(svVector4 color);
   virtual void SetColorByCluster();
+  virtual void SetColor(int index1, int index2, svVector4 color1, svVector4 color2);
+  virtual void SetColorByCluster(svIntArray index, svVector4 c);
   virtual void SetColorByCluster(svIntArray cluster);
   // colorModel: SV_GRAY, SV_LOCS
   
   virtual void EnableLineWidth(svFloat minlw, svFloat maxlw);
-
+  virtual void SetBBox();
   virtual void SetLut(const svLut & newlut)
   {}; // Not implemented
   virtual void GetColor(svVector4Array *colorArray) const 
@@ -98,12 +127,21 @@ class svGlyph : public svPrimitive
   virtual void Replace(svUint glyph_num, 
                 svScalar x, svScalar y, svScalar z){}; 
   // Not imeplemented
-    
-   svVector3Array *GetGlyphs() const {return glyph;}
+  
 
+   virtual svInt GetContourListSize(){return contourList.size();}
+   svVector3 GetLb(){return lbbox;}
+   svVector3 GetRb(){return rbbox;}
+   void GetBoundary(int index, svVector3 &l, svVector3 &r);
+   svVector3 GetCenter(int index); 
+   svVector3Array *GetGlyphs() const {return glyph;}
+   svVector3 GetGlyph(int seed, int index){return glyph[seed][index];}
+   svScalar GetMag(int seed, int index){return mag[seed][index];}
    virtual void SetAlpha(svScalar a){alpha =a;}
    virtual void SetRadius(svScalar radius){glyphRadius = radius;}
    virtual void SetScale(svScalar scale){glyphScale = scale;}
+   virtual svScalar GetRadius(){return glyphRadius;}
+   virtual svScalar GetScale(){return glyphScale;}
    virtual svIntArray* GetClusterLabels(){return clusterLabel;}
  private:
 
@@ -112,6 +150,7 @@ class svGlyph : public svPrimitive
                      int dimension, int clusterIndex);
   //virtual void SetKmeansProperty();
   //virtual void SetContourProperty();
+  virtual void SetContourLabel(int index, int layer, int in);
 
   virtual void GenerateContour(char *contourfile, char *vtkdir, int layer, float contourValue);
   
@@ -134,6 +173,8 @@ class svGlyph : public svPrimitive
 
   int maxClusterLabel;
 
+  svScalarArray contourList;
+  svIntArray    *contourLabel;
   svIntArray    *clusterLabel;   // store cluster result
   svIntArray    *roiLabel; //inside roi; boolean
   svIntArray    *visibleLabel;
@@ -146,6 +187,8 @@ class svGlyph : public svPrimitive
   //ContourProperty contourproperty;
                               
   svScalar alpha;
+
+ //svPeeling *peeling;
 
   svChar *infile;
   

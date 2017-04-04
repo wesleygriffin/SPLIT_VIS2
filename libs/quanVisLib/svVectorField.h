@@ -97,6 +97,8 @@ class svVectorField {
 
   // Get and Set
   // XXX: this is ambiguious
+  virtual          void ProcessContour(char *contourfile,char *dir, int layer);
+
   virtual void GetPhysicalDimension(svScalar* sx, svScalar* sy, svScalar* sz) const
   {  
      *sx = rbbox[0]-lbbox[0]; *sy = rbbox[1]-lbbox[1]; 

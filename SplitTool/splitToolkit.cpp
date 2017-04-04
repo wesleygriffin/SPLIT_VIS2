@@ -1,9 +1,10 @@
+#include <sstream>
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
 #include <math.h>
 #include <assert.h>
-
+#include <string.h>
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
@@ -19,6 +20,8 @@
 #include "ivTrackball.h"
 #include "ivview.h"
 #include "MGL.h"
+#include "svOutline.h"
+#include "svMesh.h"
 #include <string.h>
 
 #define CLUSTER_DIMENSION 7
@@ -37,6 +40,8 @@ view3d view_info;
 svQDOT *flow_field;
 svDirectArrow *directglyph;
 svSummaryGlyph *summaryglyph;
+svOutline *outline;
+svMesh *mesh;
 
 char *configFile;
 
@@ -47,7 +52,11 @@ char *regionfile;
 char *densityfile;
 
 bool summaryVisible;
-
+svScalar scale;
+svScalar directradius;
+svScalar summaryradius;
+vector<int> unique_region;
+int regioncount = 0;
 struct ConfigProperty{
 	
 	char *rawDir;
@@ -62,14 +71,15 @@ struct ConfigProperty{
 	
 	KmeansProperty step1_kmeansproperty;
 	KmeansProperty step2_kmeansproperty;
-	
+
+        vector<string> contourname;	
 	ContourProperty contourproperty;
 	
 	svScalarArray *magrange;
 	
 } configproperty;
 
-
+int contourindex = 0;
 void Config(char *configfname, ConfigProperty &property);
 void Update();
 
@@ -174,7 +184,10 @@ void display(void)
         glEnable(GL_LIGHTING);
         glEnable(GL_LIGHT0);
         glEnable(GL_TEXTURE_2D);
+         outline->DrawXYZ(directglyph->GetLb(), directglyph->GetRb());
 
+        glColor3f(1,0,0);
+        mesh->Render();
         directglyph->Render();
         if(summaryVisible)
               summaryglyph->Render();
@@ -186,6 +199,13 @@ void display(void)
         glDisable(GL_LIGHT0);
 
         glPopMatrix();
+
+	glPushMatrix();
+//	glScalef(50,100,100);
+        if(summaryVisible)
+		summaryglyph->RenderColor();
+	glPopMatrix();
+
         glFlush();
         glutSwapBuffers();
 }
@@ -194,30 +214,94 @@ void display(void)
 void key(unsigned char key, int x, int y)
 {
         switch (key) {
+        case 'h':
+              trackball.reset();
+              break;
+        case 'm':
+              {if(regioncount > unique_region.size()-1) regioncount = 0;
+              else regioncount++;  
+              if(regioncount == unique_region.size())
+              {  
+                 char *str = new char[200];
+                 sprintf(str, "%s/%s/mesh%d.txt", configproperty.storeDir, configproperty.rawFile, 100);
+                 mesh->GenerateWireframe(str);
+                 delete [] str;
 
+                  cout<<"no region is displayed"<<endl;}
+              else
+              {
+                 char *str = new char[200];
+                 sprintf(str, "%s/%s/mesh%d.txt", configproperty.storeDir, configproperty.rawFile, unique_region[regioncount]);
+                 mesh->GenerateWireframe(str);
+                 cout<<"region "<<unique_region[regioncount]<<endl;
+                 delete [] str;
+              }
+              break;}
         case 'S':
         case 's':
               summaryVisible = 1-summaryVisible;
 	      break;
-
+        case 'x':
+                scale = scale*1.5;	
+		directradius = directradius * 1.5;
+		summaryradius = summaryradius * 1.5;
+                directglyph->SetScale(scale);
+		directglyph->SetRadius(directradius);
+                directglyph->Generate();
+		summaryglyph->SetRadius(summaryradius);
+                summaryglyph->SetScale(scale);
+                summaryglyph->Generate(1);
+		break;
+	case 'X':
+                scale = scale/1.5;
+                directradius = directradius / 1.5;
+                summaryradius = summaryradius / 1.5;
+		directglyph->SetScale(scale);
+                directglyph->SetRadius(directradius);
+               directglyph->Generate();
+                summaryglyph->SetRadius(summaryradius);
+                summaryglyph->SetScale(scale);
+                summaryglyph->Generate(1);
+		break;
         case 'u':
         case 'U':
                Update();
                break;
-               
+        case 'c':
+        case 'C':
+              if(contourindex<directglyph->GetContourListSize()-1)contourindex++;
+              else contourindex = 0;
+              cerr<<"The current contour: "<<configproperty.contourname[contourindex]<<endl;
+               directglyph->ResetVisible();
+              directglyph->SetVisible(contourindex);
+                directglyph->SetVisible(zmin, zmax);
+               directglyph->Generate();
+               summaryglyph->ResetVisible();
+               summaryglyph->SetVisible(contourindex);
+               summaryglyph->SetVisible(zmin, zmax);
+               summaryglyph->Generate(1);
+               break;
         case  'l':
-               cout<<"Please input the index of the min layer"<<endl;
+               {cout<<"Please input the index of the min layer"<<endl;
                cin>>zmin;
                cout<<"Please input the index of the  max layer"<<endl;
                cin>>zmax;
-                directglyph->SetVisible(zmin, zmax);
+               directglyph->ResetVisible();
+               directglyph->SetVisible(contourindex);
+               directglyph->SetVisible(zmin, zmax);
                directglyph->Generate();
+               summaryglyph->ResetVisible();
+               summaryglyph->SetVisible(contourindex);
                summaryglyph->SetVisible(zmin, zmax);
                summaryglyph->Generate(1);
-               cout<<"zmin "<<zmin<<", zmax "<<zmax<<endl;
-               break;   
-        case 'z':
-				zmin--;
+               svVector3 p = flow_field->GetPlanePosition(zmin);
+               cout<<"min plane: "<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
+               p = flow_field->GetPlanePosition(zmax);
+               cout<<"max plane: "<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
+              // cout<<"zmin "<<zmin<<", zmax "<<zmax<<endl;
+               }break;   
+        /*case 'z':
+	      if(zmin>0)			zmin--;
                directglyph->SetVisible(zmin, zmax);
                directglyph->Generate();
                summaryglyph->SetVisible(zmin, zmax);
@@ -225,7 +309,7 @@ void key(unsigned char key, int x, int y)
                cout<<"zmin "<<zmin<<", zmax "<<zmax<<endl;
                break;
         case 'Z':
-               zmin++;
+               if(zmin<zmax) zmin++;
                directglyph->SetVisible(zmin, zmax);
                directglyph->Generate();
                summaryglyph->SetVisible(zmin, zmax);
@@ -233,7 +317,7 @@ void key(unsigned char key, int x, int y)
                cout<<"zmin "<<zmin<<", zmax "<<zmax<<endl;
                break;
                
-        case 'x': zmax--;
+        case 'x': if(zmax>zmin)zmax--;
                 directglyph->SetVisible(zmin, zmax);
                directglyph->Generate();
                summaryglyph->SetVisible(zmin, zmax);
@@ -241,32 +325,51 @@ void key(unsigned char key, int x, int y)
                 cout<<"zmin "<<zmin<<", zmax "<<zmax<<endl;
                 break;
         case 'X':
-                zmax++;
+                if(zmax<flow_field->GetPlaneNum()-1)zmax++;
                 directglyph->SetVisible(zmin, zmax);
                directglyph->Generate();
                summaryglyph->SetVisible(zmin, zmax);
                summaryglyph->Generate(1);
                 cout<<"zmin "<<zmin<<", zmax "<<zmax<<endl;
                 break;
-                
-        case 't':zmin = zmin - 1;
+               */ 
+        case 't':if(zmin>0)
+                {zmin = zmin - 1;
                 zmax = zmax - 1;
-                directglyph->SetVisible(zmin, zmax);
+               directglyph->ResetVisible();
+               directglyph->SetVisible(contourindex);
+               directglyph->SetVisible(zmin, zmax);
                directglyph->Generate();
+               summaryglyph->ResetVisible();
+               summaryglyph->SetVisible(contourindex);
                summaryglyph->SetVisible(zmin, zmax);
                summaryglyph->Generate(1);
-                cout<<"zmin "<<zmin<<", zmax "<<zmax<<endl;
-                break; 
+               svVector3 p = flow_field->GetPlanePosition(zmin);
+               cout<<"min plane: "<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
+               p = flow_field->GetPlanePosition(zmax);
+               cout<<"max plane: "<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
+               // cout<<"zmin "<<zmin<<", zmax "<<zmax<<endl;
+                }break; 
         case 'T':
+              if(zmax <flow_field->GetPlaneNum()-1)
+              {
                 zmin = zmin + 1;
                 zmax = zmax + 1;
+               directglyph->ResetVisible();
+               directglyph->SetVisible(contourindex);
                 directglyph->SetVisible(zmin, zmax);
                directglyph->Generate();
+               summaryglyph->ResetVisible();
+               summaryglyph->SetVisible(contourindex);
                summaryglyph->SetVisible(zmin, zmax);
                summaryglyph->Generate(1);
-                cout<<"zmin "<<zmin<<", zmax "<<zmax<<endl;
-                break;
-                    
+               svVector3 p = flow_field->GetPlanePosition(zmin);
+               cout<<"min plane: "<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
+               p = flow_field->GetPlanePosition(zmax);
+               cout<<"max plane: "<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
+               // cout<<"zmin "<<zmin<<", zmax "<<zmax<<endl;
+               } break;
+           
                 
         case '\033':
         case 'q':
@@ -332,6 +435,9 @@ struct ConfigProperty{
 
 void Config(char *configfname, ConfigProperty &property)
 {
+//	cerr<<"config"<<endl;
+	contourindex = 0;
+
 	ifstream infile(configfname);
 	
 	property.rawDir = new char[200];
@@ -344,7 +450,7 @@ void Config(char *configfname, ConfigProperty &property)
 	densityfile = new char [50];
 	
 	string tmp;
-	
+//cerr<<sortfile<<endl;	
 	/*-------------file names-----------------*/
 	infile>>tmp;
 	infile>>property.rawDir;
@@ -352,7 +458,7 @@ void Config(char *configfname, ConfigProperty &property)
 	infile>>property.rawFile;
 	infile>>tmp;
 	infile>>property.storeDir;
-
+//cerr<<tmp<<endl;
 	mkdir(property.storeDir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);  
 
     infile>>tmp;
@@ -361,23 +467,29 @@ void Config(char *configfname, ConfigProperty &property)
 	infile>>property.plane_vector[0]>>property.plane_vector[1]>>property.plane_vector[2];
 	infile>>tmp;
 	infile>>property.plane_distance;
-	
+//	cerr<<tmp<<endl;
 	/*--------------initialization of QDOT field------------*/
 	char *qdot_format = new char[400];
 	sprintf(qdot_format,"%s/%s/format.txt", property.storeDir, 
 	            property.rawFile);
-	flow_field = new svQDOT();
+	//flow_field = new svQDOT();
+	//cerr<<qdot_format<<endl;
     flow_field->SetVTK(property.rawDir, property.rawFile,
 	                   property.storeDir,
 					   "sort.txt", "format.txt", "density.txt",
 					   property.plane_center,
 					   property.plane_vector,
 					   property.plane_distance);
-    flow_field->New(qdot_format);					
+//cerr<<"done"<<endl;
+        flow_field->New(qdot_format);	
+       char *str = new char[200];
+
+sprintf(str, "%s/%s/", property.storeDir,  property.rawFile);				
+        flow_field->NewMesh(str);
 	delete [] qdot_format;
 	
 	/*------------------contour----------------------*/
-	infile>>tmp;// cerr<<tmp<<endl;
+	infile>>tmp; //cerr<<tmp<<endl;
 	double store;
 	infile>>property.isContour;
 	infile>>tmp; //cerr<<tmp<<endl;
@@ -386,17 +498,22 @@ void Config(char *configfname, ConfigProperty &property)
         //cerr<<num<<endl;cerr<<flow_field->GetPlaneNum()<<endl;
         property.contourproperty.seed_num = flow_field->GetPlaneNum();
         property.contourproperty.contourValues = new svScalarArray[flow_field->GetPlaneNum()];
+        property.contourproperty.isUpdate.free();
         for(int i=0;i<flow_field->GetPlaneNum();i++)
            property.contourproperty.isUpdate.add(0);
         //cerr<<flow_field->GetPlaneNum()<<endl;
 	char linestr[5];
 
-       char *str = new char[200];
+       property.contourname.clear();
+
+//       char *str = new char[200];
        sprintf(str, "%s/%s/density.txt", property.storeDir, property.rawFile);
   //   cerr<<num<<" "<<str<<endl; 
 	for(int i=0;i<num;i++)
 	{
-		infile>>linestr;cerr<<linestr<<endl;
+               std::string cn("");
+
+		infile>>linestr;//cerr<<linestr<<endl;
 		if(!strcmp(linestr,"G"))
 		{
 			//cerr<<linestr<<endl;
@@ -405,7 +522,13 @@ void Config(char *configfname, ConfigProperty &property)
 
 			if(!strcmp(linestr2,"A"))
 			{
+                        cn += "Absolute value ";
+
 				infile>>store;
+                                       std::ostringstream ss;
+                                        ss<<store;
+                                        cn += ss.str();
+
 				for(int j=0;j<flow_field->GetPlaneNum();j++)
 				{
 					property.contourproperty.contourValues[j].add(store);
@@ -414,7 +537,13 @@ void Config(char *configfname, ConfigProperty &property)
 			}
 			else
 			{
+                        cn += "Ratio ";
+
 				infile>>store;
+                                       std::ostringstream ss;
+                                        ss<<store;
+                                        cn += ss.str();
+
 				//cerr<<store<<endl;
 				for(int j=0;j<flow_field->GetPlaneNum();j++)
 				{
@@ -462,6 +591,7 @@ void Config(char *configfname, ConfigProperty &property)
 				}			
 			}			
 		}
+              property.contourname.push_back(cn);//cerr<<property.contourname[i]<<endl;
 //		property.contourproperty.isUpdate.add(1);
 	}
 	sprintf(str, "%s/%s/contour.txt", property.storeDir, property.rawFile);
@@ -479,6 +609,8 @@ void Config(char *configfname, ConfigProperty &property)
 	/*-------------step 1-----------------------------------*/
     property.step1_kmeansproperty.dimension = 7;
     property.step1_kmeansproperty.isNormalize = true;
+     property.step1_kmeansproperty.clusterLayer.free();
+    property.step1_kmeansproperty.clusterWeight.free();
     for(int i=0;i<flow_field->GetPlaneNum();i++)
     {
         property.step1_kmeansproperty.clusterLayer.add(-1);
@@ -525,6 +657,8 @@ void Config(char *configfname, ConfigProperty &property)
     /*--------------------step 2-------------------------------------------*/
     property.step2_kmeansproperty.dimension = 7;
     property.step2_kmeansproperty.isNormalize = true;
+property.step2_kmeansproperty.clusterLayer.free();
+property.step2_kmeansproperty.clusterWeight.free();
     for(int i=0;i<flow_field->GetPlaneNum();i++)
     {
         property.step2_kmeansproperty.clusterLayer.add(-1);
@@ -573,8 +707,8 @@ void Config(char *configfname, ConfigProperty &property)
 	sprintf(str, "%s/%s/output.txt", property.storeDir, property.rawFile);
 	property.step2_kmeansproperty.file2 = strdup(str);
 
-    zmin=0;
-    zmax = flow_field->GetPlaneNum()-1;
+   // zmin=0;
+   // zmax = flow_field->GetPlaneNum()-1;
 
     delete [] str;	
 	infile.close();
@@ -594,7 +728,8 @@ void Config(char *configfname, ConfigProperty &property)
 void Update()
 {
     Config(configFile, configproperty);
-    
+     unique_region.clear();
+  unique_region = flow_field->GetUniqueRegion(); 
       directglyph->New(flow_field, flow_field->GetPlaneNum());
   summaryglyph->New(flow_field, flow_field->GetPlaneNum());
                  //cerr<<"done"<<flow_field->GetPlaneNum()<<endl;
@@ -612,11 +747,16 @@ void Update()
                    directglyph->SetData(str, i);
                   summaryglyph->SetData(str, i);
          }
+        directglyph->SetContourLabel();
+        summaryglyph->SetContourLabel();
    }           
   delete [] str;  
-
+cerr<<zmin<<" "<<zmax<<endl;
   directglyph->ResetCluster();
   summaryglyph->ResetCluster();
+   directglyph->ResetVisible();
+   directglyph->SetVisible(contourindex);
+  directglyph->SetVisible(zmin, zmax);
   directglyph->SetROI(configproperty.magrange[0][0], configproperty.magrange[0][1]);
   directglyph->GenerateClusters(configproperty.step1_kmeansproperty);
   directglyph->SetROI(configproperty.magrange[1][0], configproperty.magrange[1][1]);
@@ -628,6 +768,9 @@ void Update()
  // cerr<<"done"<<endl;
   summaryglyph->SetNumPower(flow_field->GetNumPower());
   summaryglyph->SetScaling(flow_field->GetScaling());
+  summaryglyph->ResetVisible();
+  summaryglyph->SetVisible(contourindex);
+  summaryglyph->SetVisible(zmin, zmax);
   directglyph->Generate();
   summaryglyph->SetRadius(0.27);
   svInt list =10;
@@ -638,11 +781,20 @@ void Update()
 
 void init(char *configfname)//rbfname, char *cpname)
 {
+  mesh = new svMesh();
+  mesh->SetDisplayList(30);
+  outline = new svOutline();
+  flow_field = new svQDOT();
   configFile = strdup(configfname);
-
+//cerr<<"done"<<endl;
   Config(configfname, configproperty);
-// cerr<<configproperty.rawDir<<endl; 
+   zmin=0;
+    zmax = flow_field->GetPlaneNum()-1;
+
+ //cerr<<configproperty.rawDir<<endl; 
   char *str = new char[200];
+  unique_region.clear();
+  unique_region = flow_field->GetUniqueRegion();
 
   directglyph = new svDirectArrow(flow_field);//cerr<<"done"<<endl;
   directglyph->New(flow_field, flow_field->GetPlaneNum());
@@ -650,8 +802,8 @@ void init(char *configfname)//rbfname, char *cpname)
   summaryglyph = new svSummaryGlyph();
   summaryglyph->New(flow_field, flow_field->GetPlaneNum());
   if(configproperty.isContour)
-  { cerr<<"isContour"<<endl;
-       directglyph->GenerateContours(configproperty.contourproperty);cerr<<"done"<<endl;
+  {// cerr<<"isContour"<<endl;
+       directglyph->GenerateContours(configproperty.contourproperty);//cerr<<"done"<<endl;
        summaryglyph->GenerateContours(configproperty.contourproperty); 
   }
   else
@@ -662,36 +814,50 @@ void init(char *configfname)//rbfname, char *cpname)
 	           directglyph->SetData(str, i);
                    summaryglyph->SetData(str, i);
          }
+        directglyph->SetContourLabel();
+        summaryglyph->SetContourLabel();
    }
-  delete [] str;  
+  //delete [] str;  
 
   directglyph->ResetCluster();
   summaryglyph->ResetCluster();
+   directglyph->SetVisible(contourindex);
+  directglyph->SetVisible(zmin, zmax);
   directglyph->SetROI(configproperty.magrange[0][0], configproperty.magrange[0][1]);
   directglyph->GenerateClusters(configproperty.step1_kmeansproperty);
   directglyph->SetROI(configproperty.magrange[1][0], configproperty.magrange[1][1]);
   directglyph->GenerateClusters(configproperty.step2_kmeansproperty);
-cerr<<"done"<<endl;
+//cerr<<"done"<<endl;
   summaryglyph->GenerateClusters(directglyph->GetClusterLabels());
+  summaryglyph->SetVisible(contourindex);
+  summaryglyph->SetVisible(zmin, zmax);
 
-  cerr<<"done"<<endl;
+//  cerr<<"done"<<endl;
   summaryglyph->SetNumPower(flow_field->GetNumPower());
   summaryglyph->SetScaling(flow_field->GetScaling());
-cerr<<"done"<<endl;
+//cerr<<"done"<<endl;
   directglyph->SetColorByCluster();
   //summaryglyph->SetColors(); 
- cerr<<"done"<<endl;
+// cerr<<"done"<<endl;
   directglyph->Generate();
-cerr<<"done"<<endl;
+//cerr<<"done"<<endl;
   summaryglyph->SetRadius(0.27);
   //summaryglyph->SetDisplayList(10);
   svInt list = 10;
   summaryglyph->SetDisplayList(list);
   summaryglyph->Generate(1);
-cerr<<"done"<<endl;
+
+//  char *str = new char[200];
+  sprintf(str, "%s/%s/mesh%d.txt", configproperty.storeDir, configproperty.rawFile, unique_region[0]);
+//cerr<<str<<endl;
+  mesh->GenerateWireframe(str);
+  delete [] str;
+//cerr<<"done"<<endl;
 
   summaryVisible = 1;
-
+  scale = directglyph->GetScale();
+  directradius = directglyph->GetRadius();
+  summaryradius = 0.27;
 
   svVector3 center = flow_field->GetCenter();//cerr<<"done"<<endl;
   center.getValue(view_info.coi);
@@ -699,8 +865,8 @@ cerr<<"done"<<endl;
   GLfloat x, y, z;
   flow_field->GetPhysicalDimension(&x,&y, &z);
 
-  view_info.eye[0] = x/2.0;
-  view_info.eye[1] = y/2.0;
+  view_info.eye[0] = 0;//x/2.0;
+  view_info.eye[1] =0;// y/2.0;
   view_info.eye[2] = z*2.0;
 
   trackball.setEye(view_info.eye);

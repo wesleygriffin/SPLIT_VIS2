@@ -9,9 +9,11 @@ svDirectBar::svDirectBar(svVectorField *f) : svBarGlyph(f)
 {
 
 }
-void svDirectBar::Generate(DirectProperty &property,
+void svDirectBar::Generate(DirectProperty &property, ViewProperty &viewproperty,
                             svVector3 planeDir)
 {
+  cleanup();
+
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
  glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
@@ -42,7 +44,7 @@ void svDirectBar::Generate(DirectProperty &property,
              sortbar.push_back(tmpbar);
          }
       }
-      sort(sortbar.begin(), sortbar.end(), compare_sortbar);
+ //     sort(sortbar.begin(), sortbar.end(), compare_sortbar);
 
       for(int ii=0;ii<sortbar.size();ii++)
       {
@@ -62,13 +64,13 @@ void svDirectBar::Generate(DirectProperty &property,
 
              if(dot(dir[i][j], planeDir)>0)
              {
-                shift = glyph[i][j] + planeDir*barproperty.circleradius
-                                    -v*barproperty.circleradius;
+                shift = glyph[i][j] //+ planeDir*barproperty.circleradius
+                                    -dir[i][j]*barproperty.circleradius;
              }
              else
              {
-                shift = glyph[i][j] - planeDir*barproperty.circleradius
-                                    -v*barproperty.circleradius;
+                shift = glyph[i][j] //- planeDir*barproperty.circleradius
+                                    -dir[i][j]*barproperty.circleradius;
              }
 
              glColor4f(barproperty.circlecolor[0],barproperty.circlecolor[1],
@@ -102,11 +104,13 @@ void svDirectBar::Generate(DirectProperty &property,
 //             glEnable(GL_POLYGON_OFFSET_FILL);
 //               glPolygonOffset(0.1, 1.0);
 //
+             svVector3 eyev  = viewproperty.eye; eyev.normalize();
+             if(dot(shiftv, eyev)>0)shift=-shift;
 
                svVector3 p1, p2, p3, p4;
                glDisable(GL_LIGHTING);
                glDisable(GL_LIGHT0);
-
+/*
           if(barproperty.legend < mag[i][j])
           {
                glColor4f(barproperty.circlecolor[0],barproperty.circlecolor[1],
@@ -118,14 +122,14 @@ void svDirectBar::Generate(DirectProperty &property,
                glVertex3f(p3[0], p3[1], p3[2]);
                glEnd();
           }
-
+*/
                glEnable(GL_LIGHTING);
                glEnable(GL_LIGHT0);
 
 
                glColor4f(barproperty.legendcolor[0], barproperty.legendcolor[1], barproperty.legendcolor[2],barproperty.legendcolor[3]);
                svScalar lh = barproperty.legend*property.UnitHeight*barproperty.scaley;
-               glBegin(GL_QUADS);
+               glBegin(GL_LINE_LOOP);
               glNormal3f(shiftv[0], shiftv[1], shiftv[2]);
               glNormal3f(-shiftv[0], -shiftv[1], -shiftv[2]);
                p1 = glyph[i][j]-shift*shiftv;
@@ -156,6 +160,11 @@ void svDirectBar::Generate(DirectProperty &property,
                glVertex3f(p3[0], p3[1], p3[2]);
                glVertex3f(p4[0], p4[1], p4[2]);
                glEnd();
+
+               barEnd1[i].add(p1);
+               barEnd2[i].add(p2);
+               barEnd3[i].add(p3);
+               barEnd4[i].add(p4);
 
                halop.add(p1);halop.add(p1-barproperty.halowidth*v-barproperty.halowidth*dir[i][j]);
                halop.add(p2);halop.add(p2+barproperty.halowidth*v-barproperty.halowidth*dir[i][j]);
@@ -201,5 +210,33 @@ void svDirectBar::Render()
   glCallList(display_list);
 }
 
+svVector3 svDirectBar::GetEnd(DirectProperty &property, ViewProperty &viewproperty,
+               svVector3 planeDir,
+                int seed, int index)
+{
+           int i = seed;
+           int j = index;
+               dir[seed][index].normalize();
+             svVector3 v1 = dir[seed][index];
+             svVector3 v2 = planeDir;
+             v2.normalize();
+             svVector3 v = cross(v1, v2);
+             v.normalize();
 
+             svVector3 shiftv;
+             shiftv = normalize(cross(dir[i][j], v));
+             svScalar shift;
+             shift = barproperty.circleradius/4.;
+
+             svVector3 eyev  = viewproperty.eye; eyev.normalize();
+             if(dot(shiftv, eyev)<0)shift=-shift;
+
+               svVector3 p1, p2, p3, p4;
+
+                p1 = glyph[i][j]+shift*shiftv;
+               p2 = glyph[i][j] + barproperty.scalex*property.width*v+shift*shiftv;
+               p3 = p2 + mag[i][j]*barproperty.scaley * property.UnitHeight * dir[i][j]; 
+
+             return p3;
+}
 }

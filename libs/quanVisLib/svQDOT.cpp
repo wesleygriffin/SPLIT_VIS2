@@ -10,11 +10,17 @@ svQDOT::svQDOT(char*formatfName):svVectorField()
 
 void svQDOT::New(char *formatfName)
 {
+  unique_region.clear();
+
   ifstream infile(formatfName);
 
+  int n;
+  infile>>n; unique_region.resize(n);
+  for(int i=0;i<n;i++)infile>>unique_region[i];
   infile>>plane_num;
   infile>>min_plane[0]>>min_plane[1]>>min_plane[2];
   infile>>plane_dir[0]>>plane_dir[1]>>plane_dir[2];
+  plane_dir.normalize();
   infile>>plane_distance;
   infile>>xdistance;
   infile>>ydistance;
@@ -27,6 +33,40 @@ void svQDOT::New(char *formatfName)
   
   infile.close();	
 }
+svVector3 svQDOT::GetPlanePosition(int index)
+{
+    svVector3 p;
+    p = min_plane +( index * plane_distance)*plane_dir;
+    return p;
+}
+void svQDOT::NewMesh(char *dir)
+{
+   for(int i=0;i<unique_region.size();i++)
+   {
+       char *str = new char[300];
+       sprintf(str, "%s/region%d.txt", dir, unique_region[i]);
+       char *outstr = new char[300];
+       sprintf(outstr, "%s/mesh%d.txt", dir, unique_region[i]);
+       char *exe = new char[1024];
+       sprintf(exe, "%s/ex_alpha_shapes_3 %s > %s 2>&1", BIN_DIR, str, outstr);
+//cerr<<exe<<endl;
+       ifstream infile(outstr);
+
+       if(infile.is_open())
+       {
+           infile.close();
+       }
+       else
+       {
+           infile.close();
+           system(exe);
+       }
+
+       delete [] outstr;
+       delete [] str;
+       delete [] exe;
+   }
+}
 
 
 void svQDOT::SetVTK(svChar *rawdir, svChar *rawfile, svChar *dir,
@@ -36,16 +76,16 @@ void svQDOT::SetVTK(svChar *rawdir, svChar *rawfile, svChar *dir,
                                         svVector3 pdir, svScalar pdis)
 {
   //generate sorted file and vtk file	  
-  char folderstr[200];
+  char *folderstr = new char[200];
   sprintf(folderstr, "%s/%s", dir, rawfile);
   mkdir(folderstr, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);  
 
-  char sortfile[200];
+  char *sortfile = new char[200];
   sprintf(sortfile, "%s/%s/%s", dir, rawfile, sortFile);//sort.txt
 
-  char input[50];
-  sprintf(input, "%s/preprocessing/generateVTK/input", SRC_DIR);
-  
+  char *input = new char[200];
+  sprintf(input, "%s/preprocessing/generateVTK/input",SRC_DIR);
+// cerr<<input<<endl; 
   ofstream readinput(input);
   
   readinput<<ppos[0]<<" "<<ppos[1]<<" "<<ppos[2]<<endl;
@@ -57,20 +97,26 @@ void svQDOT::SetVTK(svChar *rawdir, svChar *rawfile, svChar *dir,
   ifstream infile(sortfile);
   if(!infile.is_open())
   {
-    char str[2048];
+    char *str = new char[2048];
     sprintf(str, "%s/genVTK %s/%s %s/%s/%s %s/%s/ %s/%s/%s %s/%s/%s %s/preprocessing/generateVTK/input", 
 		  BIN_DIR, rawdir, rawfile, 
                   dir, rawfile, sortFile,
                   dir, rawfile, 
                   dir, rawfile, formatFile,
                   dir, rawfile, densityFile,
-          SRC_DIR); 
+		SRC_DIR); 
 	cerr<<"======> " << str<<endl;
     system(str);
+    delete [] str;
   }
   infile.close(); 
+ 
   
-  
+ 
+// cerr<<"done"<<endl; 
+  delete [] input;
+  delete [] folderstr;
+  delete [] sortfile;
 }
 /*
 void svQDOT::SetClusterInput(svInt isRaw, svIntArray & layer, svIntArray *roi, 

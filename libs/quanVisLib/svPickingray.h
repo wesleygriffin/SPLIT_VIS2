@@ -17,6 +17,7 @@ Pickying array
 #include "svType.h"
 #include "svVectorMatrix.h"
 #include "svArray.h"
+#include "svUtil.h"
 
 #ifndef PI
 #define PI 3.1415926
@@ -42,8 +43,17 @@ class svPickingray
 		  
   void getPickingray(svScalar screenX,
 			  svScalar screenY);
+  void setPickingray(GLfloat *invert_tb);
+  svVector3 getRayPostion(int x, int y, ViewProperty &property);
+  int getSelectedBar(svVector3Array *barEnd1,
+                     svVector3Array *barEnd2,
+                     svVector3Array *barEnd3,
+                     svVector3Array *barEnd4,
+                     int seed_num); 
+  bool getPlanePosition(svVector3 &pos, svVector3 lb, svVector3 rb);
 
   void render();
+  void renderbyPlane(svVector3 lb, svVector3 rb);
 			  
   svVector3 getPickingpos(){return pickingPos;}
   svVector3 getPickingdir(){return pickingDir;}

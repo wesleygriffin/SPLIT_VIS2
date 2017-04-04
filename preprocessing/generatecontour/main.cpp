@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 			//cerr<<vtkfile<<" "<<gv[j]<<endl;
 		  qdotcontour->Get2DContour(vtkfile, gv[j]);//
 		}
-
+//cerr<<out_fname<<endl;
 	  qdotcontour->SavePointtoFile(out_fname);
 
 	delete [] in_fname;

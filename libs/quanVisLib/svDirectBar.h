@@ -13,21 +13,25 @@
 #endif
 namespace __svl_lib {
 
-typedef struct DirectProperty{
+/*typedef struct DirectProperty{
   svScalar UnitHeight;
   svScalar width; 
 }DirectProperty; 
-    
+  */
+  
 class svDirectBar : public svBarGlyph{
 public:
    svDirectBar(svVectorField *f);
 
    virtual ~svDirectBar(){};
 
-   virtual void Generate(DirectProperty &property,
+   virtual void Generate(DirectProperty &property, ViewProperty &viewproperty,
                             svVector3 planeDir);
 
    virtual void Render();
+   svVector3 GetEnd(DirectProperty &property, ViewProperty &viewproperty,
+               svVector3 planeDir,
+                int seed, int index);
 
 protected:
 private:

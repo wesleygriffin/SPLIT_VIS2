@@ -19,7 +19,11 @@ typedef struct BendProperty{
   svScalarArray bendRange;
   svScalarArray bendHeight;
   svScalarArray bendWidth;
-  svScalarArray *bendLegend;  
+  svScalarArray bendLegendRange;
+  svScalarArray bendLegendHeight;
+  svScalarArray bendLegendWidth;  
+  svScalarArray bendLegendValue;
+  svVector3Array groupcolor;
 } BendProperty;
 
 class svBendBar : public svBarGlyph{
@@ -29,14 +33,25 @@ public:
 
    virtual ~svBendBar(){};
 
+   virtual void SetLegendList(svInt list){legend_list = list;}
+
+   virtual void GenerateLegend(BendProperty &property, svVector3 startPos, svVector3 dir1, svVector3 dir2,
+                       svScalar stepD1, svScalar stepD2,
+                       svInt stepN1, svInt stepN2, svVector3 planeDir);
    virtual void Generate(BendProperty &property, ViewProperty &viewproperty,
                             svVector3 planeDir);
-
+   virtual void Generate(BendProperty &property, ViewProperty &viewproperty,
+                            svVector3 planeDir, int indexx);   
+   virtual void SaveToOBJ(char *fname,BendProperty &property,svVector3 planeDir);
    virtual void Render();
 
+   svVector3 GetEnd(BendProperty &property, ViewProperty &viewproperty,
+               svVector3 planeDir,
+                int seed, int index);
+   virtual void RenderLegend(BendProperty &property);
 protected:
 private:
-   
+   svInt legend_list;
 };
 }
 

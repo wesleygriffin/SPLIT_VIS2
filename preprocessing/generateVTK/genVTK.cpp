@@ -51,6 +51,7 @@ int main(int argc, char *argv[])
     qdotData->SortedData(sort_fname);//cerr<<"read"<<endl;
     qdotData->SplitData(pos_x, pos_y, pos_z, dir_x, dir_y, dir_z, distance);
     qdotData->SaveSplitData(vtk_fname);
+    qdotData->SaveRegiontoFile(vtk_fname);
     qdotData->SavetoVTK(vtk_fname);//cerr<<"save to "<< vtk_fname << endl;
     qdotData->SaveDataFormat(format_fname);//cerr<<"save to "<< format_fname << endl;
     qdotData->SaveDensityBylayer(density_fname);

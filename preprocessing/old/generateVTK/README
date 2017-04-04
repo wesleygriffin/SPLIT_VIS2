@@ -1,0 +1,26 @@
+
+To run: 
+
+./genVTK  <raw_fname> <gen_sort_fname> <gen_vtk_dirName> <gen_format_fname>
+
+
+Input: 
+ * raw_fname: input raw filename (from scientists stored in the directory data.)
+
+Output:
+
+ * gen_sort_fname:
+  sorted by x, y, and z
+
+ * gen_vtk_dirName:
+  where the vtk files will be stored
+  generate two types of vtk files:
+	by layer: each z layer is stored in a vtk
+	all: all input file is stored in a vtk. each layer is named lx.vtk
+
+
+ * gen_format_fname:
+  store meta-data information about the input data
+	e.g., z distance; grid size; data index of each index
+
+

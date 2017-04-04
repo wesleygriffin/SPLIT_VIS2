@@ -12,21 +12,22 @@ ifeq ($(MACHINE),Darwin)
 	OPENGL_LIB= -framework OpenGL -framework GLUT -framework Cocoa 
 	LLDLIBS = -L../jcUtil -L../LU -lLU -ljcUtil-1.0  -lm 
 else
-	OPENGL_INC= -I/usr/include -I../LU -I../jcUtil
+	OPENGL_INC= -I/usr/include -I../LU -I../jcUtil -I../dual_depth_peeling/common/GLEW/include -I../dual_depth_peeling/common/include -I../dual_depth_peeling/common/nvModel/include
 	OPENGL_LIB= -L/usr/lib64 
-	LLDLIBS = -L../jcUtil -L../LU -lLU -ljcUtil-1.0 -lglut -lGL -lGLU -lGL -lXmu -lXext -lX11 -lm 
+	LLDLIBS = -L/local/HEV/external/cuda/cuda-6.5/samples/common/lib/linux/x86_64/ -L../jcUtil -L../LU -lLU -ljcUtil-1.0 -lGLEW -lglut -lGL -lGLU -lGL -lXmu -lXext -lX11 -lm 
 endif
 
 ifeq ($(wildcard $(VTKPath)), $(VTKPath))
-	CXX = g++ -O3 -fopenmp -D_VTK
+	CXX = g++ -D_VTK -O3 -Wall -DNDEBUG -Winvalid-pch -m64 -fopenmp -msse4.2
 else
-	CXX=g++ -O3 -fopenmp
+	CXX=g++  -O3 -Wall -DNDEBUG -Winvalid-pch -m64 -fopenmp -msse4.2
 endif
 #CXX=g++ 
 
 COMPILER_FLAGS= -g 
 
 INCPATH= $(OPENGL_INC)
+INCLUDE=$(OPENGL_INC)
 LIBS= $(OPENGL_LIB) $(LLDLIBS) 
 
 TARGETS = libsvl-1.0.a
@@ -62,10 +63,14 @@ svPrimitive.cpp\
 svGlyph.cpp\
 svSummaryGlyph.cpp\
 svCylinderGlyph.cpp\
+svDirectCylinder.cpp\
+svSplitVectorsCylinder.cpp\
 svBarGlyph.cpp\
 svBendBar.cpp\
 svSplitVectorsBar.cpp\
-svDirectBar.cpp
+svDirectBar.cpp\
+GLSLProgramObject.cpp\
+dual_depth_peeling.cpp
 
 #svQDOTField.cpp \
 #svMesh.cpp \
@@ -100,10 +105,14 @@ svPrimitive.o\
 svGlyph.o\
 svSummaryGlyph.o\
 svCylinderGlyph.o\
+svDirectCylinder.o\
+svSplitVectorsCylinder.o\
 svBarGlyph.o\
 svBendBar.o\
 svSplitVectorsBar.o\
-svDirectBar.o
+svDirectBar.o\
+GLSLProgramObject.o\
+dual_depth_peeling.o
 
 #svQDOTField.o \
 #svMesh.o
@@ -196,10 +205,14 @@ svQDOTmagnitudemap.o: svQDOTmagnitudemap.cpp svQDOTmagnitudemap.h svType.h svVec
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svQDOTmagnitudemap.o svQDOTmagnitudemap.cpp
 svMap.o: svMap.cpp svMap.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svMap.o svMap.cpp
-svGlyph.o: svGlyph.cpp svGlyph.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
+svGlyph.o: svGlyph.cpp svGlyph.h dual_depth_peeling.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svGlyph.o svGlyph.cpp
 svCylinderGlyph.o: svCylinderGlyph.cpp svCylinderGlyph.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svCylinderGlyph.o svCylinderGlyph.cpp
+svDirectCylinder.o: svDirectCylinder.cpp svDirectCylinder.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svDirectCylinder.o svDirectCylinder.cpp
+svSplitVectorsCylinder.o: svSplitVectorsCylinder.cpp svSplitVectorsCylinder.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svSplitVectorsCylinder.o svSplitVectorsCylinder.cpp
 svBarGlyph.o: svBarGlyph.cpp svBarGlyph.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svBarGlyph.o svBarGlyph.cpp
 svBendBar.o: svBendBar.cpp svBendBar.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
@@ -221,6 +234,10 @@ svColors.o: svColors.cpp svColors.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svColors.o svColors.cpp
 svDisc.o: svDisc.cpp svDisc.h svType.h svVectorMatrix.h svArray.h svVectorField.h svUtil.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svDisc.o svDisc.cpp
+GLSLProgramObject.o: GLSLProgramObject.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o GLSLProgramObject.o GLSLProgramObject.cpp
+dual_depth_peeling.o: dual_depth_peeling.cpp nvModel.h GLSLProgramObject.h Timer.h OSD.h 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o dual_depth_peeling.o dual_depth_peeling.cpp
 #svMesh.o: svMesh.cpp svMesh.h svType.h svVectorMatrix.h svArray.h svVectorField.h
 #	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o svMesh.o svMesh.cpp
 clean:

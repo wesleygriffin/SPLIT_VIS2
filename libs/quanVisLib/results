@@ -1,0 +1,143 @@
+g++ -D_VTK -O3 -Wall -DNDEBUG -Winvalid-pch -m64 -fopenmp -msse4.2 -c  -I/usr/include -I../LU -I../jcUtil -I../dual_depth_peeling/common/GLEW/include -I../dual_depth_peeling/common/include/ -I../dual_depth_peeling/common/nvModel/include -o svUtil.o svUtil.cpp
+In file included from svUtil.h:9,
+                 from svUtil.cpp:2:
+svVectorField.h: In member function ‘virtual __svl_lib::svVector3 __svl_lib::svVectorField::GetVector(const __svl_lib::svParticle&)’:
+svVectorField.h:73: warning: no return statement in function returning non-void
+svVectorField.h: In member function ‘virtual __svl_lib::svVector3 __svl_lib::svVectorField::GetVector(const __svl_lib::svVector3&, __svl_lib::svScalar)’:
+svVectorField.h:74: warning: no return statement in function returning non-void
+g++ -D_VTK -O3 -Wall -DNDEBUG -Winvalid-pch -m64 -fopenmp -msse4.2 -c  -I/usr/include -I../LU -I../jcUtil -I../dual_depth_peeling/common/GLEW/include -I../dual_depth_peeling/common/include/ -I../dual_depth_peeling/common/nvModel/include -o svLut.o svLut.cpp
+In file included from svUtil.h:9,
+                 from svLut.cpp:8:
+svVectorField.h: In member function ‘virtual __svl_lib::svVector3 __svl_lib::svVectorField::GetVector(const __svl_lib::svParticle&)’:
+svVectorField.h:73: warning: no return statement in function returning non-void
+svVectorField.h: In member function ‘virtual __svl_lib::svVector3 __svl_lib::svVectorField::GetVector(const __svl_lib::svVector3&, __svl_lib::svScalar)’:
+svVectorField.h:74: warning: no return statement in function returning non-void
+svLut.cpp: In member function ‘void __svl_lib::svLut::MakeBlueYellowTexture()’:
+svLut.cpp:177: warning: unused variable ‘c’
+svLut.cpp: In member function ‘void __svl_lib::svLut::MakeLOCTexture()’:
+svLut.cpp:213: warning: unused variable ‘c’
+svLut.cpp: In member function ‘void __svl_lib::svLut::RenderLOC()’:
+svLut.cpp:246: warning: unused variable ‘half_ww’
+svLut.cpp:247: warning: unused variable ‘half_wh’
+g++ -D_VTK -O3 -Wall -DNDEBUG -Winvalid-pch -m64 -fopenmp -msse4.2 -c  -I/usr/include -I../LU -I../jcUtil -I../dual_depth_peeling/common/GLEW/include -I../dual_depth_peeling/common/include/ -I../dual_depth_peeling/common/nvModel/include -o svParticle.o svParticle.cpp
+In file included from svParticle.cpp:6:
+svVectorField.h: In member function ‘virtual __svl_lib::svVector3 __svl_lib::svVectorField::GetVector(const __svl_lib::svParticle&)’:
+svVectorField.h:73: warning: no return statement in function returning non-void
+svVectorField.h: In member function ‘virtual __svl_lib::svVector3 __svl_lib::svVectorField::GetVector(const __svl_lib::svVector3&, __svl_lib::svScalar)’:
+svVectorField.h:74: warning: no return statement in function returning non-void
+g++ -D_VTK -O3 -Wall -DNDEBUG -Winvalid-pch -m64 -fopenmp -msse4.2 -c  -I/usr/include -I../LU -I../jcUtil -I../dual_depth_peeling/common/GLEW/include -I../dual_depth_peeling/common/include/ -I../dual_depth_peeling/common/nvModel/include -o ivview.o ivview.cpp
+g++ -D_VTK -O3 -Wall -DNDEBUG -Winvalid-pch -m64 -fopenmp -msse4.2 -c  -I/usr/include -I../LU -I../jcUtil -I../dual_depth_peeling/common/GLEW/include -I../dual_depth_peeling/common/include/ -I../dual_depth_peeling/common/nvModel/include -o ivTrackball.o ivTrackball.cpp
+ivTrackball.h: In constructor ‘__svl_lib::Trackball::Trackball()’:
+ivTrackball.h:128: warning: ‘__svl_lib::Trackball::pan_scale’ will be initialized after
+ivTrackball.h:126: warning:   ‘Scalar __svl_lib::Trackball::dolly_scale’
+ivTrackball.cpp:72: warning:   when initialized here
+#g++ -D_VTK -O3 -Wall -DNDEBUG -Winvalid-pch -m64 -fopenmp -msse4.2 -c  -I/usr/include -I../LU -I../jcUtil -I../dual_depth_peeling/common/GLEW/include -I../dual_depth_peeling/common/include/ -I../dual_depth_peeling/common/nvModel/include -o svQDOTNorm.o svQDOTNorm.cpp
+g++ -D_VTK -O3 -Wall -DNDEBUG -Winvalid-pch -m64 -fopenmp -msse4.2 -c  -I/usr/include -I../LU -I../jcUtil -I../dual_depth_peeling/common/GLEW/include -I../dual_depth_peeling/common/include/ -I../dual_depth_peeling/common/nvModel/include -o svOutline.o svOutline.cpp
+svOutline.cpp: In member function ‘void __svl_lib::svOutline::DrawAxis_scale(__svl_lib::svVector3, __svl_lib::svVector3, int)’:
+svOutline.cpp:80: warning: unused variable ‘value’
+svOutline.cpp:83: warning: unused variable ‘temp’
+svOutline.cpp: In member function ‘void __svl_lib::svOutline::DrawAxis(__svl_lib::svVector3, __svl_lib::svVector3)’:
+svOutline.cpp:367: warning: unused variable ‘str’
+g++ -D_VTK -O3 -Wall -DNDEBUG -Winvalid-pch -m64 -fopenmp -msse4.2 -c  -I/usr/include -I../LU -I../jcUtil -I../dual_depth_peeling/common/GLEW/include -I../dual_depth_peeling/common/include/ -I../dual_depth_peeling/common/nvModel/include -o svDistance.o svDistance.cpp
+In file included from svUtil.h:9,
+                 from svDistance.h:12,
+                 from svDistance.cpp:1:
+svVectorField.h: In member function ‘virtual __svl_lib::svVector3 __svl_lib::svVectorField::GetVector(const __svl_lib::svParticle&)’:
+svVectorField.h:73: warning: no return statement in function returning non-void
+svVectorField.h: In member function ‘virtual __svl_lib::svVector3 __svl_lib::svVectorField::GetVector(const __svl_lib::svVector3&, __svl_lib::svScalar)’:
+svVectorField.h:74: warning: no return statement in function returning non-void
+svDistance.cpp: In member function ‘void __svl_lib::svDistance::ANN_Montecarlo()’:
+svDistance.cpp:139: warning: comparison between signed and unsigned integer expressions
+svDistance.cpp:153: warning: comparison between signed and unsigned integer expressions
+svDistance.cpp:188: warning: unused variable ‘sum’
+svDistance.cpp: In member function ‘void __svl_lib::svDistance::SetSelectedLayer(int)’:
+svDistance.cpp:302: warning: comparison between signed and unsigned integer expressions
+svDistance.cpp: In member function ‘void __svl_lib::svDistance::CosDistance()’:
+svDistance.cpp:318: warning: comparison between signed and unsigned integer expressions
+g++ -D_VTK -O3 -Wall -DNDEBUG -Winvalid-pch -m64 -fopenmp -msse4.2 -c  -I/usr/include -I../LU -I../jcUtil -I../dual_depth_peeling/common/GLEW/include -I../dual_depth_peeling/common/include/ -I../dual_depth_peeling/common/nvModel/include -o svArrowGlyph.o svArrowGlyph.cpp
+In file included from svUtil.h:9,
+                 from svArrowGlyph.cpp:14:
+svVectorField.h: In member function ‘virtual __svl_lib::svVector3 __svl_lib::svVectorField::GetVector(const __svl_lib::svParticle&)’:
+svVectorField.h:73: warning: no return statement in function returning non-void
+svVectorField.h: In member function ‘virtual __svl_lib::svVector3 __svl_lib::svVectorField::GetVector(const __svl_lib::svVector3&, __svl_lib::svScalar)’:
+svVectorField.h:74: warning: no return statement in function returning non-void
+svArrowGlyph.cpp: In member function ‘void __svl_lib::svArrowGlyph::ReadDataFormat(std::vector<std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > >, std::allocator<std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > > > >)’:
+svArrowGlyph.cpp:70: warning: comparison between signed and unsigned integer expressions
+svArrowGlyph.cpp:72: warning: comparison between signed and unsigned integer expressions
+svArrowGlyph.cpp:81: warning: comparison between signed and unsigned integer expressions
+svArrowGlyph.cpp:84: warning: comparison between signed and unsigned integer expressions
+svArrowGlyph.cpp:87: warning: comparison between signed and unsigned integer expressions
+svArrowGlyph.cpp: In member function ‘void __svl_lib::svArrowGlyph::ReadDataFormat(char*)’:
+svArrowGlyph.cpp:97: warning: comparison between signed and unsigned integer expressions
+svArrowGlyph.cpp:99: warning: comparison between signed and unsigned integer expressions
+svArrowGlyph.cpp:161: warning: comparison between signed and unsigned integer expressions
+svArrowGlyph.cpp:123: warning: unused variable ‘xl’
+svArrowGlyph.cpp:124: warning: unused variable ‘yl’
+svArrowGlyph.cpp:125: warning: unused variable ‘zmin’
+svArrowGlyph.cpp: In member function ‘void __svl_lib::svArrowGlyph::SetData(std::vector<std::vector<__svl_lib::Vector3, std::allocator<__svl_lib::Vector3> >, std::allocator<std::vector<__svl_lib::Vector3, std::allocator<__svl_lib::Vector3> > > >, std::vector<std::vector<__svl_lib::Vector3, std::allocator<__svl_lib::Vector3> >, std::allocator<std::vector<__svl_lib::Vector3, std::allocator<__svl_lib::Vector3> > > >, std::vector<std::vector<float, std::allocator<float> >, std::allocator<std::vector<float, std::allocator<float> > > >, std::vector<std::vector<float, std::allocator<float> >, std::allocator<std::vector<float, std::allocator<float> > > >, std::vector<std::vector<float, std::allocator<float> >, std::allocator<std::vector<float, std::allocator<float> > > >, std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > >, __svl_lib::svInt)’:
+svArrowGlyph.cpp:353: warning: comparison between signed and unsigned integer expressions
+svArrowGlyph.cpp:355: warning: comparison between signed and unsigned integer expressions
+svArrowGlyph.cpp: In member function ‘void __svl_lib::svArrowGlyph::SetInbox(bool*)’:
+svArrowGlyph.cpp:505: warning: unused variable ‘count’
+svArrowGlyph.cpp: In member function ‘void __svl_lib::svArrowGlyph::extendLength(double)’:
+svArrowGlyph.cpp:613: warning: unused variable ‘s’
+svArrowGlyph.cpp:613: warning: unused variable ‘e’
+svArrowGlyph.cpp: In member function ‘void __svl_lib::svArrowGlyph::extendRadius(double)’:
+svArrowGlyph.cpp:690: warning: unused variable ‘scale’
+svArrowGlyph.cpp:676: warning: unused variable ‘s’
+svArrowGlyph.cpp:676: warning: unused variable ‘e’
+svArrowGlyph.cpp:678: warning: unused variable ‘min_size’
+svArrowGlyph.cpp: In member function ‘void __svl_lib::svArrowGlyph::SetArrows()’:
+svArrowGlyph.cpp:747: warning: unused variable ‘s’
+svArrowGlyph.cpp:747: warning: unused variable ‘e’
+svArrowGlyph.cpp: In member function ‘void __svl_lib::svArrowGlyph::createSphereArraysAndVBOs()’:
+svArrowGlyph.cpp:841: warning: unused variable ‘radius’
+svArrowGlyph.cpp:844: warning: unused variable ‘size’
+svArrowGlyph.cpp: In member function ‘void __svl_lib::svArrowGlyph::drawSphereDirectWithDataFromArrays()’:
+svArrowGlyph.cpp:906: warning: unused variable ‘j’
+svArrowGlyph.cpp: In member function ‘void __svl_lib::svArrowGlyph::DrawSpring(__svl_lib::svVector3, __svl_lib::svVector3, double, double, double)’:
+svArrowGlyph.cpp:1045: warning: unused variable ‘rotationAngle’
+svArrowGlyph.cpp: In member function ‘void __svl_lib::svArrowGlyph::svArrowGlyphRenderArrow(float)’:
+svArrowGlyph.cpp:1093: warning: unused variable ‘slices’
+svArrowGlyph.cpp:1094: warning: unused variable ‘stacks’
+svArrowGlyph.cpp:1095: warning: unused variable ‘vertices’
+svArrowGlyph.cpp:1117: warning: unused variable ‘count’
+svArrowGlyph.cpp: In member function ‘void __svl_lib::svArrowGlyph::cleanup()’:
+svArrowGlyph.cpp:1577: warning: comparison between signed and unsigned integer expressions
+svArrowGlyph.cpp:1579: warning: comparison between signed and unsigned integer expressions
+g++ -D_VTK -O3 -Wall -DNDEBUG -Winvalid-pch -m64 -fopenmp -msse4.2 -c  -I/usr/include -I../LU -I../jcUtil -I../dual_depth_peeling/common/GLEW/include -I../dual_depth_peeling/common/include/ -I../dual_depth_peeling/common/nvModel/include -o svArrowSelection.o svArrowSelection.cpp 
+In file included from svUtil.h:9,
+                 from svArrowSelection.h:23,
+                 from svArrowSelection.cpp:11:
+svVectorField.h: In member function ‘virtual __svl_lib::svVector3 __svl_lib::svVectorField::GetVector(const __svl_lib::svParticle&)’:
+svVectorField.h:73: warning: no return statement in function returning non-void
+svVectorField.h: In member function ‘virtual __svl_lib::svVector3 __svl_lib::svVectorField::GetVector(const __svl_lib::svVector3&, __svl_lib::svScalar)’:
+svVectorField.h:74: warning: no return statement in function returning non-void
+In file included from svArrowSelection.cpp:11:
+svArrowSelection.h: In member function ‘__svl_lib::svVector3* __svl_lib::svArrowSelection::GetPoints()’:
+svArrowSelection.h:54: warning: comparison between signed and unsigned integer expressions
+svArrowSelection.cpp: In member function ‘void __svl_lib::svArrowSelection::SetSelectedMarker(__svl_lib::svVector3)’:
+svArrowSelection.cpp:76: warning: comparison between signed and unsigned integer expressions
+svArrowSelection.cpp: In member function ‘void __svl_lib::svArrowSelection::DeleteMarker(__svl_lib::svVector3)’:
+svArrowSelection.cpp:297: warning: comparison between signed and unsigned integer expressions
+svArrowSelection.cpp: In member function ‘void __svl_lib::svArrowSelection::DeleteMarker()’:
+svArrowSelection.cpp:319: warning: comparison between signed and unsigned integer expressions
+svArrowSelection.cpp: In member function ‘void __svl_lib::svArrowSelection::Find_Current_Nearest(__svl_lib::svVector3, __svl_lib::svVector3, GLfloat*)’:
+svArrowSelection.cpp:479: warning: comparison between signed and unsigned integer expressions
+svArrowSelection.cpp: In member function ‘void __svl_lib::svArrowSelection::Find_Nearest(__svl_lib::svVector3, __svl_lib::svVector3, GLfloat*)’:
+svArrowSelection.cpp:625: warning: comparison between signed and unsigned integer expressions
+svArrowSelection.cpp: In member function ‘__svl_lib::svVector3* __svl_lib::svArrowSelection::GetSelected2DAllPos(GLfloat*)’:
+svArrowSelection.cpp:672: warning: comparison between signed and unsigned integer expressions
+svArrowSelection.cpp: In member function ‘void __svl_lib::svArrowSelection::SetSelectedMarker(__svl_lib::svVector3)’:
+svArrowSelection.cpp:73: warning: ‘in’ may be used uninitialized in this function
+svArrowSelection.cpp: In member function ‘void __svl_lib::svArrowSelection::DeleteMarker(__svl_lib::svVector3)’:
+svArrowSelection.cpp:293: warning: ‘in’ may be used uninitialized in this function
+g++ -D_VTK -O3 -Wall -DNDEBUG -Winvalid-pch -m64 -fopenmp -msse4.2 -c  -I/usr/include -I../LU -I../jcUtil -I../dual_depth_peeling/common/GLEW/include -I../dual_depth_peeling/common/include/ -I../dual_depth_peeling/common/nvModel/include -o svSlice.o svSlice.cpp
+In file included from svUtil.h:9,
+                 from svSlice.h:10,
+                 from svSlice.cpp:1:
+svVectorField.h: In member function ‘virtual __svl_lib::svVector3 __svl_lib::svVectorField::GetVector(const __svl_lib::svParticle&)’:
+svVectorField.h:73: warning: no return statement in function returning non-void
+svVectorField.h: In member function ‘virtual __svl_lib::svVector3 __svl_lib::svVectorField::GetVector(const __svl_lib::svVector3&, __svl_lib::svScalar)’:
+svVectorField.h:74: warning: no return statement in function returning non-void
+make: *** [svSlice.o] Interrupt

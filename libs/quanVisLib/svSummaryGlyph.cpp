@@ -1,3 +1,7 @@
+
+#include "svSummaryGlyph.h"
+
+
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
@@ -6,7 +10,6 @@
 
 #include <iostream>
 #include <fstream>
-#include "svSummaryGlyph.h"
 #include "svException.h"
 #include "svUtil.h"
 
@@ -93,11 +96,13 @@ void svSummaryGlyph::Generate(float alpha)
   }
 //cerr<<"done1"<<endl;
   for(int i=0;i<seed_num;i++)
-  {//cerr<<i<<endl
+  {//cerr<<i<<endl;
      for(int j=0;j<glyph[i].size();j++)
      {
-		 if(visibleLabel[i][j])
-		 {
+
+                 if(visibleLabel[i][j])
+                 {
+
          int in = clusterLabel[i][j]+1;
          
          summaryPos[in][0] = summaryPos[in][0] + glyph[i][j][0];  
@@ -113,7 +118,7 @@ void svSummaryGlyph::Generate(float alpha)
          denDistribute[in][numPower-num-scaling-1]++;
 
          count[in] ++;
-	     }
+        }
      } 
   }  
 
@@ -287,6 +292,77 @@ void svSummaryGlyph::Generate(float alpha)
    count.free(); 
 }
 
+void svSummaryGlyph::RenderColor()
+{
+        ViewProperty viewproperty;
+       glGetDoublev (GL_MODELVIEW_MATRIX, viewproperty.mvmatrix);
+    glGetDoublev (GL_PROJECTION_MATRIX, viewproperty.projmatrix);
+    glGetIntegerv( GL_VIEWPORT, viewproperty.viewport );
+
+        glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            gluOrtho2D(0.0,(GLfloat) viewproperty.viewport[2], 0.0, (GLfloat) viewproperty.viewport[3]);
+            glMatrixMode(GL_MODELVIEW);
+            glLoadIdentity();
+            glDisable(GL_LIGHTING);
+
+
+        glPushMatrix();
+        glScalef(10,20,1);
+
+        char str[50];
+        float x = 1;
+        float y = 1;
+        float size = 1;
+        float m_length_in = 1;
+
+        glColor3f(1,1,1);
+
+        double index;
+
+     svScalarArray value;
+
+
+        sprintf(str, "Magnitude (summary glyph)");
+         glRasterPos2f(x ,(numPower+2)*y*(size) );
+                        for(int j=0;j<strlen(str);j++)
+                             glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, str[j]);
+    for(int i=numPower-1;i>=0;i--)
+     {
+          value.add((svScalar)i);
+     }
+     for(int i=numPower-1;i>=0;i--)
+
+        {
+            glColor3f(summaryDenColor [i][0],
+                                    summaryDenColor[i][1],
+                                   summaryDenColor[i][2]);
+
+                        glBegin(GL_QUADS);
+                        glVertex2f(x,y);
+                        glVertex2f(x+size,y);
+                        glVertex2f(x+size,y+size);
+                        glVertex2f(x,y+size);
+                        glEnd();
+
+        glColor3f(1,1,1);
+
+                        sprintf(str,"1e%0.0f",value[i]-scaling);
+                        glRasterPos2f(x + size*1.1, y );
+                        for(int j=0;j<strlen(str);j++)
+                             glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, str[j]);
+
+                        y = y + size;
+
+        }
+value.free();
+  glPopMatrix();
+                glMatrixMode(GL_PROJECTION);
+                glLoadMatrixd(viewproperty.projmatrix);
+                glMatrixMode(GL_MODELVIEW);
+                glLoadMatrixd(viewproperty.mvmatrix);
+
+}
 svSummaryGlyph::~svSummaryGlyph()
 {
  cleanup();

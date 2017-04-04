@@ -1,3 +1,4 @@
+#include "svDirectArrow.h"
 
 
 #ifdef __APPLE__
@@ -8,7 +9,6 @@
 
 #include <iostream>
 #include <fstream>
-#include "svDirectArrow.h"
 #include "svException.h"
 #include "svUtil.h"
 
@@ -34,6 +34,44 @@ svDirectArrow::svDirectArrow(svVectorField *f):svGlyph()//svVectorField* f, int 
 //  display_list = DEFAULT_DISPLAYLIST;
 }
 
+void svDirectArrow::SaveToFile(char *fname)
+{
+    ofstream outfile(fname);
+
+    int count = 0;
+
+    for(int i=0;i<seed_num;i++)
+    {
+          for(int j=0;j<glyph[i].size();j++)
+          {
+              count++;
+          }
+    }
+
+    outfile<<count<<endl;
+
+    for(int i=0;i<seed_num;i++)
+    {
+         // outfile<<glyph[i].size()<<endl;
+          for(int j=0;j<glyph[i].size();j++)
+          {
+              outfile<<2<<endl;
+              outfile<<glyph[i][j][0]<<" "<<glyph[i][j][1]<<" "<<glyph[i][j][2]
+               <<" "<<glyphColors[i][j][0]<<" "<<glyphColors[i][j][1]<<" "
+               <<glyphColors[i][j][2]<<endl;
+                        svVector3 end;
+                        end[0] = glyph[i][j][0]+mag[i][j]*glyphScale*dir[i][j][0];
+                        end[1] = glyph[i][j][1]+mag[i][j]*glyphScale*dir[i][j][1];
+                        end[2] = glyph[i][j][2]+mag[i][j]*glyphScale*dir[i][j][2];
+//cerr<<end[0]<<glyphScale<<" "<<mag[i][j]<<endl;
+            outfile<<end[0]<<" "<<end[1]<<"  "<<end[2]
+               <<" "<<glyphColors[i][j][0]<<" "<<glyphColors[i][j][1]<<" "
+               <<glyphColors[i][j][2]<<endl;
+          }
+    }
+
+    outfile.close();
+}
 
 void svDirectArrow::Generate() // this read specific data format
 {

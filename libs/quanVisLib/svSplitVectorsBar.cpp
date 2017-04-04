@@ -12,9 +12,11 @@ svSplitVectorsBar::svSplitVectorsBar(svVectorField *f) : svBarGlyph(f)
 
 }
 
-void svSplitVectorsBar::Generate(SplitVectorsProperty &property,
+void svSplitVectorsBar::Generate(SplitVectorsProperty &property,ViewProperty &viewproperty,
                             svVector3 planeDir)
 {
+  cleanup();
+
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
  glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
@@ -42,7 +44,7 @@ void svSplitVectorsBar::Generate(SplitVectorsProperty &property,
              sortbar.push_back(tmpbar);
           }
       }
-      sort(sortbar.begin(), sortbar.end(), compare_sortbar);
+//      sort(sortbar.begin(), sortbar.end(), compare_sortbar);
 
       for(int ii=0;ii<sortbar.size();ii++)
       {
@@ -60,13 +62,13 @@ void svSplitVectorsBar::Generate(SplitVectorsProperty &property,
 
              if(dot(dir[i][j], planeDir)>0)
              {
-                shift = glyph[i][j] + planeDir*barproperty.circleradius
-                                    -v*barproperty.circleradius;
+                shift = glyph[i][j] //+ planeDir*barproperty.circleradius
+                                    -dir[i][j]*barproperty.circleradius;
              }
              else
              {
-                shift = glyph[i][j] - planeDir*barproperty.circleradius
-                                    -v*barproperty.circleradius;
+                shift = glyph[i][j] //- planeDir*barproperty.circleradius
+                                    -dir[i][j]*barproperty.circleradius;
              }
 
              glColor4f(barproperty.circlecolor[0],barproperty.circlecolor[1],
@@ -87,6 +89,7 @@ void svSplitVectorsBar::Generate(SplitVectorsProperty &property,
            svScalar coe = mag[i][j]/pow(10., exp);
 
            exp = exp + property.shiftexp;
+//cerr<<coe<<" "<<exp<<endl;
              svVector3 v1 = dir[i][j];
              svVector3 v2 = planeDir;
              v2.normalize();
@@ -96,7 +99,10 @@ void svSplitVectorsBar::Generate(SplitVectorsProperty &property,
              svVector3 shiftv;
              shiftv = normalize(cross(dir[i][j], v));
              svScalar shift;
-             shift = barproperty.circleradius/8.;
+             shift = barproperty.circleradius/4.;
+
+             svVector3 eyev  = viewproperty.eye; eyev.normalize();
+             if(dot(shiftv, eyev)>0)shift=-shift;
 
                svVector3 coep;
                svScalar cw = property.coeWidth * barproperty.scalex;
@@ -112,8 +118,9 @@ void svSplitVectorsBar::Generate(SplitVectorsProperty &property,
                glDisable(GL_LIGHT0);
                glColor4f(barproperty.legendcolor[0], barproperty.legendcolor[1], barproperty.legendcolor[2],barproperty.legendcolor[3]);
                glLineWidth(1.);
-               svScalar lh =1  *property.expHeight*barproperty.scaley;
+               svScalar lh =barproperty.legend * pow(10, property.shiftexp) *property.expHeight*barproperty.scaley;
 //(getNumOfIntegerDigits(barproperty.legend)+property.shiftexp)*property.expHeight*barproperty.scaley;
+              glLineWidth(1.5);
                glBegin(GL_LINES);
                glVertex3f(coep[0] + v[0] * cw/2.+ shiftv[0]*shift,
                        coep[1] + v[1] * cw/2.+ shiftv[1]*shift,
@@ -163,9 +170,24 @@ void svSplitVectorsBar::Generate(SplitVectorsProperty &property,
                            expp[1]+dir[i][j][1]*eh,
                            expp[2]+dir[i][j][2]*eh);
                glEnd();
+             
 
+              if(exp > coe)
+              { 
+               barEnd1[i].add(expp);
+               barEnd2[i].add(expp + v * ew);
+               barEnd3[i].add(expp + v*ew + dir[i][j] * eh);
+               barEnd4[i].add(expp+dir[i][j] * eh);
+              }
+              else
+              {
+               barEnd1[i].add(coep);
+               barEnd2[i].add(coep + v * cw);
+               barEnd3[i].add(coep + v*cw + dir[i][j] * ch);
+               barEnd4[i].add(coep+dir[i][j] * ch);
+              }
 
-//               glDisable(GL_POLYGON_OFFSET_FILL);
+//                glDisable(GL_POLYGON_OFFSET_FILL);
 
            }
           }  
@@ -179,5 +201,57 @@ void svSplitVectorsBar::Render()
 {
   glCallList(display_list);
 }
+svVector3 svSplitVectorsBar::GetEnd(SplitVectorsProperty &property, ViewProperty &viewproperty,
+               svVector3 planeDir,
+                int seed, int index)
+{
+int i = seed;
+int j = index;
 
+           svScalar exp = getNumOfIntegerDigits(mag[i][j]);
+           svScalar coe = mag[i][j]/pow(10., exp);
+
+           exp = exp + property.shiftexp;
+
+               dir[seed][index].normalize();
+             svVector3 v1 = dir[seed][index];
+             svVector3 v2 = planeDir;
+             v2.normalize();
+             svVector3 v = cross(v1, v2);
+             v.normalize();
+          svVector3 p3;
+
+             svVector3 shiftv;
+             shiftv = normalize(cross(dir[i][j], v));
+             svScalar shift;
+             shift = barproperty.circleradius/4.;
+
+               svVector3 coep;
+               svScalar cw = property.coeWidth * barproperty.scalex;
+               svScalar ch = property.coeHeight * coe * barproperty.scaley;
+               svVector3 expp;
+               svScalar ew = property.expWidth* barproperty.scalex;
+               svScalar eh = property.expHeight * exp * barproperty.scaley;
+               expp = glyph[i][j]-shiftv*shift;
+              coep = glyph[i][j] +
+                       (svScalar)(ew/2.-cw/2.) * v + shiftv*shift;
+
+
+             svVector3 eyev  = viewproperty.eye; eyev.normalize();
+             if(dot(shiftv, eyev)<0)shift=-shift;
+
+     if(exp > coe)
+     {
+         p3[0] =expp[0]+v[0]*ew+dir[i][j][0]*eh;
+         p3[1] =expp[1]+v[1]*ew+dir[i][j][1]*eh;
+         p3[2] =expp[2]+v[2]*ew+dir[i][j][2]*eh;
+     }
+    else
+     {
+                 p3[0]=coep[0]+v[0]*cw+dir[i][j][0]*ch;
+                       p3[1]=    coep[1]+v[1]*cw+dir[i][j][1]*ch;
+                        p3[2]=   coep[2]+v[2]*cw+dir[i][j][2]*ch;
+      }
+          return p3;
+}
 }

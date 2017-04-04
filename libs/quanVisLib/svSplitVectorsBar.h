@@ -14,7 +14,7 @@
 
 
 namespace __svl_lib {
-
+/*
 typedef struct SplitVectorsProperty{
   svScalar shiftexp;
   svScalar expHeight;
@@ -24,6 +24,7 @@ typedef struct SplitVectorsProperty{
   svVector4 coeColor;
   svVector4 expColor;
 } SplitVectorsProperty;
+*/
 
 class svSplitVectorsBar : public svBarGlyph{
 
@@ -32,9 +33,12 @@ public:
 
    virtual ~svSplitVectorsBar(){};
 
-   virtual void Generate(SplitVectorsProperty &property, 
+   virtual void Generate(SplitVectorsProperty &property,
+              ViewProperty &viewproperty, 
                             svVector3 planeDir);
-
+svVector3 GetEnd(SplitVectorsProperty &property, ViewProperty &viewproperty,
+               svVector3 planeDir,
+                int seed, int index);
    virtual void Render();
 
 protected:

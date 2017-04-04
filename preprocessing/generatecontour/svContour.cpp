@@ -52,7 +52,7 @@ void svContour::Get2DContour(char *infile,  double density) //density is only th
 	range = grid->GetScalarRange();
 //	if(type == 1) density = density * range[1];
 
-	//cerr<<infile<<" "<<density<<endl;
+//	cerr<<infile<<" "<<density<<endl;
 
         vtkContourFilter *iso = vtkContourFilter::New();
         iso->SetInputConnection(del2d->GetOutputPort());
@@ -61,9 +61,13 @@ void svContour::Get2DContour(char *infile,  double density) //density is only th
         vtkDataSetSurfaceFilter *filter = vtkDataSetSurfaceFilter::New();
         filter->SetInput(iso->GetOutput());
         //JC
+  //      cerr<<"a"<<endl;
         //filter->SetInputData(iso->GetOutput());
         filter->Update();
+    //    cerr<<"a"<<endl;
+
         vtkPolyData *pd = filter->GetOutput();
+      //  cerr<<"a"<<endl;
 
   	vtkSmartPointer<vtkPolygon> polygon = vtkSmartPointer<vtkPolygon>::New();
         for(int i=0;i<pd->GetNumberOfPoints();i++)
@@ -73,6 +77,7 @@ void svContour::Get2DContour(char *infile,  double density) //density is only th
 			polygon->GetPoints()->InsertNextPoint(tmpp[0], tmpp[1], tmpp[2]);
 	//delete [] tmpp;
 	}
+        //cerr<<"a"<<endl;
 	
   		double testIn[3] = {0., -0, -10.0};
   		double testOut[3] = {2.0, 0.5, 0.0};
@@ -100,7 +105,8 @@ void svContour::Get2DContour(char *infile,  double density) //density is only th
         for(int i=0;i<pd->GetNumberOfPoints();i++)
         {
 
-                p = pd->GetPoint(i);
+//cerr<<i<<endl;
+		p = pd->GetPoint(i);
 
 		p3.push_back(p[0]);
 		p3.push_back(p[1]);

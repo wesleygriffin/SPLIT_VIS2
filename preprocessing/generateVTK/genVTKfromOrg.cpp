@@ -751,10 +751,10 @@ void genVTKfromOrg::SaveRegiontoFile(char *file)
   for(int i=0;i<region_count.size();i++)
   {
 	  char *str = new char[200];
-	sprintf(str, "%s/region%d.txt", file, i+min_region);
+	sprintf(str, "%s/region%d.txt", file, unique_region[i]);//i+min_region);
 	ofstream outfile(str);
 
-	    outfile<<i<<endl; 
+	   // outfile<<i<<endl; 
 
 	    outfile<<region_count[i]<<endl;  
 		
@@ -763,11 +763,11 @@ void genVTKfromOrg::SaveRegiontoFile(char *file)
 	  {
 		if(data[j].region == i+min_region)
 	      	{
-			outfile<<data[j].px<<" "<<data[j].py<<" "<<data[j].pz<<" ";
+			outfile<<data[j].px<<" "<<data[j].py<<" "<<data[j].pz<<endl;
 
-	     		outfile<<data[j].vx<<" "<<data[j].vy<<" "<<data[j].vz<<" ";
+	    // 		outfile<<data[j].vx<<" "<<data[j].vy<<" "<<data[j].vz<<" ";
 
-	      		outfile<<data[j].den<<endl;
+	    //  		outfile<<data[j].den<<endl;
 	    }
 	  }
 	  delete [] str;
@@ -833,9 +833,60 @@ void genVTKfromOrg::SavetoVTK(char *file)
     outfile<<"DATASET UNSTRUCTURED_GRID"<<endl;   
 
     outfile<<"POINTS "<<splitData[i].size()<<" float"<<endl;   
+
+    Spin x,y;
+    x = splitData[i][0];
+    y = splitData[i][1];
+    
+    double xaxis[3];
+    xaxis[0] = y.px - x.px;
+    xaxis[1] = y.py - x.py;
+    xaxis[2] = y.pz - x.pz;
+
+    double sum = sqrt(xaxis[0]*xaxis[0]+xaxis[1]*xaxis[1]+xaxis[2]*xaxis[2]); 
+    xaxis[0] = xaxis[0]/sum;
+    xaxis[1] = xaxis[1]/sum;
+    xaxis[2] = xaxis[2]/sum;
+
+    double z[3];z[0]=plane_dir[0];z[1]=plane_dir[1];z[2]=plane_dir[2];
+    sum = sqrt(z[0]*z[0]+z[1]*z[1]+z[2]*z[2]);
+    z[0]=z[0]/sum;
+    z[1]=z[1]/sum;
+    z[2]=z[2]/sum;
+    double yaxis[3];
+    yaxis[0] = z[1]*xaxis[2] - z[2] * xaxis[1];
+    yaxis[1] = z[2]*xaxis[0] - z[0] * xaxis[2];
+    yaxis[2] = z[0]*xaxis[1] - z[1] * xaxis[0];
+
+    sum = sqrt(yaxis[0]*yaxis[0]+yaxis[1]*yaxis[1]+yaxis[2]*yaxis[2]);
+    yaxis[0] = yaxis[0]/sum;
+    yaxis[1] = yaxis[1]/sum;
+    yaxis[2] = yaxis[2]/sum;
+
+    char *name = new char[100];
+    sprintf(name, "%s/coor%d.txt", file,i);
+
+    ofstream coorout(name);
+    coorout<<x.px<<" "<<x.py<<" "<<x.pz<<endl;
+    coorout<<xaxis[0]<<" "<<xaxis[1]<<" "<<xaxis[2]<<endl;
+    coorout<<yaxis[0]<<" "<<yaxis[1]<<" "<<yaxis[2]<<endl;
+    coorout<<z[0]<<" "<<z[1]<<" "<<z[2]<<endl;
+    coorout.close();
+
+    delete [] name;
+
     for(int j=0;j<splitData[i].size();j++)
     {
-      outfile<<splitData[i][j].px<<" "<<splitData[i][j].py<<" "<<splitData[i][j].pz<<endl;
+      double tmp[3];
+      tmp[0] = splitData[i][j].px - x.px;
+      tmp[1] = splitData[i][j].py - x.py;
+      tmp[2] = splitData[i][j].pz - x.pz;
+
+      double xvalue = tmp[0] * xaxis[0] + tmp[1] * xaxis[1] + tmp[2] * xaxis[2];
+      double yvalue = tmp[0] * yaxis[0] + tmp[1] * yaxis[1] + tmp[2] * yaxis[2]; 
+
+  //    outfile<<splitData[i][j].px<<" "<<splitData[i][j].py<<" "<<splitData[i][j].pz<<endl;
+    	outfile<<xvalue<<" "<<yvalue<<" 0"<<endl;
     }
     outfile<<endl;
     
@@ -897,7 +948,7 @@ void genVTKfromOrg::SavetoVTK(char *file)
   outfile.close();
 
 //=======================================================
-  for(int i=0;i<region_count.size();i++)
+/*  for(int i=0;i<region_count.size();i++)
   {
 	sprintf(str, "%s/region%d.vtk", file, i+min_region);
 	outfile.open(str);
@@ -942,13 +993,18 @@ void genVTKfromOrg::SavetoVTK(char *file)
 
 	outfile.close();
   }
-
+*/
   delete [] str;
 }
 
 void genVTKfromOrg::SaveDataFormat(char *file)
 {
 	ofstream outfile(file);
+
+        outfile<<unique_region.size()<<endl;
+        for(int i=0;i<unique_region.size();i++)
+            outfile<<unique_region[i]<<" ";
+        outfile<<endl;
 
 	vector<double> temp_x;
 	for(int i=0;i<dataSize;i++)

@@ -1,12 +1,13 @@
 #ifndef __SV_SUMMARY_GLYPH_H
 #define __SV_SUMMARY_GLYPH_H
+#include <string.h>
+#include "svGlyph.h"
 
 #include "svArray.h"
 #include "svVectorField.h"
 #include "svParticle.h"
 #include "svPrimitive.h"
 #include "svLut.h"
-#include "svGlyph.h"
 
 #ifndef PI
 #define PI 3.1415926
@@ -29,6 +30,9 @@ class svSummaryGlyph : public svGlyph {
 
     virtual void Generate(float alpha);
     virtual void Render();
+    virtual void RenderColor();
+
+
 protected:
     void cleanup();
     void RenderAnnulus(svVector3 pos, svVector3 vel,

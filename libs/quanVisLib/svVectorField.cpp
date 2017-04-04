@@ -12,6 +12,7 @@
 #include "svVectorField.h"
 #include "svConfig.h"
 
+
 using namespace std;
 
 #define DEFAULT_DELTA_T      0.001
@@ -63,8 +64,8 @@ void svContour::ComputeContours(char *vtkfName, char *contourfName, float contou
       char *exe = new char[2048];
 	  //char *contourname = new char[400];
 	  //sprintf(contourname, "%s/%s/%s", field->dataDir, field->dataFile, outContourfname); //contour.txt
-      sprintf(exe, "%s/Contour %s %s %g", 
-	      BIN_DIR, vtkfName, contourfName, contourValue);
+      sprintf(exe, "%s/Contour %s %s %g",  BIN_DIR,
+	      vtkfName, contourfName, contourValue);
 //cerr<<exe<<endl;		  
       system(exe); 
  //    cerr<<exe<<endl;
@@ -77,6 +78,61 @@ void svContour::ComputeContours(char *vtkfName, char *contourfName, float contou
 }
 /*contour end*/
 
+void svVectorField::ProcessContour(char *contourfile, char *dir, int layer)
+{
+     char *tmp = new char[200];
+     sprintf(tmp, "%s/coor%d.txt", dir, layer);
+
+     svVector3 pos;
+     svVector3 x;
+        svVector3 y;
+        svVector3 z;
+
+     ifstream infile(tmp);
+        infile>>pos[0]>>pos[1]>>pos[2];
+        infile>>x[0]>>x[1]>>x[2];
+        infile>>y[0]>>y[1]>>y[2];
+        infile>>z[0]>>z[1]>>z[2];
+     infile.close();
+
+        delete [] tmp;
+        infile.open(contourfile);
+        int n;
+        infile>>n;
+        svVector3Array ppp;
+        svVector3Array vvv;
+        svScalarArray mmm;
+        for(int i=0;i<n;i++)
+        {
+                double p[3]; svVector3 v; svScalar m;
+                infile>>p[0]>>p[1]>>p[2]>>v[0]>>v[1]>>v[2]>>m;
+
+                svVector3 pp;
+                pp[0] = pos[0] + p[0] * x[0];
+                pp[1] = pos[1] + p[0] * x[1];
+                pp[2] = pos[2] + p[0] * x[2];
+                pp[0] = pp[0] + p[1] * y[0];
+                pp[1] = pp[1] + p[1] * y[1];
+                pp[2] = pp[2] + p[1] * y[2];
+                ppp.add(pp);
+                vvv.add(v);
+                mmm.add(m);
+        }
+        infile.close();
+
+        ofstream outfile(contourfile);
+        outfile<<n<<endl;
+        for(int i=0;i<n;i++)
+        {
+                double p[7];
+                outfile<<ppp[i][0]<<" "<<ppp[i][1]<<" "<<ppp[i][2]<<" "
+                       <<vvv[i][0]<<" "<<vvv[i][1]<<" "<<vvv[i][2]<<" "
+                       <<mmm[i]<<endl;
+        }
+        outfile.close() ;
+
+        ppp.free();vvv.free();mmm.free();
+}
 
 /*KMeans clustering*/
 
@@ -206,9 +262,8 @@ void svKmeans::ComputeClusters(char *datafName, char *clusterfName,
 		//{	
 			char *exe = new char[2048];
 			
-			sprintf(exe, "%s/kmlsample -d %d -k %d -max %d -df %s > %s 2>&1",  
-			BIN_DIR,
-            dim,
+			sprintf(exe, "%s/kmlsample -d %d -k %d -max %d -df %s > %s 2>&1",  BIN_DIR,
+			dim,
 			numCluster,
 			dataSize,
 			datafName,

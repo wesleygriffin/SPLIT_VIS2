@@ -374,6 +374,35 @@ bool LessAngle(svVector3 p1, svVector3 p2, svVector3 p)
     return false;
 }
 //https://sites.google.com/site/justinscsstuff/object-intersection
+//
+bool rayPlaneIntersect(svVector3 rPos, svVector3 rDir,
+svVector3 pPos0, svVector3 pPos1, svVector3 pPos2,svVector3 pPos3,
+svVector3 pDir, svScalar &distance, svVector3 &pos)
+{
+    float nDotD = GetDot(pDir, rDir);
+
+    distance = 9e+9;
+
+    if (nDotD == 0)
+        return false;
+    svVector3 x = rPos + rDir * (-GetDot(pDir, rPos - pPos0) / nDotD);
+    svVector3 a = pPos0;
+    svVector3 b = pPos1;
+    svVector3 c = pPos2;
+    svVector3 d = pPos3;
+
+    if (GetDot(cross(b-a, x-a), pDir) < 0) return false;
+    if (GetDot(cross(c-b, x-b), pDir) < 0) return false;
+    if (GetDot(cross(d-c, x-c), pDir) < 0) return false;
+    if (GetDot(cross(a-d, x-d), pDir) < 0) return false;    
+
+    distance = sqrt((x[0] - rPos[0])*(x[0] - rPos[0])
+                +  (x[1] - rPos[1])*(x[1] - rPos[1])
+                +  (x[2] - rPos[2])*(x[2] - rPos[2]));
+    pos = x;
+
+    return true;
+}
 bool rayTriangleIntersect(svVector3 rPos, svVector3 rDir, 
 			svVector3 pPos0, svVector3 pPos1, svVector3 pPos2,
 			svVector3 pDir, svScalar &distance, svVector3 &pos) 
@@ -384,13 +413,11 @@ bool rayTriangleIntersect(svVector3 rPos, svVector3 rDir,
 
     if (nDotD == 0)
         return false;
-
     svVector3 x = rPos + rDir * (-GetDot(pDir, rPos - pPos0) / nDotD);
     svVector3 a = pPos0;
     svVector3 b = pPos1;
     svVector3 c = pPos2;
 
-	//cerr<<x[0]<<" "<<x[1]<<" "<<x[2]<<endl;
 
     if (GetDot(cross(b-a, x-a), pDir) > 0) return false;
     if (GetDot(cross(c-b, x-b), pDir) > 0) return false;

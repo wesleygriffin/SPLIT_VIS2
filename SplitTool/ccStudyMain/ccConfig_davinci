@@ -1,0 +1,93 @@
+#task1
+#datadir:
+/home/davinci/Documents/henan/NIST/CrossVis/dataselection/3Ddata/output/task1task2/
+#dataindex:
+24 32
+#task2
+#datadir
+/home/davinci/Documents/henan/NIST/CrossVis/dataselection/3Ddata/output/task1task2/
+#dataindex
+12 23
+#task3
+#datadir
+/home/davinci/Documents/henan/NIST/CrossVis/dataselection/3Ddata/intermediate/task3/spin_proj_vs_pos_shift_2a_z1.8d3_12T_29
+#dataindex
+0 31
+#task4
+#datadir
+/home/davinci/Documents/henan/NIST/CrossVis/dataselection/3Ddata/
+#dataindex
+0 31
+#task5
+#datadir
+/home/davinci/Documents/henan/NIST/CrossVis/dataselection/3Ddata/intermediate/task5/spin_proj_norm_vs_pos_p_v_z_10z/
+#dataindex
+0 180
+#task6
+#datadir
+/home/davinci/Documents/henan/NIST/CrossVis/dataselection/2Ddata/output/task6/
+#dataindex
+0 180
+#task7
+#datadir
+/home/davinci/Documents/henan/NIST/CrossVis/dataselection/2Ddata/output/task7/
+#dataindex
+0 59
+#planeCenter 0 0 0
+#planeDirection 0 0 1
+#planeDistance 0.25
+#bend
+6
+1e-7 1 1
+1.5e-6 7.5 2
+4e-6 4 10
+1.5e-5 7.5 20
+4e-5 8 50
+1e-4 10 100
+#bendlegend
+6
+1e-7 10 10 1
+1.5e-6 20 10 2
+4e-6 100 10 10
+1.5e-5 200 10 20
+4e-5 500 10 50
+1e-4 1000 10 100
+3
+1e-7 10 10 1
+4e-6 100 10 10
+1e-4 1000 10 100
+2
+1e-7 10 10 1
+4e-6 100 10 10
+2
+1e-7 20 10 2
+1.5e-5 200 10 20
+#barproperty
+#scalex
+0.006
+#scaley
+0.06
+#direct
+#width
+5
+#splitvectors
+#shiftexp
+7
+#height
+1
+#expwidth
+5
+#coewidth
+2.5
+
+0.00625
+0.0625
+#bendcolor
+#6
+#49  54 149
+#69  117 180
+#145 191 219
+#254 224 144
+#252 141 89
+#215 48 39
+#

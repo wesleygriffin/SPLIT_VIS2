@@ -4,12 +4,13 @@
 #ifndef __SV_DIRECT_ARROW_H
 #define __SV_DIRECT_ARROW_H
 
-#include "svArray.h"
-#include "svVectorField.h"
-#include "svParticle.h"
-#include "svPrimitive.h"
-#include "svLut.h"
 #include "svGlyph.h"
+
+//#include "svArray.h"
+//#include "svVectorField.h"
+//#include "svParticle.h"
+//#include "svPrimitive.h"
+//#include "svLut.h"
 
 #ifndef PI
 #define PI 3.1415926
@@ -26,6 +27,8 @@ class svDirectArrow : public svGlyph {
     svDirectArrow(svVectorField *f);
 	
     virtual ~svDirectArrow(){};
+
+    virtual void SaveToFile(char *fname);
   
     virtual void Render();
     virtual void Generate();

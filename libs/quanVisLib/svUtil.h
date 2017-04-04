@@ -46,7 +46,9 @@ svVector3 svAverage(const svVector3& v1, const svVector3& v2);
 
 svVector3 GetVertical(svVector3 pos, svVector3 dir,  ViewProperty &property);
 svVector3 GetVerticalByeye(svVector3 pos, svVector3 v, ViewProperty &property);
-
+bool rayPlaneIntersect(svVector3 rPos, svVector3 rDir,
+svVector3 pPos0, svVector3 pPos1, svVector3 pPos2,svVector3 pPos3,
+svVector3 pDir, svScalar &distance, svVector3 &pos);
 bool rayTriangleIntersect(svVector3 rPos, svVector3 rDir, 
 			svVector3 pPos0, svVector3 pPos1, svVector3 pPos2,
 			svVector3 pDir, svScalar &distance, svVector3 &pos) ;

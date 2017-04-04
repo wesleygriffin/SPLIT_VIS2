@@ -1,3 +1,6 @@
+#include "svCylinderGlyph.h"
+
+
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
@@ -11,7 +14,6 @@
 
 
 
-#include "svCylinderGlyph.h"
 
 using namespace std;
 
@@ -22,6 +24,10 @@ svCylinderGlyph::svCylinderGlyph(svVectorField *f):svGlyph()
 {
   field = f;
 
+       cylinderEnd1 = new svVector3Array[1];
+       cylinderEnd2 = new svVector3Array[1];
+       cylinderEnd3 = new svVector3Array[1];
+       cylinderEnd4 = new svVector3Array[1];
 }
 void svCylinderGlyph::Draw_InnerLegend()
 {
@@ -119,6 +125,47 @@ void svCylinderGlyph::Draw_WidthLegend()
         glVertex3f(p2[0], p2[1], p2[2]);
         glEnd();
  }
+
+}
+
+void svCylinderGlyph::cleanup()
+{
+       if(cylinderEnd1 == NULL)
+       {
+             for(int i=0;i<seed_num;i++)
+             {
+                  cylinderEnd1[i].free();
+             }
+             delete [] cylinderEnd1;
+             cylinderEnd1 = NULL;
+       }
+       if(cylinderEnd2 == NULL)
+       {
+             for(int i=0;i<seed_num;i++)
+             {
+                  cylinderEnd2[i].free();
+             }
+             delete [] cylinderEnd2;
+             cylinderEnd2 = NULL;
+       }
+       if(cylinderEnd3 == NULL)
+       {
+             for(int i=0;i<seed_num;i++)
+             {
+                  cylinderEnd3[i].free();
+             }
+             delete [] cylinderEnd3;
+             cylinderEnd3 = NULL;
+       }
+       if(cylinderEnd4 == NULL)
+       {
+             for(int i=0;i<seed_num;i++)
+             {
+                  cylinderEnd4[i].free();
+             }
+             delete [] cylinderEnd4;
+             cylinderEnd4 = NULL;
+       }
 
 }
 

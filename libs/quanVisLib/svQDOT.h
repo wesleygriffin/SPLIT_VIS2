@@ -44,20 +44,21 @@ class svQDOT : public svVectorField
                             svVector3 ppos,
 					svVector3 pdir, svScalar pdis);
 	virtual void New(char *formatfName);
-	
+	virtual void NewMesh(char *dir);
 	int GetPlaneIndex(svVector3 p);
 	svScalar GetMaxDensitybyLayer(char *densityfName, int layer);
-
+        vector<int> GetUniqueRegion(){return unique_region;}
         svVector3 GetPlaneDir(){return plane_dir;}
+        svVector3 GetPlanePosition(int index);
 	virtual svInt GetPlaneNum(){return plane_num;}
         svInt GetNumPower(){return numPower;}
         svScalar GetScaling(){return scaling;}	
-        svScalar GetZdistance(){return zdistance;}
     virtual ~svQDOT(){}
 	
 protected:
 
 	//svInt Cluster_isWhole;
+        vector<int> unique_region;
 	
 	svInt plane_num;
 	svVector3 min_plane;
