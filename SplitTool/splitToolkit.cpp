@@ -214,6 +214,7 @@ void display(void)
 void key(unsigned char key, int x, int y)
 {
         switch (key) {
+	case 'H':
         case 'h':
               trackball.reset();
               break;
