@@ -3,21 +3,6 @@ Build the program:
     cd build && make && make install && cd ..
 
 Run the program:
+    set OMP_NUM_THREADS=<number_of_threads_to _use>
+    export OMP_NUM_THREADS=<number_of_threads_to _use>
     LD_LIBRARY_PATH=LOCATION_TO_VTK bin/splitToolkit <CONFIG_FILE>
-
-To update contour, clustering and rendering, please modify and save config
-file first and then press "u" or "U" button.
-If you'd like to load a different data, please run a new program. 
-
-Key:
-"u" or "U": re-load config file
-"s" or "S": enable/disable summary glyphs
-The following keys are used to control visible layers:
-"l": input the index of min and max layers
-"z": decrease the index of the min layer by 1
-"Z": increase the index of the min layer by 1
-"x": decrease the index of the max layer by 1
-"X": increase the index of the max layer by 1
-"t": decrease the index of all visible layers by 1. If the current visible layer is layer 5, the new visible layer will be 4.
-"T": increase the index of all visible layers by 1. If the current visible layer is layer 5, the new visible layer will be 6.
-
