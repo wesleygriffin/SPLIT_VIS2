@@ -20,6 +20,8 @@ endif()
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
 
+set(GLEW_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/dual_depth_peeling/common/GLEW/include)
+set(GLEW_LIBRARY ${CMAKE_CURRENT_SOURCE_DIR}/libs/dual_depth_peeling/common/GLEW/lib)
 find_package(GLEW REQUIRED)
 if (GLEW_FOUND)
     include_directories(${GLEW_INCLUDE_DIRS})
