@@ -301,94 +301,376 @@ svSymmetry::svSymmetry(svVectorField *inputfield)
     field = inputfield;
 }
 
-//constrain: only allow symmetry patterns 
-void svSymmetry::ComputeSymmetry(SymmetryProperty &property)
+int svSymmetry::SymmetryPair(SymmetryProperty &property, svVector3 pos, svVector3 dir,
+                    svVector3 *pair, svVector3 *pairdir,
+                    SYMMETRYTYPE type)
 {
-   vector<int> index;
-   svVector3Array pos;
+            int count = 0;
+            for(int t=0;t<property.pos.size();t++)
+            {
+                 svVector3 d = property.pos[t] - pos;
+                 svVector3 norm;
+                 if(dot(d, property.dir[t])<0)
+                 {
+                          norm = - property.dir[t];
+                 }
+                 else norm = property.dir[t];
+                 svScalar distance = dot(d, norm)*2;
+                 svVector3 p = pos + norm * distance;
+                 
+                 svVector3 d2 = property.pos[t] - (pos+dir);
+                 svScalar distance2 = dot(d2, norm) * 2;
+                 svVector3 p2 = (pos + dir) + norm * distance2;
 
-   ifstream infile(property.datafile);
-//cerr<<property.datafile<<endl;
+                 svVector3 dir2 = normalize(p2 - p);
+
+               if(!(fabs(p[0]-pos[0])<0.001
+                    && fabs(p[1]-pos[1])<0.001
+                    && fabs(p[2]-pos[2])<0.001))
+               {
+                  if(type == _ANTISYMMETRY)
+                  {
+                      pairdir[count]=-dir2;
+                      pair[count] = p;
+                      count++;  
+                  } 
+                  else if(type == _POSITIVE)
+                  {
+                       pairdir[count] = dir2;
+                       pair[count] = p;
+                       count++;
+                  }
+                  else if(type == _NEGATIVENEAR)
+                  {
+                        if(dot(dir, norm)>0)
+                        {
+                              pairdir[count] = dir2;
+                              pair[count] = p;
+                              count++;
+                        }
+                  }
+                  else if(type == _NEGATIVEFAR)
+                  {
+                        if(dot(dir, norm)<0)
+                        {                                 
+                              pairdir[count] = dir2;
+                              pair[count] = p;
+                              count++;
+                        }
+                  }
+               }
+            }
+          
+            return count;
+}
+
+void svSymmetry::ComputeAntiSymmetry(SymmetryProperty &property)
+{
+      ComputeSymmetry(property, _ANTISYMMETRY);
+}
+
+void svSymmetry::ComputePositiveSymmetry(SymmetryProperty &property)
+{
+      ComputeSymmetry(property, _POSITIVE);
+}
+
+void svSymmetry::ComputeNegativeNearSymmetry(SymmetryProperty &property)
+{
+      ComputeSymmetry(property, _NEGATIVENEAR);
+}
+
+void svSymmetry::ComputeNegativeFarSymmetry(SymmetryProperty &property)
+{
+      ComputeSymmetry(property, _NEGATIVEFAR);
+}
+
+
+void svSymmetry::ComputeSymmetry(SymmetryProperty &property, SYMMETRYTYPE type)
+{
+
+cout<<"Symmetry processing ..."<<endl;
+   ifstream test(property.outputfile);
+
+   if(!test.is_open())
+  {
+   svIntArray * index;
+   svVector3Array *pos;
+   svVector3Array *dir;
+
+   ifstream infile(property.inputfile);
    int n;
    infile>>n;
-//   pos.resize(n);
+   pos = new svVector3Array[n];
+   dir = new svVector3Array[n];
+   index = new svIntArray[n];
+   int N = 0;
    for(int i=0;i<n;i++)
-   {//cerr<<i<<" "<<pos[i][0]<<" "<<n<<endl;
+   {
+       int m;
+       infile>>m;
+       for(int j=0;j<m;j++)
+       {
        double tmp[4];
-       svVector3 p;
+       svVector3 p,d;
        infile>>p[0]>>p[1]>>p[2]
-             >>tmp[0]>>tmp[1]>>tmp[2]>>tmp[3];
-       index.push_back(-1);
-       pos.add(p);
-
-      // cerr<<i<<" "<<pos[i][0]<<" "<<pos[i][1]<<" "<<pos[i][2]<<endl;
+             >>d[0]>>d[1]>>d[2]>>tmp[3];
+       index[i].add(-1);
+       pos[i].add(p);
+       dir[i].add(d);
+       N++;
+       }
    }
-   
+   vector< vector<int> > symmetry[2];
+   symmetry[0].resize(N);
+   symmetry[1].resize(N);   
+
    infile.close();
-//cerr<<property.datafile<<endl;
    int count = -1;
+   int ii=0;
+cerr<<property.inputfile<<n<<endl;
    for(int i=0;i<n;i++)
-   { //cerr<<i<<endl;
-        vector<int> symmetryindex;
-        if(index[i] == -1)
+   { 
+      for(int j=0;j<pos[i].size();j++)
+      {
+        vector<int> symmetryindex[2];
+        if(index[i][j] == -1)
         {
-            // #pragma omp for
-             for(int j=0;j<n;j++)
-             {//cerr<<"==="<<endl;
-                for(int t =0;t<property.pos.size();t++)
-                {
-                 //    svVector3 p1 = pos[i] - property.pos[t];
-                 //    svVector3 p2 = pos[j] - property.pos[t];
-                     svVector3 p = normalize(pos[i] - pos[j]);
-                     svScalar d1 = (pos[i][0] - property.pos[t][0])*(pos[i][0] - property.pos[t][0])
-                      +(pos[i][1] - property.pos[t][1])*(pos[i][1] - property.pos[t][1])
-                      +(pos[i][2] - property.pos[t][2])*(pos[i][2] - property.pos[t][2]);
-                     svScalar d2 = (pos[j][0] - property.pos[t][0])*(pos[j][0] - property.pos[t][0])
-                      +(pos[j][1] - property.pos[t][1])*(pos[j][1] - property.pos[t][1])
-                      +(pos[j][2] - property.pos[t][2])*(pos[j][2] - property.pos[t][2]);
-
-                /*     if(pos[i][0] == 11 && pos[i][1] == 18
-                        && pos[j][0] == -18 && pos[j][1] == -11)
-                     {
-                          cerr<<p[0]<<" "<<p[1]<<" "<<p[2]<<" "<<fabs(dot(p, property.dir[t]))<<" "<<fabs(dot(normalize(pos[i] - pos[j]), property.dir[t]))<<endl;
-                     }
+             vector<svVector3> pair;
+             vector<svVector3> pairdir;
+             vector<int> planeindex;
+/*            for(int t=0;t<property.pos.size();t++)
+            {
+                 svVector3 d = property.pos[t] - pos[i][j];
+                 svVector3 norm;
+                 if(dot(d, property.dir[t])<0)
+                 {
+                          norm = - property.dir[t];
+                 }
+                 else norm = property.dir[t];
+                 svScalar distance = dot(d, norm)*2;
+                 svVector3 p = pos[i][j] + norm * distance;
+               if(!(fabs(p[0]-pos[i][j][0])<0.001
+                    && fabs(p[1]-pos[i][j][1])<0.001
+                    && fabs(p[2]-pos[i][j][2])<0.001))
+                 pair.push_back(p);
+            }  
 */
-                     if(fabs(fabs(dot(p, property.dir[t]))-1.) <0.000001
-                    && fabs(d1-d2)<0.000001)
-                   // &&fabs(dot(normalize(pos[i] - pos[j]), property.dir[t]))<0.0000001)
-                     {
-                        symmetryindex.push_back(j);
-                        if(index[j] > -1)
-                        {
-                              index[i] = index[j];
-                        }
-                     }
 
+           svVector3 *pp = new svVector3[property.pos.size()];
+           svVector3 *dd = new svVector3[property.pos.size()];
+           int size = SymmetryPair(property, pos[i][j], dir[i][j],
+                    pp, dd,
+                    type);
+           // cerr<<type<<" "<<size<<" ";
+           if(type == _POSITIVE)
+           {
+              for(int t=0;t<size;t++)
+              {
+                if(fabs(dd[t][0]-dir[i][j][0])<1e-3
+                 && fabs(dd[t][1]-dir[i][j][1])<1e-3
+                 && fabs(dd[t][2]-dir[i][j][2])<1e-3)
+                 {
+                     pair.push_back(pp[t]);
+                     pairdir.push_back(dd[t]);
+                 }
+              }
+           }
+           else 
+           {
+              for(int t=0;t<size;t++)
+              {
+                  pair.push_back(pp[t]);
+                  pairdir.push_back(dd[t]);
+                 // cerr<<pp[t][0]<<" "<<pp[t][1]<<" "<<pp[t][2]<<" "<<dd[t][0]<<" "<<dd[t][1]<<" "<<dd[t][2]<<" ";
+              }//cerr<<endl;
+           }
+           delete [] pp;
+           delete [] dd;
+
+           for(int t=0;t<pair.size();t++)
+           {
+                svScalar distance = dot(pair[t] - property.planepos, property.planedir);
+                planeindex.push_back(distance/property.planedistance);
+           }
+
+           for(int t=0;t<planeindex.size();t++)
+           { 
+               if(planeindex[t]>=0 && planeindex[t]<n)
+               {
+                for(int tt=0;tt<pos[planeindex[t]].size();tt++)
+                {
+                      if(fabs(pos[planeindex[t]][tt][0] - pair[t][0])<1e-3
+                     && fabs(pos[planeindex[t]][tt][1] - pair[t][1])<1e-3
+                     && fabs(pos[planeindex[t]][tt][2] - pair[t][2])<1e-3
+                     && fabs(dir[planeindex[t]][tt][0] - pairdir[t][0])<1e-3
+                     && fabs(dir[planeindex[t]][tt][1] - pairdir[t][1])<1e-3
+                     && fabs(dir[planeindex[t]][tt][2] - pairdir[t][2])<1e-3)
+                    {
+                          symmetryindex[0].push_back(planeindex[t]);
+                          symmetryindex[1].push_back(tt);
+                          break; 
+                    }
+                }
+               }
+           }
+         //  cerr<<symmetryindex[0].size()<<endl;
+           pair.clear();
+           pairdir.clear();
+           planeindex.clear();
+ 
+             int value = -1;
+             for(int t=0;t<symmetryindex[0].size();t++)
+             {
+                if(index[symmetryindex[0][t]][symmetryindex[1][t]]!=-1)
+                {
+                       value = index[symmetryindex[0][t]][symmetryindex[1][t]];
                 }
              }
-             if(index[i] == -1)
+             index[i][j] = value;
+             if(index[i][j] == -1)
              {
                   count++;
-                  index[i] = count;
+                  index[i][j] = count;
              }
-             for(int j=0;j<symmetryindex.size();j++)
+             for(int t=0;t<symmetryindex[0].size();t++)
              {
-                  index[symmetryindex[j]] = index[i];
+                  bool flag = false;
+                  index[symmetryindex[0][t]][symmetryindex[1][t]] = index[i][j];
+                  for(int m=0;m<symmetry[0][index[i][j]].size();m++)
+                  {
+                        if(symmetryindex[0][t] == symmetry[0][index[i][j]][m]
+                           && symmetryindex[1][t] == symmetry[1][index[i][j]][m])
+                        {
+                              flag = true;
+                              break;
+                        }
+                  }                 
+                  if(!flag)
+                  {
+                      symmetry[0][index[i][j]].push_back(symmetryindex[0][t]);
+                      symmetry[1][index[i][j]].push_back(symmetryindex[1][t]);
+                  } 
              }
-      //       cerr<<symmetryindex.size()<<endl;
+                 bool flag = false;
+                 for(int m=0;m<symmetry[0][index[i][j]].size();m++)
+                  {
+                        if(i == symmetry[0][index[i][j]][m]
+                           && j == symmetry[1][index[i][j]][m])
+                        {
+                              flag = true;
+                              break;
+                        }
+                  }
+                  if(!flag)
+                  {
+                      symmetry[0][index[i][j]].push_back(i);
+                      symmetry[1][index[i][j]].push_back(j);
+                  }
         }
-        symmetryindex.clear();
+     //   for(int t=0;t<symmetryindex[0].size();t++)
+     //       cerr<<symmetryindex[0][t]<<" "<<symmetryindex[1][t]<<" ";
+     //   cerr<<endl;
+     //  cerr<<symmetryindex[0].size()<<endl;
+        symmetryindex[0].clear();
+        symmetryindex[1].clear();
+        ii++;
+      }
    }
-//cerr<<property.outputfile<<endl;
+/*
+  for(int i=0;i<n;i++)
+  {
+    for(int j=0;j<pos[i].size();j++)
+    {
+          if(index[i][j] == 1)
+               cout<<"a"<<symmetry[0][index[i][j]].size()<<endl;
+    }
+  }
+*/
+cerr<<n<<endl;
+//-----------savetofile-----------------
    ofstream outfile(property.outputfile);
    outfile<<count+1<<endl;
+   count = 0;
+   vector< vector< vector<int> > > list[2];
+   list[0].resize(n);
+   list[1].resize(n);
+ /* for(int i=0;i<N;i++)
+   { for(int j=0;j<symmetry[0][i].size();j++)
+     cout<<symmetry[0][i][j]<<" "<<symmetry[1][i][j]<<" ";
+     cout<<endl;
+   }cout<<endl; 
+*/
    for(int i=0;i<n;i++)
-   //      outfile<<pos[i][0]<<" "<<pos[i][1]<<" "<<pos[i][2]<<" "<<index[i]<<endl;
-            outfile<<index[i]<<endl;
+   {
+       // cerr<<i<<" "<<n<<endl;
+        list[0][i].resize(pos[i].size());
+        list[1][i].resize(pos[i].size());
+
+        for(int j=0;j<pos[i].size();j++)
+        {
+                list[0][i][j].push_back(i);
+                list[1][i][j].push_back(j);
+                for(int t=0;t<symmetry[0][index[i][j]].size();t++)
+                {
+                       if(i == symmetry[0][index[i][j]][t] 
+                        && j == symmetry[1][index[i][j]][t])
+                       {
+                               
+                       }
+                       else
+                       {
+                            list[0][i][j].push_back(symmetry[0][index[i][j]][t]);
+                            list[1][i][j].push_back(symmetry[1][index[i][j]][t]);
+                       }
+                       
+                }
+        }
+   }
+   for(int i=0;i<n;i++)
+   {
+          for(int j=0;j<pos[i].size();j++)
+          {
+                 outfile<<list[0][i][j].size()<<" ";
+                 for(int ii=0;ii<list[0][i][j].size();ii++)
+                         outfile<<list[0][i][j][ii]<<" "<<list[1][i][j][ii]<<" ";
+                 outfile<<endl;
+          }
+   }
+
+   for(int i=0;i<n;i++)
+   {
+          for(int j=0;j<pos[i].size();j++)
+          {
+                list[0][i][j].clear();
+                list[1][i][j].clear();
+          }
+          list[0][i].clear();
+          list[1][i].clear();
+   }
+   list[0].clear();
+   list[1].clear();
+
+   for(int i=0;i<N;i++)
+   {
+       symmetry[0][i].clear();
+       symmetry[1][i].clear();
+   }
+   symmetry[0].clear();
+   symmetry[1].clear();
+
    outfile.close();
 
-   pos.free();
-   index.clear();
+  for(int i=0;i<n;i++)
+ {  pos[i].free();
+    dir[i].free();
+   index[i].free();
+  }
+   delete [] dir;
+   delete [] pos;
+   delete [] index;
+  }
+  else
+     test.close();
 }
 
 /*Symmetry end*/

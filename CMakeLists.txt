@@ -9,6 +9,8 @@ set(BUILD_SHARED_LIBS OFF) # force static libraries
 find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
 
+
+
 FIND_PACKAGE( OpenMP REQUIRED)
 if(OPENMP_FOUND)
 message("OPENMP FOUND")
@@ -26,6 +28,7 @@ if (GLEW_FOUND)
     link_libraries(${GLEW_LIBRARIES})
 endif()
 
+#include_directories(${GLEW_INCLUDE_DIR})
 
 set(genVTK_SOURCES
     preprocessing/generateVTK/genVTK.cpp
@@ -52,6 +55,7 @@ ExternalProject_Add(glui
     INSTALL_COMMAND "")
 ExternalProject_Get_Property(glui SOURCE_DIR)
 set(GLUI_LIBRARIES ${SOURCE_DIR}/src/lib/libglui.a CACHE STRING "" FORCE)
+set(GLUI_INCLUDE_DIR ${SOURCE_DIR}/src/include CACHE STRING "" FORCE)
 
 ExternalProject_Add(jcUtil
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/jcUtil
@@ -72,7 +76,6 @@ ExternalProject_Add(LU
 ExternalProject_Get_Property(LU SOURCE_DIR)
 set(LU_LIBRARIES ${SOURCE_DIR}/libLU.a CACHE STRING "" FORCE)
 
-
 set(PEELING_GLEW_INCLUDE_DIR
 ${CMAKE_CURRENT_SOURCE_DIR}/libs/dual_depth_peeling/common/GLEW/include CACHE
 STRING "" FORCE)
@@ -83,6 +86,9 @@ ${CMAKE_CURRENT_SOURCE_DIR}/libs/dual_depth_peeling/common/include CACHE STRING 
 set(PEELING_NVMODEL_INCLUDE_DIR
 ${CMAKE_CURRENT_SOURCE_DIR}/libs/dual_depth_peeling/common/nvModel/include CACHE STRING "" FORCE)
 
+include_directories(${PEELING_GLEW_INCLUDE_DIR})
+include_directories(${PEELING_COMMON_INCLUDE_DIR})
+include_directories(${PEELING_NVMODEL_INCLUDE_DIR})
 
 ExternalProject_Add(kmlocal
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/kmlocal-1.7.2
@@ -133,6 +139,9 @@ set(svl_SOURCES
     libs/quanVisLib/svBendBar.cpp
     libs/quanVisLib/svSplitVectorsBar.cpp
     libs/quanVisLib/svDirectBar.cpp
+    libs/quanVisLib/GLSLProgramObject.cpp
+    libs/quanVisLib/dual_depth_peeling.cpp
+    libs/quanVisLib/svList.cpp
     libs/quanVisLib/svUtil.h
     libs/quanVisLib/svLut.h
     libs/quanVisLib/svParticle.h
@@ -163,21 +172,24 @@ set(svl_SOURCES
     libs/quanVisLib/svBendBar.h
     libs/quanVisLib/svSplitVectorsBar.h
     libs/quanVisLib/svDirectBar.h
-    libs/quanVisLib/dual_depth_peeling.h)
+    libs/quanVisLib/GLSLProgramObject.h
+    libs/quanVisLib/dual_depth_peeling.h
+    libs/quanVisLib/svList.h)
 
 configure_file(libs/quanVisLib/svConfig.h.in
     ${CMAKE_CURRENT_BINARY_DIR}/svConfig.h)
 
-add_library(svl ${svl_SOURCES}  ${CMAKE_CURRENT_BINARY_DIR}/svConfig.h
-${PEELLING_COMMON_INCLUDE_DIR} ${PEELING_NVMODEL_INCLUDE_DIR}
-${PEELING_GLEW_INCLUDE_DIR})
+
+add_library(svl ${svl_SOURCES}  ${CMAKE_CURRENT_BINARY_DIR}/svConfig.h)
 target_include_directories(svl PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 set(SVL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/quanVisLib CACHE STRING "" FORCE)
 
 add_executable(splitToolkit SplitTool/splitToolkit.cpp)
-target_link_libraries(splitToolkit svl ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES})
+target_link_libraries(splitToolkit svl ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES}
+${GLUI_LIBRARIES} ${GLEW_LIBRARIES}
+)
 target_include_directories(splitToolkit PRIVATE ${SVL_INCLUDE_DIR}
-${JCUTIL_INCLUDE_DIR})
+ ${JCUTIL_INCLUDE_DIR} ${GLUI_INCLUDE_DIR})
 install(TARGETS splitToolkit RUNTIME DESTINATION bin)
 
 #add_executable(ccStudy SplitTool/ccStudy.cpp)

@@ -52,9 +52,13 @@ svGlyph::svGlyph()
   glyphRadius = DEFAULT_GLYPH_RADIUS;
   display_list = DEFAULT_DISPLAYLIST;
 
+  dataSize = 0;
+
       glyph=NULL;
 	dir = NULL;
       mag = NULL;
+
+     glyphFormat = NULL;
 
       contourLabel = NULL;
       clusterLabel = NULL;
@@ -66,7 +70,12 @@ svGlyph::svGlyph()
       glyphWidth = NULL;
 
       glyphSize = 0;
-  
+ 
+      symmetrylist[0] = new svList(); 
+      symmetrylist[1] = new svList();
+      symmetrylist[2] = new svList();
+      symmetrylist[3] = new svList();
+
   // peeling = new svPeeling();
 
 }
@@ -196,6 +205,8 @@ void svGlyph::New(svVectorField* f, int numPlane)
      if(seed_num > 0)
       clean();
 
+      dataSize =0 ;
+
       seed_num = numPlane;
 
       field = f;
@@ -213,6 +224,8 @@ void svGlyph::New(svVectorField* f, int numPlane)
      glyph = new svVector3Array[seed_num];
      dir = new svVector3Array[seed_num];
      mag = new svScalarArray[seed_num];
+
+     glyphFormat = new svIntArray[seed_num];
 
      contourLabel = new svIntArray[seed_num]; 
      clusterLabel = new svIntArray[seed_num];
@@ -278,6 +291,7 @@ void svGlyph::SetData(char *infName, int seed)
                svVector4 color;
                color[0]=1;color[1]=1;color[2]=1;color[3]=1;
                glyphColors[layer].add(color);
+               dataSize ++;
         }
 
         //glyphSize = glyphSize + glyph[layer].size();
@@ -299,6 +313,23 @@ void svGlyph::SetData(char *infName, int seed)
         delete symmetry;
 */
        // DisableColor();
+}
+
+void svGlyph::SetFormat(char *infname, int seed)
+{
+     ifstream infile (infname);
+
+     int n;infile>>n;
+
+     for(int i=0;i<n;i++)
+     {
+           int a,b;
+           infile>>a>>b;
+           glyphFormat[seed].add(a);
+           glyphFormat[seed].add(b);
+     }
+
+     infile.close();
 }
 
 void svGlyph::SaveToFile(char *fname)
@@ -412,7 +443,7 @@ void svGlyph::GenerateContours(ContourProperty &property) //const
 //    omp_set_num_threads(10);
     for(int i=0;i<property.contourValues[0].size();i++)
              contourList.add(0);
-
+    dataSize = 0;
 
     #pragma omp parallel for
     for(int j=0;j<seed_num;j++)
@@ -547,15 +578,57 @@ void svGlyph::SetSampling(svInt frequency)
    }
 }
 
-void svGlyph::SetSampling(SymmetryProperty property, svInt frequency)
+void svGlyph::SetSampling(vector<int> symmetrytype, svInt frequency)
+{
+    for(int i=0;i<seed_num;i++)
+      for(int j=0;j<glyph[i].size();j++)
+         visibleLabel[i][j] = false;
+
+    for(int i=0;i<seed_num;i++)
+    {
+         for(int j=0;j<glyph[i].size();j++)
+         {
+                   int x = glyphFormat[i][j*2];
+                   int y = glyphFormat[i][j*2+1];
+                   if(x%frequency ==0 && y%frequency ==0)
+                   {
+                       visibleLabel[i][j] = true;
+                   }
+         }
+    }
+
+    int count = 0;
+    for(int i=0;i<seed_num;i++)
+    {
+         for(int j=0;j<glyph[i].size();j++)
+         {
+            if(visibleLabel[i][j] == true)
+            {
+              for(int t=0;t<symmetrytype.size();t++)
+              {
+                   int size = symmetrylist[t]->getSize(count);
+                   int data1[size];
+                   int data2[size];
+ 
+                   symmetrylist[t]->getData(count, data1, data2);
+
+                    for(int m=0;m<size;m++)
+                    {
+                          visibleLabel[data1[m]][data2[m]] = true;
+                    }
+              }
+             }
+            count++;
+         }
+    }
+}
+
+void svGlyph::GenerateSymmetry(SymmetryProperty &property)
 {
    svSymmetry *symmetry = new svSymmetry(field);
 
-//cerr<<seed_num<<endl;
-   for(int i=0;i<seed_num;i++)
-   {
-       if(glyph[i].size()>0)
-       {
+   for(int i=0;i<4;i++)
+   {cerr<<i<<"symmetry"<<endl;
         char *symmetrystr = new char[200];
         for(int j=0;j<200;j++) symmetrystr[j] = '\0';
         for(int j=0;j<property.dir.size();j++)
@@ -564,54 +637,76 @@ void svGlyph::SetSampling(SymmetryProperty property, svInt frequency)
                   property.pos[j][0], property.pos[j][1], property.pos[j][2],
                   property.dir[j][0], property.dir[j][1], property.dir[j][2]);
         }
-       // cerr<<property.outputfile<<endl;
-        sprintf(property.outputfile,"%s/%d_%d_%s.txt", 
-                property.datafile, i, glyph[i].size(), 
-                symmetrystr);
-//cerr<<property.outputfile<<endl;
+        switch(i)
+        {
+          case 0:  sprintf(property.outputfile,"%s/antisymmetry%s.txt", 
+                   property.datafile, symmetrystr);
+                   break;
+          case 1:  sprintf(property.outputfile,"%s/positivesymmetry%s.txt",
+                   property.datafile, symmetrystr);
+                   break;
+          case 2:  sprintf(property.outputfile,"%s/negativenearsymmetry%s.txt",
+                   property.datafile, symmetrystr);
+                   break;
+          case 3:  sprintf(property.outputfile,"%s/negativefarsymmetry%s.txt",
+                   property.datafile, symmetrystr);
+                   break;
+          //cerr<<property.outputfile<<endl;
+        }
+        delete [] symmetrystr;
 
-       delete [] symmetrystr;
         ifstream infile(property.outputfile);
         if(!infile.is_open())
         {
                infile.close();
-               sprintf(property.datafile, "%s/input.txt",property.datafile);
-  //             cerr<<property.datafile<<endl;
-               ofstream outfile(property.datafile);
-               outfile<<glyph[i].size()<<endl;
-               for(int j=0;j<glyph[i].size();j++)
-               {
-                    outfile<<glyph[i][j][0]<<" "<<glyph[i][j][1]<<" "<<glyph[i][j][2]<<" "
-                         <<dir[i][j][0]<<" "<<dir[i][j][1]<<" "<<dir[i][j][2]<<" "
-                         <<mag[i][j]<<endl;
-               }
-               outfile.close();
-               // cerr<<property.datafile<<endl;
+              char *str = new char[200];
+               sprintf(str, "%s/layerall.txt",property.datafile);
+               property.inputfile = strdup(str);
+             delete [] str;
 
-               symmetry->ComputeSymmetry(property);
-                //cerr<<property.datafile<<endl;
-
+             switch(i)
+             {
+               case 0:
+                      symmetry->ComputeAntiSymmetry(property);break;
+               case 1:
+                      symmetry->ComputePositiveSymmetry(property);break;
+               case 2:
+                      symmetry->ComputeNegativeNearSymmetry(property);break;
+               case 3:
+                      symmetry->ComputeNegativeFarSymmetry(property);break;
+             }
         }
         else 
            infile.close();
+//=================save to list=======================
 
-infile.open(property.outputfile);
+         symmetrylist[i]->destroy();
+         symmetrylist[i]->new_list(dataSize);
+         infile.open(property.outputfile);
         int n;
         infile>>n;
         
-        for(int j=0;j<glyph[i].size();j++)
+        int count = 0;
+        for(int ii=0;ii<seed_num;ii++)
         {
-           int ii;
-           infile>>ii;
-           if(ii%frequency == 0)
-                 sampleLabel[i][j] = 1;
-           else
-                 sampleLabel[i][j] = 0;
-        } 
-
+           for(int j=0;j<glyph[ii].size();j++)
+          {
+             int m;
+             infile>>m;
+             vector<int> value; value.resize(m*2);
+             for(int t=0;t<m*2;t++)
+             {
+                 infile>>value[t];
+             }     
+             
+             symmetrylist[i]->add_next(count, value);
+             count++;
+          } 
+        }
         infile.close();
+
+//        symmetrylist[i]->display_list();
    }
-  }
 
    delete symmetry;
 }
@@ -627,6 +722,27 @@ void svGlyph::ResetVisible()
     }
 }
 
+void svGlyph::SetSymmetryVisible(int type)
+{
+    int count = 0;
+    for(int i=0;i<seed_num;i++)
+    {
+          for(int j=0;j<glyph[i].size();j++)
+          {
+               int size = symmetrylist[type]->getSize(count);
+               if(size>1)
+               {
+                     visibleLabel[i][j] = true;
+               }
+               else
+               {
+                     visibleLabel[i][j] = false;
+               }
+
+               count++;         
+          }
+    }
+}
 void svGlyph::SetVisible(int contour)
 {
     for(int i=0;i<seed_num;i++)
@@ -768,7 +884,12 @@ void svGlyph::clean()
     delete [] mag;
     mag=NULL;
   };
-
+  if (glyphFormat!=NULL) {
+    for(int i=0; i<seed_num; i++)
+      glyphFormat[i].free();
+    delete [] glyphFormat;
+    glyphFormat=NULL;
+  };
   if (clusterLabel!=NULL) {
     for(int i=0; i<seed_num; i++)
       clusterLabel[i].free();

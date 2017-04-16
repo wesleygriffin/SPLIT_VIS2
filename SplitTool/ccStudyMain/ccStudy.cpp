@@ -69,21 +69,22 @@ typedef struct taskproperty{
 
 struct ConfigProperty{
    
-    taskproperty task[7];
+    taskproperty task[8];
 	
     svVector3 plane_center;
     svVector3 plane_vector;
     svScalar plane_distance;
 	
         RenderProperty  renderproperty;
+        
 
         BendProperty bendproperty;
-        BarProperty barproperty;        
+        BarProperty barproperty;   
+        CylinderProperty cylinderproperty;
+     
         DirectProperty directproperty;
         SplitVectorsProperty splitproperty;
 
-        svScalar roimag1;
-        svScalar roimag2;
         svVector4 barcolor;
         svInt frequency;
 
@@ -1610,6 +1611,7 @@ void motion(int x, int y)
 {
         movecount++;
         trackball.mouseMotion(x, y);
+
  if(movecount == 10)
  {
      trackball.getMatrix().getValue(viewproperty.tm);    
@@ -1634,7 +1636,9 @@ void motion(int x, int y)
             ty * invert_tb[6] +
             tz * invert_tb[10] +
             invert_tb[14];
+
      movecount = 0;
+
              if(studyorder[dataindex].encodeid == BEND) bendglyph[0]->Generate(configproperty.bendproperty,viewproperty,
                  configproperty.plane_vector);
              else if(studyorder[dataindex].encodeid ==LINEAR) directglyph[0]->Generate(configproperty.directproperty,viewproperty,
@@ -1658,6 +1662,7 @@ void motion(int x, int y)
        glutPostRedisplay();
 }
 
+//configuration files
 void Config(char *configfname, ConfigProperty &property)
 {
 	ifstream infile(configfname);
@@ -1665,24 +1670,14 @@ void Config(char *configfname, ConfigProperty &property)
         float store;
         int num;	
 	string tmp;
-
-        for(int i=0;i<7;i++)
+//dir
+        for(int i=0;i<8;i++)
         {
               configproperty.task[i].dir = new char[200];
               infile>>tmp;
-              infile>>tmp;
               infile>>configproperty.task[i].dir;
-              infile>>tmp;
-              infile>>configproperty.task[i].index[0]>>configproperty.task[i].index[1];
         }
-	
-        infile>>tmp;
-	infile>>property.plane_center[0]>>property.plane_center[1]>>property.plane_center[2];
-	infile>>tmp;
-	infile>>property.plane_vector[0]>>property.plane_vector[1]>>property.plane_vector[2];
-	infile>>tmp;
-	infile>>property.plane_distance;
-
+//bend
         infile>>tmp;cerr<<tmp<<endl;
         infile>>store;
         num = store;
@@ -1704,75 +1699,7 @@ void Config(char *configfname, ConfigProperty &property)
            configproperty.bendproperty3.bendWidth.add(store);
            configproperty.bendproperty4.bendWidth.add(store);
         }
-        infile>>tmp;
-        infile>>store;
-        num = store;
-        for(int i=0;i<num;i++)
-        {
-           infile>>store;
-           configproperty.bendproperty.bendLegendRange.add(store);
-           infile>>store;
-           configproperty.bendproperty.bendLegendValue.add(store);
-           infile>>store;
-           configproperty.bendproperty.bendLegendHeight.add(store);
-           infile>>store;
-           configproperty.bendproperty.bendLegendWidth.add(store);
-        }
-        infile>>store;
-        num = store;
-        for(int i=0;i<num;i++)
-        {
-           infile>>store;
-           configproperty.bendproperty2.bendLegendRange.add(store);
-           infile>>store;
-           configproperty.bendproperty2.bendLegendValue.add(store);
-           infile>>store;
-           configproperty.bendproperty2.bendLegendHeight.add(store);
-           infile>>store;
-           configproperty.bendproperty2.bendLegendWidth.add(store);
-        }
-        infile>>store;
-        num = store;
-        for(int i=0;i<num;i++)
-        {
-           infile>>store;
-           configproperty.bendproperty3.bendLegendRange.add(store);
-           infile>>store;
-           configproperty.bendproperty3.bendLegendValue.add(store);
-           infile>>store;
-           configproperty.bendproperty3.bendLegendHeight.add(store);
-           infile>>store;
-           configproperty.bendproperty3.bendLegendWidth.add(store);
-        }
-        infile>>store;
-        num = store;//cerr<<store<<endl;
-        for(int i=0;i<num;i++)
-        {
-           infile>>store;
-           configproperty.bendproperty4.bendLegendRange.add(store);
-           infile>>store;
-           configproperty.bendproperty4.bendLegendValue.add(store);
-           infile>>store;
-           configproperty.bendproperty4.bendLegendHeight.add(store);
-           infile>>store;
-           configproperty.bendproperty4.bendLegendWidth.add(store);
-        }
-
-/*
-        infile>>tmp;cerr<<tmp<<endl;
-        infile>>store;
-        num = store;
-        for(int i=0;i<num;i++)
-        {
-            svVector3 c;
-            infile>>c[0]>>c[1]>>c[2];c[0]=c[0]/255.;c[1]=c[1]/255.;c[2]=c[2]/255.;
-            configproperty.bendproperty.groupcolor.add(c);
-            configproperty.bendproperty2.groupcolor.add(c);
-            configproperty.bendproperty3.groupcolor.add(c);
-            configproperty.bendproperty4.groupcolor.add(c);
-        }
-*/
-
+//bar
         infile>>tmp;
         infile>>tmp;
         infile>>configproperty.barproperty.scalex;
@@ -1780,12 +1707,23 @@ void Config(char *configfname, ConfigProperty &property)
         infile>>configproperty.barproperty.scaley;
 
 
+//cylinder
+	cylinderproperty.SEGMENT_NUM = 10;
+	cylinderproperty.scaley = 1;
+	cylinderproperty.legend = 10;
+	cylinderproperty.legendcolor[0] = 0.5;
+        cylinderproperty.legendcolor[1] = 0.5;
+        cylinderproperty.legendcolor[2] = 0.5;
+        cylinderproperty.legendcolor[3] = 0.5;
+
+//direct
         infile>>tmp;
+	infile>>tmp;
+	infile>>configproperty.directproperty.UnitHeight;
         infile>>tmp;
         infile>>configproperty.directproperty.width;
-        configproperty.directproperty.UnitHeight = (configproperty.bendproperty.bendHeight[0]*configproperty.bendproperty.bendWidth[0]/configproperty.directproperty.width)/configproperty.bendproperty.bendRange[0];//4e+6;
 
-
+//splitvectors
         infile>>tmp;cerr<<tmp<<endl;
         infile>>tmp;
         infile>>configproperty.splitproperty.shiftexp;
@@ -1801,6 +1739,7 @@ void Config(char *configfname, ConfigProperty &property)
         configproperty.splitproperty.coeColor[2] = 0.5;
         configproperty.splitproperty.coeColor[3] = 0.5;
 
+//bar
         configproperty.barproperty.halowidth = configproperty.barproperty.scalex*configproperty.bendproperty.bendHeight[0]/2.;
         configproperty.barproperty.legend =1e-6;//1.5e-6 ;
         configproperty.barproperty.legendh = 10 * configproperty.barproperty.scaley;
@@ -1824,7 +1763,6 @@ void Config(char *configfname, ConfigProperty &property)
         configproperty.barcolor[1] = 28./255.;//170./255.;//28./255.;
         configproperty.barcolor[2] = 95./255.;//161./255.;//95./255.;
 
- 
         configproperty.frequency = 1;
 
          infile.close();
@@ -1842,7 +1780,6 @@ void Config(char *configfname, ConfigProperty &property)
 
 void Update()
 {
- //   Config(configFile, configproperty);
  if(studyorder[pageindex].taskid<7)
  {
    if(pagestatus[pageindex] ==2
@@ -1862,7 +1799,6 @@ void Update()
    	{
       		recordTime();
       		recordAnswer();
-//      	recordAnswer();
          	dataindex++;
  //   		cerr<<pageindex<<" "<<pagestatus[pageindex]<<" "<<studyorder[dataindex].taskid<<" "<<studyorder[dataindex].dataid<<" "<<studyorder[dataindex].encodeid<<endl;
      

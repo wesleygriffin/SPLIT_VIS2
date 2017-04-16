@@ -771,4 +771,181 @@ svInt  getNumOfIntegerDigits(svScalar num)
            };
           return multiplier;
 }
+
+void RenderCylinder(svVector3 glyph, svVector3 dir,
+                svScalar radius, svScalar height,
+                int segment)
+{
+    svVector3 cylinder_seg_norm[segment+1];
+    svVector3 cylinder_seg_pos[(segment+1)*2];
+    float interval_degree  = 360./(float)segment;
+    for(int i=0;i<=segment;i++) {
+        if(i == 0)
+        {
+           svVector3 ori =  normalize(svGetPerpendicularVector(dir));
+           cylinder_seg_pos[0] = glyph + radius * ori;
+           cylinder_seg_pos[1] = cylinder_seg_pos[0] + height * dir;
+           cylinder_seg_norm[0] = normalize(cylinder_seg_pos[0] - glyph);
+         }
+        else
+        {
+           cylinder_seg_pos[i*2] = svGetRotatePoint(cylinder_seg_pos[0],
+                                         glyph,
+                                         dir,
+                                         i * interval_degree);
+           cylinder_seg_pos[i*2+1] = cylinder_seg_pos[i*2] + height * dir;
+           cylinder_seg_norm[i] = normalize(cylinder_seg_pos[i*2] - glyph); 
+        }
+    }
+ 
+    glBegin(GL_QUAD_STRIP);
+    for(int i=0;i<=segment;i++)
+    {
+          glNormal3f(cylinder_seg_norm[i][0], 
+                    cylinder_seg_norm[i][1],
+                    cylinder_seg_norm[i][2]);
+          glVertex3f(cylinder_seg_pos[2*i][0],
+                    cylinder_seg_pos[2*i][1],
+                    cylinder_seg_pos[2*i][2]);
+
+          glNormal3f(cylinder_seg_norm[i][0],
+                    cylinder_seg_norm[i][1],
+                    cylinder_seg_norm[i][2]);
+          glVertex3f(cylinder_seg_pos[2*i+1][0],
+                    cylinder_seg_pos[2*i+1][1],
+                    cylinder_seg_pos[2*i+1][2]);
+    } 
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glNormal3f(dir[0],dir[1],dir[2]);
+    for(int i=0;i<=segment;i++)
+    {
+          glVertex3f(cylinder_seg_pos[2*i+1][0],
+                    cylinder_seg_pos[2*i+1][1],
+                    cylinder_seg_pos[2*i+1][2]);
+    }
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glNormal3f(-dir[0],-dir[1],-dir[2]);
+    for(int i=0;i<=segment;i++)
+    {
+          glVertex3f(cylinder_seg_pos[2*i][0],
+                    cylinder_seg_pos[2*i][1],
+                    cylinder_seg_pos[2*i][2]);
+    }
+    glEnd();
+}
+void RenderCone(svVector3 glyph, svVector3 dir,
+                svScalar radius, svScalar height,
+                int segment)
+{
+
+    svVector3 cone_seg_norm[segment+1];
+    svVector3 cone_seg_pos[segment];
+    cone_seg_norm[0]= normalize(dir);
+    float interval_degree  = 360./(float)segment;
+    for(int i=0;i<segment;i++) {
+        if(i == 0)
+        {
+           svVector3 ori =  normalize(svGetPerpendicularVector(cone_seg_norm[0]));
+           cone_seg_pos[0] = glyph + radius * ori;
+         }
+        else
+        {
+           cone_seg_pos[i] = svGetRotatePoint(cone_seg_pos[0],
+                                         glyph,
+                                         cone_seg_norm[0],
+                                         i * interval_degree);
+        }
+    }
+
+      glyph = glyph + height * dir;
+
+    for(int i=1;i<=segment;i++){
+        if(i==1)
+        {
+           cone_seg_norm[1] = svAverage(
+                                  svGetNorm(
+                                            glyph,
+                                            cone_seg_pos[0],
+                                            cone_seg_pos[segment-1]
+                                           ),
+                                  svGetNorm(glyph,
+                                            cone_seg_pos[1],
+                                            cone_seg_pos[0]
+                                            )
+                                        );
+          }
+          else if(i == segment){
+            cone_seg_norm[i] = svAverage(
+                                   svGetNorm(glyph,
+                                        cone_seg_pos[i-1],
+                                        cone_seg_pos[i-2]),
+                                   svGetNorm(glyph,
+                                             cone_seg_pos[0],
+                                             cone_seg_pos[i-1]
+                                             )
+                                        );
+          }
+          else
+          {
+            cone_seg_norm[i] = svAverage(
+                                   svGetNorm(glyph,
+                                        cone_seg_pos[i-1],
+                                        cone_seg_pos[i-2]),
+                                   svGetNorm(glyph,
+                                             cone_seg_pos[i],
+                                             cone_seg_pos[i-1]
+                                             )
+                                        );
+          }
+        }
+      for(int i=0;i<segment-1;i++)
+      {//cerr<<cone_seg_norm[i+1][0]<<" "<<cone_seg_norm[i+2][0]<<" "<<cone_seg_norm[i+1][1]<<" "<<cone_seg_norm[i+2][1]<<" "<<cone_seg_norm[i+1][2]<<" "<<cone_seg_norm[i+2][2]<<endl;
+          glBegin(GL_TRIANGLES);
+              glNormal3f(cone_seg_norm[0][0],cone_seg_norm[0][1],cone_seg_norm[0][2]);
+              glVertex3f(glyph[0],glyph[1],glyph[2]);
+
+              glNormal3f(cone_seg_norm[i+1][0],cone_seg_norm[i+1][1],cone_seg_norm[i+1][2]);
+              glVertex3f(cone_seg_pos[i][0],cone_seg_pos[i][1],cone_seg_pos[i][2]);
+
+              glNormal3f(cone_seg_norm[i+2][0],cone_seg_norm[i+2][1],cone_seg_norm[i+2][2]);
+              glVertex3f(cone_seg_pos[i+1][0],cone_seg_pos[i+1][1],cone_seg_pos[i+1][2]);
+            glEnd();
+
+       }
+          glBegin(GL_TRIANGLES);
+              glNormal3f(cone_seg_norm[0][0],cone_seg_norm[0][1],cone_seg_norm[0][2]);
+              glVertex3f(glyph[0],glyph[1],glyph[2]);
+
+              glNormal3f(cone_seg_norm[segment][0],cone_seg_norm[segment][1],cone_seg_norm[segment][2]);
+              glVertex3f(cone_seg_pos[segment-1][0],cone_seg_pos[segment-1][1],cone_seg_pos[segment-1][2]);
+
+              glNormal3f(cone_seg_norm[1][0],cone_seg_norm[1][1],cone_seg_norm[1][2]);
+              glVertex3f(cone_seg_pos[0][0],cone_seg_pos[0][1],cone_seg_pos[0][2]);
+            glEnd();
+
+        glBegin(GL_POLYGON);
+        glNormal3f(-dir[0],-dir[1],-dir[2]);
+        for(int i=0;i<segment;i++)
+        {
+              glVertex3f(cone_seg_pos[i][0],cone_seg_pos[i][1],cone_seg_pos[i][2]);
+        }
+        glEnd();
+}
+void RenderButtonUp(svScalar width, svScalar height,
+                 int segment)
+{
+    svVector3 boundary_pos[segment * 4];
+
+    
+}
+void RenderButtonDown(svScalar width, svScalar height,
+                 int segment)
+{
+
+}
+
 }

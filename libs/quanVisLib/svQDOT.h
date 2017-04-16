@@ -49,10 +49,15 @@ class svQDOT : public svVectorField
 	svScalar GetMaxDensitybyLayer(char *densityfName, int layer);
         vector<int> GetUniqueRegion(){return unique_region;}
         svVector3 GetPlaneDir(){return plane_dir;}
+        svVector3 GetMinPlane(){return min_plane;}
         svVector3 GetPlanePosition(int index);
 	virtual svInt GetPlaneNum(){return plane_num;}
         svInt GetNumPower(){return numPower;}
         svScalar GetScaling(){return scaling;}	
+        svScalar GetXdistance(){return xdistance;}
+        svScalar GetYdistance(){return ydistance;}
+        svScalar GetZdistance(){return zdistance;}
+
     virtual ~svQDOT(){}
 	
 protected:

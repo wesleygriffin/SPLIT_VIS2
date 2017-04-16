@@ -14,9 +14,17 @@
 #define  LIB_DIR  "/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2"
 #endif
 
+
 using namespace std;
 
 namespace __svl_lib {
+typedef enum
+{
+    _ANTISYMMETRY = 0,
+    _POSITIVE = 1,
+    _NEGATIVENEAR = 2,
+    _NEGATIVEFAR = 3,
+}SYMMETRYTYPE;
 
 typedef struct _KmeansProperty {
 	
@@ -41,12 +49,14 @@ typedef struct _ContourProperty {
 } ContourProperty; 
 
 typedef struct _SymmetryProperty{
-
+   svChar *inputfile;
    svChar *datafile;
    svChar *outputfile;
    svVector3Array pos;
-   svVector3Array dir;
-
+   svVector3Array dir; 
+   svVector3 planepos;
+   svVector3 planedir;
+   svScalar planedistance;
 } SymmetryProperty;
 
 /*
@@ -199,8 +209,14 @@ class svVectorField {
     struct svSymmetry{
        svVectorField *field;
        svSymmetry(svVectorField *inputfield);
-
-       void ComputeSymmetry(SymmetryProperty &property);
+       int SymmetryPair(SymmetryProperty &property, svVector3 pos, svVector3 dir,
+                    svVector3 *pair, svVector3 *pairdir,
+                    SYMMETRYTYPE type);
+       void ComputeAntiSymmetry(SymmetryProperty &property);
+       void ComputePositiveSymmetry(SymmetryProperty &property);
+       void ComputeNegativeFarSymmetry(SymmetryProperty &property);
+       void ComputeNegativeNearSymmetry(SymmetryProperty &property);
+       void ComputeSymmetry(SymmetryProperty &property, SYMMETRYTYPE type);
 
     } *symmetry;
     friend struct svSymmetry;

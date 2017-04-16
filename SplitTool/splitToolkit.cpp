@@ -1,3 +1,4 @@
+#include "dual_depth_peeling.h"
 #include <sstream>
 #include <stdio.h>
 #include <iostream>
@@ -10,7 +11,7 @@
 #else
 #include <GL/glut.h>
 #endif
-
+#include <GLFW/glfw3.h>
 //#include "svVectorField.h"
 #include "svQDOT.h"
 #include "svDirectArrow.h"
@@ -24,6 +25,9 @@
 #include "svMesh.h"
 #include <string.h>
 
+#include <GL/glui.h>
+
+
 #define CLUSTER_DIMENSION 7
 
 using namespace __svl_lib;
@@ -35,8 +39,20 @@ void key(unsigned char key, int x, int y);
 #define IMAGE_WIDTH  512
 #define IMAGE_HEIGHT 512
 
+int window;
+
+//=======GLUI==============
+//
+//===========================
+GLUI *glui;
+
+
+//=========END================
+
+
 view3d view_info;
 
+svPeeling *peeling;
 svQDOT *flow_field;
 svDirectArrow *directglyph;
 svSummaryGlyph *summaryglyph;
@@ -51,12 +67,15 @@ char *formatfile;
 char *regionfile;
 char *densityfile;
 
+vector<int> symmetrytype;
+int frequency = 6;
 bool summaryVisible;
 svScalar scale;
 svScalar directradius;
 svScalar summaryradius;
 vector<int> unique_region;
 int regioncount = 0;
+
 struct ConfigProperty{
 	
 	char *rawDir;
@@ -71,6 +90,7 @@ struct ConfigProperty{
 	
 	KmeansProperty step1_kmeansproperty;
 	KmeansProperty step2_kmeansproperty;
+        SymmetryProperty symmetryproperty; 
 
         vector<string> contourname;	
 	ContourProperty contourproperty;
@@ -99,13 +119,13 @@ double zshuffle;
 void InitLight()
 {
   //setting of lighting
-  GLfloat mat_diffuse[] = { 0.8, .0, 0.0, .4};
-  GLfloat mat_specular[] = { 1, 1, 1, 1 };
-  GLfloat mat_shininess[] = { 20.0 };
+  GLfloat mat_diffuse[] = { 0.8, .8, 0.8, .8};
+  GLfloat mat_specular[] = { 0.2,0.2,0.2,0.2 };
+  GLfloat mat_shininess[] = { 2.0 };
   //GLfloat light_position[] = { 24, 24, 60, 0.0 };
-  GLfloat light_position[] = { 50,50,50, 0.0 };
+  GLfloat light_position[] = { 0,0,100, 0.0 };
   GLfloat white_light[] = { 1.0, 1.0, 1.0, 1.0 };
-  glClearColor(0.0, 0.0, 0.0, 0.0);
+ // glClearColor(0.0, 0.0, 0.0, 0.0);
   glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mat_diffuse);
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat_specular);
   glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat_shininess);
@@ -159,16 +179,24 @@ void reshape(int w, int h)
 
 }
 
+void DrawSymmetry(void)
+{
+
+}
+
+
 void display(void)
 {
         // set new model view and projection matrix
-        glClearColor(0.3, 0.3, 0.3, 1);
+        glClearColor(0.5, 0.5, 0.5, 1);
 //	glClear(GL_COLOR_BUFFER_BIT);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
 
         glEnable(GL_COLOR_MATERIAL);
         glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+        InitLight();
+       glEnable(GL_MULTISAMPLE);
 
         GLfloat m[16];
         trackball.getMatrix().getValue(m);
@@ -176,21 +204,22 @@ void display(void)
         glPushMatrix();
         glMultMatrixf(m);
 
-        if (bBoundingBox)
+ //       if (bBoundingBox)
                 directglyph->DrawOutline();
         //if (bAxis)
         //	draw_axis();
 
-        glEnable(GL_LIGHTING);
-        glEnable(GL_LIGHT0);
-        glEnable(GL_TEXTURE_2D);
+//        glEnable(GL_LIGHTING);
+//        glEnable(GL_LIGHT0);
+//        glEnable(GL_TEXTURE_2D);
          outline->DrawXYZ(directglyph->GetLb(), directglyph->GetRb());
-
+         outline->DrawAxis_scale(directglyph->GetLb(), directglyph->GetRb(),image_width);
         glColor3f(1,0,0);
         mesh->Render();
         directglyph->Render();
         if(summaryVisible)
               summaryglyph->Render();
+       // directglyph->Render();
 
         glDisable(GL_TEXTURE_2D);
         glDisable(GL_BLEND);
@@ -201,7 +230,7 @@ void display(void)
         glPopMatrix();
 
 	glPushMatrix();
-//	glScalef(50,100,100);
+	glTranslatef(100,0,0);
         if(summaryVisible)
 		summaryglyph->RenderColor();
 	glPopMatrix();
@@ -214,6 +243,18 @@ void display(void)
 void key(unsigned char key, int x, int y)
 {
         switch (key) {
+        case 'f':
+             if(frequency>1)frequency--;
+               directglyph->SetSampling(symmetrytype, frequency);
+              directglyph->Generate();
+cerr<<frequency<<endl;
+              break;
+        case 'F':
+              frequency++;
+cerr<<frequency<<endl;
+                directglyph->SetSampling(symmetrytype, frequency);
+              directglyph->Generate();
+              break;
         case 'h':
               trackball.reset();
               break;
@@ -237,29 +278,29 @@ void key(unsigned char key, int x, int y)
                  delete [] str;
               }
               break;}
-        case 'S':
+        //case 'S':
         case 's':
               summaryVisible = 1-summaryVisible;
 	      break;
         case 'x':
                 scale = scale*1.5;	
 		directradius = directradius * 1.5;
-		summaryradius = summaryradius * 1.5;
+	//	summaryradius = summaryradius * 1.5;
                 directglyph->SetScale(scale);
 		directglyph->SetRadius(directradius);
                 directglyph->Generate();
-		summaryglyph->SetRadius(summaryradius);
+		// summaryglyph->SetRadius(summaryradius);
                 summaryglyph->SetScale(scale);
                 summaryglyph->Generate(1);
 		break;
 	case 'X':
                 scale = scale/1.5;
                 directradius = directradius / 1.5;
-                summaryradius = summaryradius / 1.5;
+          //      summaryradius = summaryradius / 1.5;
 		directglyph->SetScale(scale);
                 directglyph->SetRadius(directradius);
                directglyph->Generate();
-                summaryglyph->SetRadius(summaryradius);
+              //  summaryglyph->SetRadius(summaryradius);
                 summaryglyph->SetScale(scale);
                 summaryglyph->Generate(1);
 		break;
@@ -436,7 +477,7 @@ struct ConfigProperty{
 void Config(char *configfname, ConfigProperty &property)
 {
 //	cerr<<"config"<<endl;
-	contourindex = 0;
+	//contourindex = 0;
 
 	ifstream infile(configfname);
 	
@@ -474,7 +515,7 @@ void Config(char *configfname, ConfigProperty &property)
 	            property.rawFile);
 	//flow_field = new svQDOT();
 	//cerr<<qdot_format<<endl;
-    flow_field->SetVTK(property.rawDir, property.rawFile,
+        flow_field->SetVTK(property.rawDir, property.rawFile,
 	                   property.storeDir,
 					   "sort.txt", "format.txt", "density.txt",
 					   property.plane_center,
@@ -625,6 +666,7 @@ sprintf(str, "%s/%s/", property.storeDir,  property.rawFile);
 	infile>>tmp;//cerr<<tmp<<endl;
 	infile>>index1;
 	infile>>index2;
+        if (index2>=flow_field->GetPlaneNum()) index2=flow_field->GetPlaneNum()-1;
 	infile>>tmp; //cerr<<tmp<<endl;
 	infile>>store;  
     bool isWhole = store;
@@ -674,6 +716,7 @@ property.step2_kmeansproperty.clusterWeight.free();
 	infile>>tmp;//cerr<<tmp<<endl;
 	infile>>index1;
 	infile>>index2;
+        if (index2>=flow_field->GetPlaneNum()) index2=flow_field->GetPlaneNum()-1;
 	for(int i=index1; i<=index2;i++)
 	{
 		property.step2_kmeansproperty.clusterLayer[i]++;
@@ -709,8 +752,27 @@ property.step2_kmeansproperty.clusterWeight.free();
 
    // zmin=0;
    // zmax = flow_field->GetPlaneNum()-1;
-
-    delete [] str;	
+//----------------------symmetry--------------------
+        infile>>tmp;
+        infile>>store;
+        svVector3 pp;
+        svVector3 dd;
+        sprintf(str, "%s/%s/", property.storeDir, property.rawFile);
+        property.symmetryproperty.datafile= strdup(str);
+        sprintf(str, "%s/symmetry.txt", property.storeDir);
+        property.symmetryproperty.outputfile = strdup(str);
+        for(int i=0;i<(int)store;i++)
+        {
+            infile>>pp[0]>>pp[1]>>pp[2];
+            infile>>dd[0]>>dd[1]>>dd[2];
+            dd.normalize();
+            property.symmetryproperty.pos.add(pp);
+            property.symmetryproperty.dir.add(dd);
+        }
+        property.symmetryproperty.planepos = flow_field->GetMinPlane();
+        property.symmetryproperty.planedir = flow_field->GetPlaneDir();
+        property.symmetryproperty.planedistance = property.plane_distance;
+        delete [] str;	
 	infile.close();
 
 	/*-------------------------end----------------------------------------*/
@@ -723,6 +785,12 @@ property.step2_kmeansproperty.clusterWeight.free();
 			cerr<<i<<" "<<contourValues[i][j]<<" ";
 		}cerr<<endl;
 	}*/
+
+       symmetrytype.clear();
+       symmetrytype.push_back(0);
+       symmetrytype.push_back(1);
+       symmetrytype.push_back(2);
+       symmetrytype.push_back(3);
 } 
 
 void Update()
@@ -749,12 +817,17 @@ void Update()
          }
         directglyph->SetContourLabel();
         summaryglyph->SetContourLabel();
-   }           
+   }
+
+  sprintf(str, "%s/%s/mesh%d.txt", configproperty.storeDir, configproperty.rawFile, unique_region[0]);
+  mesh->GenerateWireframe(str);
+           
   delete [] str;  
-cerr<<zmin<<" "<<zmax<<endl;
+//cerr<<zmin<<" "<<zmax<<endl;
   directglyph->ResetCluster();
   summaryglyph->ResetCluster();
    directglyph->ResetVisible();
+   directglyph->SetSampling(symmetrytype, frequency);
    directglyph->SetVisible(contourindex);
   directglyph->SetVisible(zmin, zmax);
   directglyph->SetROI(configproperty.magrange[0][0], configproperty.magrange[0][1]);
@@ -781,6 +854,10 @@ cerr<<zmin<<" "<<zmax<<endl;
 
 void init(char *configfname)//rbfname, char *cpname)
 {
+        InitLight();
+
+  peeling = new svPeeling();
+
   mesh = new svMesh();
   mesh->SetDisplayList(30);
   outline = new svOutline();
@@ -813,6 +890,8 @@ void init(char *configfname)//rbfname, char *cpname)
                sprintf(str, "%s/%s/%d.txt", configproperty.storeDir, configproperty.rawFile, i);
 	           directglyph->SetData(str, i);
                    summaryglyph->SetData(str, i);
+               sprintf(str, "%s/%s/format%d.txt",configproperty.storeDir, configproperty.rawFile, i);
+                   directglyph->SetFormat(str,i);
          }
         directglyph->SetContourLabel();
         summaryglyph->SetContourLabel();
@@ -821,6 +900,11 @@ void init(char *configfname)//rbfname, char *cpname)
 
   directglyph->ResetCluster();
   summaryglyph->ResetCluster();
+  directglyph->GenerateSymmetry(configproperty.symmetryproperty);//, frequency);
+   directglyph->SetXdistance(flow_field->GetXdistance());
+   directglyph->SetYdistance(flow_field->GetYdistance());
+   directglyph->SetZdistance(flow_field->GetZdistance());
+   directglyph->SetSampling(symmetrytype, frequency);
    directglyph->SetVisible(contourindex);
   directglyph->SetVisible(zmin, zmax);
   directglyph->SetROI(configproperty.magrange[0][0], configproperty.magrange[0][1]);
@@ -849,7 +933,6 @@ void init(char *configfname)//rbfname, char *cpname)
 
 //  char *str = new char[200];
   sprintf(str, "%s/%s/mesh%d.txt", configproperty.storeDir, configproperty.rawFile, unique_region[0]);
-//cerr<<str<<endl;
   mesh->GenerateWireframe(str);
   delete [] str;
 //cerr<<"done"<<endl;
@@ -875,22 +958,45 @@ void init(char *configfname)//rbfname, char *cpname)
 }
 
 //**********************
+//// GLUI
+////**********************
+void glui_display()
+{
+  glui = GLUI_Master.create_glui_subwindow( window,
+                                            GLUI_SUBWINDOW_LEFT );
+
+  new GLUI_StaticText(glui, "Show me");
+  
+  new GLUI_Checkbox(glui, "Symmetry");
+  new GLUI_Checkbox(glui, "Overview");
+}
+
+
+//**********************
 // program entry
 //**********************
 
 int main(int argc, char** argv)
 {
-  srand(12345);
+//  srand(12345);
   
         glutInit(&argc, argv);
-        glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
+        glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);// | GLUT_MULTISAMPLE);
 
         image_width  = IMAGE_WIDTH;
         image_height = IMAGE_HEIGHT;
 
         glutInitWindowSize(image_width, image_height);
-        glutCreateWindow("QDOT");
+        window = glutCreateWindow("QDOT");
         glutInitWindowPosition(200, 200);
+/*
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+*/
+//        glfwWindowHint(GLFW_SAMPLES, 4);
 
         if(argc == 2)
         {
@@ -901,11 +1007,21 @@ int main(int argc, char** argv)
             exit(0);
         }
         glutDisplayFunc(display);
-        glutReshapeFunc(reshape);
+/*        glutReshapeFunc(reshape);
         glutKeyboardFunc(key);
         glutMouseFunc(mouse);
         glutMotionFunc(motion);
+*/
+  
+        GLUI_Master.set_glutReshapeFunc(reshape);
+        GLUI_Master.set_glutKeyboardFunc(key);
+        GLUI_Master.set_glutSpecialFunc(NULL);
+        GLUI_Master.set_glutMouseFunc(mouse);
+        glutMotionFunc(motion);
+   
 
+         glui_display();
+ 
         glutMainLoop();
         return 0;
 }

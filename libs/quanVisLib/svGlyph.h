@@ -8,6 +8,7 @@
 #include "svPrimitive.h"
 #include "svLut.h"
 #include "svColors.h"
+#include "svList.h"
 //#define DEFAULT_GLYPH_RADIUS 0.02
 #define DEFAULT_GLYPH_HEIGHT 0.08
 #define DEFAULT_GLYPH_FREQUENCY 1
@@ -61,15 +62,17 @@ class svGlyph : public svPrimitive
   virtual void ResetCluster();
   
   virtual void SetData(char *infName, int seed);
+  virtual void SetFormat(char *infname, int seed);
 
   virtual void SetSampling(svInt frequency); 
-  virtual void SetSampling(SymmetryProperty property, svInt frequency);
+  virtual void SetSampling(vector<int> symmetrytype, svInt frequency);
  
   //void SetContourProperty(ContourProperty & property);
   //void SetKmeansProperty(KmeansProperty & property);
 
   virtual void ResetVisible();
   virtual void SetVisible(int contour);
+  virtual void SetSymmetryVisible(int type);
   virtual void SetVisible(svScalar z1, svScalar z2);
   
   virtual void SetContourLabel();
@@ -89,6 +92,7 @@ class svGlyph : public svPrimitive
   virtual void GenerateClusters(svIntArray *cluster);
   virtual void GenerateContours(ContourProperty & property);// const;
   virtual void GenerateClusters(KmeansProperty & property);// const;
+  virtual void GenerateSymmetry(SymmetryProperty & property);
   virtual void Generate(svVector3Array *vec3in);
   virtual void Generate(svVector3Array *vec3in, svVector4Array *color4in);
 
@@ -128,7 +132,9 @@ class svGlyph : public svPrimitive
                 svScalar x, svScalar y, svScalar z){}; 
   // Not imeplemented
   
-
+   void SetXdistance(svScalar x){xdistance =  x;}
+   void SetYdistance(svScalar y){ydistance = y;}
+   void SetZdistance(svScalar z){zdistance = z;}
    virtual svInt GetContourListSize(){return contourList.size();}
    svVector3 GetLb(){return lbbox;}
    svVector3 GetRb(){return rbbox;}
@@ -166,10 +172,13 @@ class svGlyph : public svPrimitive
   svVector3Array *glyph; // positions
   svVector3Array *dir;   // direction
   svScalarArray  *mag;   // magnitude
-
+  
+  svInt dataSize;
   svInt glyphSize;
   svScalar   glyphScale;
   svScalar   glyphRadius;
+ 
+  svIntArray *glyphFormat; 
 
   int maxClusterLabel;
 
@@ -188,10 +197,14 @@ class svGlyph : public svPrimitive
                               
   svScalar alpha;
 
+  svScalar xdistance;
+  svScalar ydistance;
+  svScalar zdistance;
+
  //svPeeling *peeling;
 
   svChar *infile;
-  
+  svList *symmetrylist[4];
   //svChar *glyphDir;
   //svChar *glyphFile;
   //svChar *fileName1;

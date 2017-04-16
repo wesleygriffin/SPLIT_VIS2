@@ -1,27 +1,19 @@
 #task1
-#datadir:
 ../../dataselection/3Ddata/output/task1task2/
 #task2
-#datadir
 ../../dataselection/3Ddata/output/task1task2/
 #task3
-#datadir
 ../../dataselection/3Ddata/output/task5/
 #task4
-#datadir
 /home/hnz8/Documents/03072017/dataselection/3Ddata/output/task4/
 #task5
-#datadir
 /home/davinci/Documents/henan/NIST/CrossVis/dataselection/3Ddata/intermediate/task5/spin_proj_norm_vs_pos_p_v_z_10z/
 #task6
-#datadir
 /home/davinci/Documents/henan/NIST/CrossVis/dataselection/2Ddata/output/task6/
 #task7
-#datadir
 /home/davinci/Documents/henan/NIST/CrossVis/dataselection/2Ddata/output/task7/
-#planeCenter 0 0 0
-#planeDirection 0 0 1
-#planeDistance 0.25
+#task8
+/home/davinci/Documents/henan/NIST/CrossVis/dataselection/2Ddata/output/task8/
 #bend
 6
 1e-7 1 1
@@ -38,33 +30,25 @@
 1.5e-5 200 10 20
 4e-5 500 10 50
 1e-4 1000 10 100
-3
-1e-7 10 10 1
-4e-6 100 10 10
-1e-4 1000 10 100
-2
-1e-7 10 10 1
-4e-6 100 10 10
-2
-1e-7 20 10 2
-1.5e-5 200 10 20
 #barproperty
 #scalex
 0.006
 #scaley
 0.06
 #direct
-#width
-5
+#height
+0.0425
+#radius
+0.0425
 #splitvectors
 #shiftexp
 7
 #height
-1
-#expwidth
-5
-#coewidth
-2.5
+0.0425
+#expradius
+0.0425
+#coeradius
+0.02125
 
 0.00625
 0.0625

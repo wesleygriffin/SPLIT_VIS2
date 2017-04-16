@@ -67,6 +67,7 @@ class genVTKfromOrg
     vector<int> unique_region;
     vector<int> region_count;
 
+
 	vector<double> plane_min;
 	vector<double> plane_dir;
 	double plane_distance;

@@ -1,0 +1,1 @@
+/usr/bin/c++   -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -m64 -mtune=generic  -frounding-math -O3 -DNDEBUG    CMakeFiles/ex_alpha_shapes_3.dir/ex_alpha_shapes_3.cpp.o  -o ex_alpha_shapes_3 -rdynamic -lmpfr -lgmp -lCGAL -lboost_thread-mt -lboost_system-mt -lCGAL -lboost_thread-mt -lboost_system-mt 

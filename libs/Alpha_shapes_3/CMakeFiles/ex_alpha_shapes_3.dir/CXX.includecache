@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/ex_alpha_shapes_3.cpp
+CGAL/Exact_predicates_inexact_constructions_kernel.h
+-
+CGAL/Delaunay_triangulation_3.h
+-
+CGAL/Alpha_shape_3.h
+-
+fstream
+-
+list
+-
+cassert
+-
+

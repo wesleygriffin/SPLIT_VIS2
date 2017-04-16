@@ -10,20 +10,25 @@ tmp
 #ifcontour:
 0
 #contours:
-3
+4
 G R 0.5
 G A 1e-8
 G A 1e-6
+G A 1e-4
 #clusters:
 #step1:
 #weights: 1 1 1 1 1 1 1
-#layer: 0 108
+#layer: 0 92
 #bywhole: 1
 #magrange: 0 1
-#numofclusters: 10
+#numofclusters: 20
 #step2:
 #weights: 1 1 1 1 1 1 1
-#layer: 0 -1
+#layer: 0 -1 
 #bywhole: 1
-#magrange: 1e-5 1e-3
-#numofclusters: 10
+#magrange: 1e-4 1e-3
+#numofclusters: 5
+#symmetry
+2
+0 0 0 1 1 0
+0 0 0 -1 1 0

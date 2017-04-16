@@ -110,6 +110,13 @@ void svDirectArrow::Generate() // this read specific data format
       }*/
  // }
 
+        glEnable(GL_COLOR_MATERIAL);
+        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_NORMALIZE);
+  glEnable(GL_MULTISAMPLE);  
+
   display_mode = SV_DISPLAYLIST;
   //display_list = 1;
   svGlyph::STILL_UPDATE = false;
@@ -117,18 +124,22 @@ void svDirectArrow::Generate() // this read specific data format
 	if(glIsList(display_list))
 		glDeleteLists(display_list, 1); 
     glNewList(display_list, GL_COMPILE);
-    
+        glEnable(GL_COLOR_MATERIAL);
+        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+
+  
     for(int i =0;i<seed_num;i++)
     {		
-		//cerr<<i<<" "<<glyph[i].size()<<endl;
 		for(int j=0;j<glyph[i].size();j++)
 		{
-			if(visibleLabel[i][j])
+			if(visibleLabel[i][j] && sampleLabel[i][j])
 			{
 			glColor4f(glyphColors[i][j][0],glyphColors[i][j][1],glyphColors[i][j][2],alpha);
 
-			double radius = mag[i][j] * glyphRadius;
-			
+			svScalar radius = mag[i][j] * glyphRadius;
+		/*	
 
 			//-----------------rotation------------------------------
 			double angle_x = acos(dir[i][j][2]);
@@ -152,7 +163,7 @@ void svDirectArrow::Generate() // this read specific data format
 					if(dir[i][j][0] < 0)
 						angle_z =  -angle_z;		
 			}
-
+*/
 			//-----------------endpoint-----------------------
 			svVector3 end;
 			end[0] = glyph[i][j][0]+mag[i][j]*glyphScale*dir[i][j][0];
@@ -162,7 +173,7 @@ void svDirectArrow::Generate() // this read specific data format
 			//cerr<<mag[i][j]<<" "<<glyphScale<<" "<<dir[i][j][0]<<" "<<end[0]<<" "<<glyph[i][j][0]<<endl;
 
 			//------------------render -------------------
-			glPushMatrix();
+/*			glPushMatrix();
 
 			glTranslatef(end[0],end[1],end[2]);
 			glRotatef(angle_z/PI * 180.,0,0,1);
@@ -171,9 +182,28 @@ void svDirectArrow::Generate() // this read specific data format
 			double base = radius * 1.5;
 			 glutSolidCone(base, base*3, 4, 1);
 			glPopMatrix();
+*/
+                        RenderCone(end, dir[i][j], radius, radius * 3, 4) ; 
+                        RenderCylinder(glyph[i][j], dir[i][j], glyphRadius*1e-4,
+                                        mag[i][j]*glyphScale, 6);
+                     } 
+             }
+       }
+/*
+    glDisable(GL_LIGHTING);
+    glDisable(GL_LIGHT0);
+    for(int i =0;i<seed_num;i++)
+    {
+                for(int j=0;j<glyph[i].size();j++)
+                {
+                        if(visibleLabel[i][j] && sampleLabel[i][j])
+                        {
+                        glColor4f(glyphColors[i][j][0],glyphColors[i][j][1],glyphColors[i][j][2],alpha);
 
-			glDisable(GL_LIGHTING);
-			glDisable(GL_LIGHT0);
+                        svVector3 end;
+                        end[0] = glyph[i][j][0]+mag[i][j]*glyphScale*dir[i][j][0];
+                        end[1] = glyph[i][j][1]+mag[i][j]*glyphScale*dir[i][j][1];
+                        end[2] = glyph[i][j][2]+mag[i][j]*glyphScale*dir[i][j][2];
 
 			//-------------------straight line or string-------------
 
@@ -191,8 +221,8 @@ void svDirectArrow::Generate() // this read specific data format
 			glVertex3f(end[0],end[1],end[2]);
 			glEnd();
 			
-			glEnable(GL_LIGHTING);
-			glEnable(GL_LIGHT0);
+//			glEnable(GL_LIGHTING);
+//			glEnable(GL_LIGHT0);
 			}
 		}	
 	}	
@@ -201,7 +231,7 @@ void svDirectArrow::Generate() // this read specific data format
     //glDisable(GL_LIGHT0);
 
 	glLineWidth(1.);
-	
+*/
 	glEndList();
 }
 

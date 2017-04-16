@@ -36,7 +36,7 @@ class svSummaryGlyph : public svGlyph {
 protected:
     void cleanup();
     void RenderAnnulus(svVector3 pos, svVector3 vel,
-                                svScalar x, svScalar H, svScalar r);
+                                svScalar left,svScalar x, svScalar H, svScalar r);
 private:
     svVector3Array summaryPos;
     svVector3Array summaryDir;
@@ -44,10 +44,12 @@ private:
     svIntArray     summaryLabel;
     svVector4Array summaryColor;
     svVector4Array summaryDenColor;
+    svScalarArray summaryMaxDen;
 
     svInt scaling;
     svInt numPower; 
 
+    svScalarArray *visibleDistribute;
     svScalarArray *denDistribute;
 };
 

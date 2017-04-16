@@ -740,6 +740,26 @@ void genVTKfromOrg::SaveSplitData(char *file)
 		outfile.close();
 	}
 
+        sprintf(str, "%s/layerall.txt", file);
+        outfile.open(str);
+        outfile<<splitData.size()<<endl;
+        for(int i=0;i<splitData.size();i++)
+        {
+              outfile<<splitData[i].size()<<endl;
+                for(int j=0;j<splitData[i].size();j++)
+                {
+                        double exp,coe;
+                        exp = (double)getNumOfIntegerDigits(splitData[i][j].den);
+                        coe = splitData[i][j].den/pow(10., exp);
+
+                        outfile<<splitData[i][j].px<<" "<<splitData[i][j].py<<" "<<splitData[i][j].pz
+                                <<" "<<splitData[i][j].vx<<" "<<splitData[i][j].vy<<" "<<splitData[i][j].vz
+                                <<" "<<splitData[i][j].den<<endl;
+                  }
+
+       }
+      outfile.close();
+
 	delete [] str;
 	
 	
@@ -873,8 +893,15 @@ void genVTKfromOrg::SavetoVTK(char *file)
     coorout<<z[0]<<" "<<z[1]<<" "<<z[2]<<endl;
     coorout.close();
 
-    delete [] name;
+    sprintf(name, "%s/format%d.txt",file,i);
+    ofstream formatout(name);
 
+    formatout<<splitData[i].size()<<endl;
+    int xi = 0; int yi =0;
+    double prevx, prevy;
+    double xvalue, yvalue;
+    prevx = 0; prevy = 0;
+    xvalue = 0; yvalue = 0;
     for(int j=0;j<splitData[i].size();j++)
     {
       double tmp[3];
@@ -882,14 +909,28 @@ void genVTKfromOrg::SavetoVTK(char *file)
       tmp[1] = splitData[i][j].py - x.py;
       tmp[2] = splitData[i][j].pz - x.pz;
 
-      double xvalue = tmp[0] * xaxis[0] + tmp[1] * xaxis[1] + tmp[2] * xaxis[2];
-      double yvalue = tmp[0] * yaxis[0] + tmp[1] * yaxis[1] + tmp[2] * yaxis[2]; 
+      prevx = xvalue; prevy = yvalue;
 
+      xvalue = tmp[0] * xaxis[0] + tmp[1] * xaxis[1] + tmp[2] * xaxis[2];
+      yvalue = tmp[0] * yaxis[0] + tmp[1] * yaxis[1] + tmp[2] * yaxis[2]; 
+
+      formatout<<xi<<" "<<yi<<endl;
+      if(xvalue < prevx)
+      {
+        xi = 0;yi++;
+      }    
+      else
+      {
+        xi++;
+      }
   //    outfile<<splitData[i][j].px<<" "<<splitData[i][j].py<<" "<<splitData[i][j].pz<<endl;
     	outfile<<xvalue<<" "<<yvalue<<" 0"<<endl;
     }
     outfile<<endl;
-    
+   
+    formatout.close();
+    delete [] name;
+ 
     outfile<<"POINT_DATA "<<splitData[i].size()<<endl;
     outfile<<"VECTORS velocity float"<<endl;  
     for(int j=0;j<splitData[i].size();j++)

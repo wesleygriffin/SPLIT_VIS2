@@ -65,6 +65,18 @@ bool LessAngle(svVector3 p1, svVector3 p2, svVector3 p);
 double pointtoPlane(svVector3 a, svVector3 p, svVector3 n);
 svVector3 CrossProduct(svVector3 u, svVector3 v);
 
+//===========Rendering==================
+void RenderCone(svVector3 glyph, svVector3 dir,
+                svScalar radius, svScalar height,
+                int segment);
+void RenderCylinder(svVector3 glyph, svVector3 dir,
+                svScalar radius, svScalar height,
+                int segment); 
+void RenderButtonUp(svScalar width, svScalar height,
+                 int segment);
+void RenderButtonDown(svScalar width, svScalar height,
+                 int segment);
+//=======================================
 svInt  getNumOfIntegerDigits(svScalar num);
 GLboolean invert_matrix( const GLfloat *m, GLfloat *out );
 

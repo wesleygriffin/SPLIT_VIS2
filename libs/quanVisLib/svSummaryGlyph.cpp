@@ -20,16 +20,41 @@ namespace __svl_lib {
 svSummaryGlyph::svSummaryGlyph():svGlyph()
 {
       denDistribute = NULL;
-
+      visibleDistribute = NULL;
       numPower = 0;
 }
 
 void svSummaryGlyph::RenderAnnulus(svVector3 pos, svVector3 vel,
-                                svScalar x, svScalar H, svScalar r)
+                                svScalar left, svScalar x, svScalar H, svScalar r)
 {
         double degree =1;
-        int times1 = x/degree;  
-        int times2 = (360-x)/degree;
+        double d1 = x/degree;
+        double d2 = (360-x-left)/degree;
+        double d3 = left/degree;
+        int times1;// = x/degree;  
+        int times2;// = (360-x-left)/degree;
+        int times3;// = left/degree;
+
+        times1 = d1; times2 = d2; times3 = d3;
+        double degree1 = x/times1;
+        double degree2 = (360-x-left)/times2;
+        double degree3 = left/times3;
+
+        if(d1 < 1&&x>0)
+        {
+           times1 = 1;
+           degree1 = d1;
+        }
+        if(d3 < 1&&left>0)
+        {
+           times3 = 1;
+           degree3 = d3;
+        }
+        if(d2 < 1&&(360-x-left)>0)
+        {
+           times2 = 1;
+           degree2 = d2;
+        }
 
         svVector3 norm = svGetPerpendicularVector(vel);
         svVector3 head_out, head_in;
@@ -38,11 +63,11 @@ void svSummaryGlyph::RenderAnnulus(svVector3 pos, svVector3 vel,
 
         glDisable(GL_LIGHTING);
         glBegin(GL_QUAD_STRIP);
-        glNormal3f(vel[0], vel[1], vel[2]);
-        glNormal3f(-vel[0], -vel[1], -vel[2]);
+   //     glNormal3f(vel[0], vel[1], vel[2]);
+   //     glNormal3f(-vel[0], -vel[1], -vel[2]);
         for(int ii = 0; ii <= times1; ii++)
         {
-                float i = (float)ii * (x/(float)times1);
+                float i = (float)ii * degree1;//(x/(float)times1);
 
                 svVector3 draw_out = svGetRotatePoint(head_out, pos, vel, i);
                 svVector3 draw_in = svGetRotatePoint(head_in, pos, vel, i);
@@ -52,14 +77,29 @@ void svSummaryGlyph::RenderAnnulus(svVector3 pos, svVector3 vel,
         }
         glEnd();
 
+        glColor4f(0.5,0.5,0.5,0.5);
+        glBegin(GL_QUAD_STRIP);
+        for(int ii = 0; ii <= times3; ii++)
+        {
+                float i = x + (float)ii * degree3;//(left/(float)times3);
+
+                svVector3 draw_out = svGetRotatePoint(head_out, pos, vel, i);
+                svVector3 draw_in = svGetRotatePoint(head_in, pos, vel, i);
+
+                glVertex3f(draw_out[0], draw_out[1], draw_out[2]);
+                glVertex3f(draw_in[0], draw_in[1], draw_in[2]);
+        }
+        glEnd();
+
+
         glEnable(GL_LIGHTING);
         glColor4f(0.8,0.8,0.8,0.5);
         glBegin(GL_QUAD_STRIP);
         glNormal3f(vel[0], vel[1], vel[2]);
-        glNormal3f(-vel[0], -vel[1], -vel[2]);
+    //    glNormal3f(-vel[0], -vel[1], -vel[2]);
         for(int ii = 0; ii <= times2; ii++)
         {
-                float i = x +  (float)ii * ((360-x)/(float)times2);
+                float i = x + left+ (float)ii * degree2;//((360-x-left)/(float)times2);
 
                 svVector3 draw_out = svGetRotatePoint(head_out, pos, vel, i);
                 svVector3 draw_in = svGetRotatePoint(head_in, pos, vel, i);
@@ -76,7 +116,7 @@ void svSummaryGlyph::Generate(float alpha)
 
 //cerr<<"cleanup"<<endl; 
   denDistribute = new svScalarArray[maxClusterLabel+2];//+1: size; +1: clusterLabel = -1
-
+  visibleDistribute = new svScalarArray[maxClusterLabel+2];
 //cerr<<maxClusterLabel<<endl;
   svScalarArray count;
 //cerr<<glyphScale<< " "<<numPower<<endl;
@@ -88,10 +128,12 @@ void svSummaryGlyph::Generate(float alpha)
       summaryDir.add(p);
       summaryDen.add(0);
       count.add(0);
+      summaryMaxDen.add(-9e+9);
       summaryLabel.add(i-1);
      for(int j=0;j<numPower;j++)
       {
         denDistribute[i].add(0);
+        visibleDistribute[i].add(0);
       }
   }
 //cerr<<"done1"<<endl;
@@ -99,9 +141,8 @@ void svSummaryGlyph::Generate(float alpha)
   {//cerr<<i<<endl;
      for(int j=0;j<glyph[i].size();j++)
      {
-
-                 if(visibleLabel[i][j])
-                 {
+     //  if(visibleLabel[i][j])
+     //  {
 
          int in = clusterLabel[i][j]+1;
          
@@ -113,15 +154,24 @@ void svSummaryGlyph::Generate(float alpha)
          summaryDir[in][2] = summaryDir[in][2] + dir[i][j][2];
          summaryDen[in] = summaryDen[in] + mag[i][j];
 
+
          int num = getNumOfIntegerDigits(mag[i][j]);
-         if(numPower-num-scaling-1>=0)
-         denDistribute[in][numPower-num-scaling-1]++;
-
+         if(numPower-num-scaling-1>=0) // when num == 0??????????
+         {
+                 denDistribute[in][numPower-num-scaling-1]++;
+//         if(numPower-num-scaling-1<0)cerr<<numPower<<" "<<num<<" "<<scaling<<endl;
+               if(num > summaryMaxDen[in]) 
+                 summaryMaxDen[in] = num;
+         }
          count[in] ++;
-        }
+    //    }
+         if(visibleLabel[i][j])
+         {
+           if(numPower-num-scaling-1>=0)
+             visibleDistribute[in][numPower-num-scaling-1]++;
+         }
      } 
-  }  
-
+  } 
    //cerr<<summaryPos.size()<<endl;
 
   for(int i=0;i<summaryPos.size();i++)
@@ -139,8 +189,11 @@ void svSummaryGlyph::Generate(float alpha)
          for(int j=0;j<numPower;j++)
          {
              denDistribute[i][j] = denDistribute[i][j]/count[i];
+             visibleDistribute[i][j]=visibleDistribute[i][j]/count[i];
 	    // cerr<<denDistribute[i][j]<<" ";
          }//cerr<<endl;
+//         cerr<<summaryMaxDen[i]<<" "<<scaling<<endl;
+         summaryMaxDen[i] = summaryMaxDen[i] + scaling;
          summaryDir[i].normalize();
       }
     //  cerr<<summaryLabel[i]<<" "<<count[i]<<endl;;
@@ -152,15 +205,28 @@ void svSummaryGlyph::Generate(float alpha)
   display_mode = SV_DISPLAYLIST;
   svGlyph::STILL_UPDATE = false;
 
+
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+        glEnable(GL_COLOR_MATERIAL);
+        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+
+
         if(glIsList(display_list))
                 glDeleteLists(display_list, 1);
     glNewList(display_list, GL_COMPILE);
+
+     //   glEnable(GL_COLOR_MATERIAL);
+      //  glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+    //glEnable(GL_LIGHTING);
+    //glEnable(GL_LIGHT0);
 
 
     for(int i=0;i<summaryPos.size();i++)
     {
          if(count[i]>0)
          {
+  //          cerr<<summaryMaxDen[i]<<" "<<numPower<<endl;
                 double radius = glyphRadius;//*summaryDen[i];
 
                double H = radius;
@@ -197,18 +263,22 @@ void svSummaryGlyph::Generate(float alpha)
                end[0] = summaryPos[i][0]+s*summaryDir[i][0];
                end[1] = summaryPos[i][1]+s* summaryDir[i][1];
                end[2] = summaryPos[i][2]+s* summaryDir[i][2];
+                glEnable(GL_LIGHTING);
+                glEnable(GL_LIGHT0);
 
-               glPushMatrix();
+/*               glPushMatrix();
                glTranslatef(end[0], end[1], end[2]);
                 glRotatef(rotate_z/M_PI*180,0,0,1);
                 glRotatef(rotate_x/M_PI*180,1,0,0);
                 glutSolidCone(radius, radius*3, 5, 1);
                 glPopMatrix();
+*/
+                RenderCone(end, summaryDir[i], radius, radius*3, 5);
+                RenderCylinder(summaryPos[i], summaryDir[i], radius/5, s, 8);
+//                glDisable(GL_LIGHTING);
+//                glDisable(GL_LIGHT0);
 
-                glDisable(GL_LIGHTING);
-                glDisable(GL_LIGHT0);
-
-                glLineWidth(3.);
+/*                glLineWidth(3.);
                 glBegin(GL_LINES);
                 glVertex3f(end[0], end[1], end[2]);
                 glVertex3f(summaryPos[i][0],summaryPos[i][1],summaryPos[i][2]);
@@ -223,7 +293,7 @@ void svSummaryGlyph::Generate(float alpha)
 
                 glEnable(GL_LIGHTING);
                 glEnable(GL_LIGHT0);
-                glEnable(GL_POLYGON_OFFSET_FILL);
+*/                glEnable(GL_POLYGON_OFFSET_FILL);
                 glPolygonOffset(1.0, 2);
 
                 svVector3 mid;
@@ -240,18 +310,20 @@ void svSummaryGlyph::Generate(float alpha)
                 glRotatef(rotate_z/M_PI*180,0,0,1);
                 glRotatef(rotate_x/M_PI*180,1,0,0);
                 glNormal3f(summaryDir[i][0], summaryDir[i][1], summaryDir[i][2]);
-                for(int j=0;j<numPower;j++)
+                glNormal3f(-summaryDir[i][0], -summaryDir[i][1], -summaryDir[i][2]);
+                for(int j=0;j<=summaryMaxDen[i];j++)//numPower;j++)
                 {
-                        glColor4f(summaryDenColor[j][0],
-                                 summaryDenColor[j][1],
-                                 summaryDenColor[j][2],
+                        glColor4f(summaryDenColor[numPower-j-1][0],
+                                 summaryDenColor[numPower-j-1][1],
+                                 summaryDenColor[numPower-j-1][2],
                                  alpha);
                        svVector3 p;
                       p[0]=0;p[1]=0;p[2]=0;
                        svVector3 v;
                        v[0]=0;v[1]=0;v[2]=1;
-                        RenderAnnulus(p,v,
-                                        denDistribute[i][j]*360,
+                  RenderAnnulus(p,v,
+                  (denDistribute[i][numPower-j-1]-visibleDistribute[i][numPower-j-1])*360,
+                       visibleDistribute[i][numPower-j-1]*360,//denDistribute[i][j]*360,
                                         H, r);
                         H = H + radius;
                         r = r + radius;
@@ -259,6 +331,7 @@ void svSummaryGlyph::Generate(float alpha)
 
                 glDisable(GL_LIGHTING);
                 glDisable(GL_LIGHT0);
+                glDisable(GL_TEXTURE_2D);
 
                 glLineWidth(0.5);
 
@@ -284,6 +357,10 @@ void svSummaryGlyph::Generate(float alpha)
                 glPopMatrix();
                 glLineWidth(1.);
                 glDisable(GL_POLYGON_OFFSET_FILL);
+
+                glEnable(GL_LIGHTING);
+                glEnable(GL_LIGHT0);
+                glEnable(GL_TEXTURE_2D);
          }
     }
 
@@ -411,6 +488,7 @@ void svSummaryGlyph::cleanup()
    summaryLabel.free();
    summaryColor.free();
    summaryDenColor.free();  
+   summaryMaxDen.free();
 
   if(denDistribute!=NULL)
   { 
@@ -419,6 +497,14 @@ void svSummaryGlyph::cleanup()
       denDistribute[i].free();
    }
    delete [] denDistribute;
+  }
+  if(visibleDistribute!=NULL)
+  {
+   for(int i=0;i<numDisc;i++)
+   {
+      visibleDistribute[i].free();
+   }
+   delete [] visibleDistribute;
   }
 }
 
