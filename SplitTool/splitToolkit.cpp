@@ -243,6 +243,7 @@ void display(void)
 void key(unsigned char key, int x, int y)
 {
         switch (key) {
+<<<<<<< HEAD
         case 'f':
              if(frequency>1)frequency--;
                directglyph->SetSampling(symmetrytype, frequency);
@@ -255,6 +256,9 @@ cerr<<frequency<<endl;
                 directglyph->SetSampling(symmetrytype, frequency);
               directglyph->Generate();
               break;
+=======
+	case 'H':
+>>>>>>> a222ccde2f5c64e8f55abf31232ad0fa6dc6bea0
         case 'h':
               trackball.reset();
               break;
