@@ -23,7 +23,7 @@ namespace __svl_lib {
 svPeeling::svPeeling()
 {
      g_numPasses = 4;
-     g_useOQ = true;
+     g_useOQ = false;//true;
 
      //g_opacity = 0.6;
      g_showOsd = true;
@@ -62,13 +62,17 @@ void svPeeling::SetDisplayList(vector<int> list)
 //--------------------------------------------------------------------------
 void svPeeling::InitDualPeelingRenderTargets()
 {
+//cerr<<"init"<<endl;
 	glGenTextures(2, g_dualDepthTexId);
 	glGenTextures(2, g_dualFrontBlenderTexId);
 	glGenTextures(2, g_dualBackTempTexId);
-
+//cerr<<"init2"<<endl;
+glewExperimental = GL_TRUE;
 	glGenFramebuffersEXT(1, &g_dualPeelingSingleFboId);
+//cerr<<"init3"<<endl;
 	for (int i = 0; i < 2; i++)
 	{
+//cerr<<i<<endl;
 		glBindTexture(GL_TEXTURE_RECTANGLE_ARB, g_dualDepthTexId[i]);
 		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP);
 		glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_T, GL_CLAMP);
@@ -95,7 +99,7 @@ void svPeeling::InitDualPeelingRenderTargets()
 		glTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA, g_imageWidth, g_imageHeight,
 					 0, GL_RGBA, GL_FLOAT, 0);
 	}
-cout<<"done1"<<endl;
+//cout<<"done1"<<endl;
 	glGenTextures(1, &g_dualBackBlenderTexId);
 	glBindTexture(GL_TEXTURE_RECTANGLE_ARB, g_dualBackBlenderTexId);
 	glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP);
@@ -111,7 +115,7 @@ cout<<"done1"<<endl;
 							  GL_TEXTURE_RECTANGLE_ARB, g_dualBackBlenderTexId, 0);
 
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, g_dualPeelingSingleFboId);
-cout<<"done2"<<endl;
+//cout<<"done2"<<endl;
 	int j = 0;
 		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
 								  GL_TEXTURE_RECTANGLE_ARB, g_dualDepthTexId[j], 0);
@@ -130,7 +134,7 @@ cout<<"done2"<<endl;
 
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT6_EXT,
 							  GL_TEXTURE_RECTANGLE_ARB, g_dualBackBlenderTexId, 0);
-cout<<"done3"<<endl;
+//cout<<"done3"<<endl;
 	CHECK_GL_ERRORS;
 }
 
@@ -149,7 +153,7 @@ void svPeeling::DeleteDualPeelingRenderTargets()
 void svPeeling::BuildShaders(string SHADER_PATH)
 {
 	printf("\nloading shaders...\n");
-cout<<SHADER_PATH+"dual_peeling_init_vertex.glsl"<<endl;
+       // cout<<SHADER_PATH+"dual_peeling_init_vertex.glsl"<<endl;
 
 	g_shaderDualInit.attachVertexShader(SHADER_PATH+"dual_peeling_init_vertex.glsl");
 	g_shaderDualInit.attachFragmentShader(SHADER_PATH+"dual_peeling_init_fragment.glsl");
@@ -192,7 +196,7 @@ void svPeeling::ReloadShaders()
 void svPeeling::InitGL(string shader)
 {
 
-//cout<<"svPeeling"<<endl; 
+//cout<<"svPeeling"<<shader<<endl; 
 	// Allocate render targets first
 	InitDualPeelingRenderTargets();
 //cout<<"InitDualPeelingRenderTargets"<<endl;
@@ -216,6 +220,9 @@ void svPeeling::MakeFullScreenQuad()
         glMatrixMode(GL_MODELVIEW);
         glPushMatrix();
         glLoadIdentity();
+    //    glMatrixMode(GL_PROJECTION);
+    //    glPushMatrix();
+    //    glLoadIdentity();
         gluOrtho2D(0.0, 1.0, 0.0, 1.0);
         glBegin(GL_QUADS);
         {
@@ -225,8 +232,8 @@ void svPeeling::MakeFullScreenQuad()
                 glVertex2f(0.0, 1.0);
         }
         glEnd();
+      //  glPopMatrix();
         glPopMatrix();
-
         glEndList();
 }
 
@@ -236,7 +243,6 @@ void svPeeling::RenderDualPeeling()
 {
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
-
 	// ---------------------------------------------------------------------
 	// 1. Initialize Min-Max Depth Buffer
 	// ---------------------------------------------------------------------
@@ -258,7 +264,7 @@ void svPeeling::RenderDualPeeling()
 
 	g_shaderDualInit.bind();
         for(int i=0;i<display_list.size();i++)
-	glCallList(display_list[i]);
+         {	glCallList(display_list[i]);}
 	g_shaderDualInit.unbind();
 
 	CHECK_GL_ERRORS;
@@ -301,11 +307,13 @@ void svPeeling::RenderDualPeeling()
 		g_shaderDualPeel.bindTextureRECT("DepthBlenderTex", g_dualDepthTexId[prevId], 0);
 		g_shaderDualPeel.bindTextureRECT("FrontBlenderTex", g_dualFrontBlenderTexId[prevId], 1);
 	       for(int j=0;j<display_list.size();j++)
-               {	
-              g_shaderDualPeel.setUniform("Alpha", (float*)&(g_opacity[j]), 1);
-		glCallList(display_list[j]);
+               {
+                        g_shaderDualPeel.setUniform("Alpha", (float*)&(g_opacity[j]), 1);
+	           	glCallList(display_list[j]);
                }
 		g_shaderDualPeel.unbind();
+
+              // glDrawBuffer(GL_BACK);
 
 		CHECK_GL_ERRORS;
 
@@ -350,12 +358,14 @@ void svPeeling::RenderDualPeeling()
 	g_shaderDualFinal.bindTextureRECT("FrontBlenderTex", g_dualFrontBlenderTexId[currId], 1);
 	g_shaderDualFinal.bindTextureRECT("BackBlenderTex", g_dualBackBlenderTexId, 2);
 //cout<<"Final"<<endl;
-	glCallList(g_quadDisplayList);
+        glCallList(g_quadDisplayList);
 	g_shaderDualFinal.unbind();
 
+        
 	CHECK_GL_ERRORS;
+        //glBindTexture(GL_TEXTURE_RECTANGLE_ARB,0);
+        //glEnable(GL_BLEND);
 }
-
 
 
 }

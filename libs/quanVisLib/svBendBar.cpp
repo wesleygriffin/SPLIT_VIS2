@@ -48,7 +48,7 @@ void svBendBar::SaveToOBJ(char *fname,BendProperty &property,svVector3 planeDir)
       for(int ii=0;ii<sortbar.size();ii++)
       {
             int j = sortbar[ii].index;
-           if(sampleLabel[i][j])
+           if(visibleLabel[i][j])
           {
             int index = sortbar[ii].rangeindex;
             svVector4 bendcolor = glyphColors[i][j];
@@ -94,7 +94,7 @@ void svBendBar::SaveToOBJ(char *fname,BendProperty &property,svVector3 planeDir)
       for(int ii=0;ii<sortbar.size();ii++)
       {
             int j = sortbar[ii].index;
-           if(sampleLabel[i][j])
+           if(visibleLabel[i][j])
           {
             int index = sortbar[ii].rangeindex;
              svVector3 v1 = dir[i][j];
@@ -115,7 +115,7 @@ void svBendBar::SaveToOBJ(char *fname,BendProperty &property,svVector3 planeDir)
       for(int ii=0;ii<sortbar.size();ii++)
       {
             int j = sortbar[ii].index;
-           if(sampleLabel[i][j])
+           if(visibleLabel[i][j])
           {
               outfile<<"f "<<count*4+1<<"//"<<count+1<<" "
                    <<count*4+2<<"//"<<count+1<<" "
@@ -264,7 +264,7 @@ void svBendBar::Generate(BendProperty &property, ViewProperty &viewproperty,
       {
            // cerr<<sortbar.size()<<endl;
                   int j = sortbar[ii].index;
-            if(sampleLabel[i][j])//&&mag[i][j]>=1e-4)
+            if(visibleLabel[i][j])//&&mag[i][j]>=1e-4)
             {
               int index = sortbar[ii].rangeindex;
 
@@ -571,7 +571,7 @@ void svBendBar::Generate(BendProperty &property, ViewProperty &viewproperty,
       {
            // cerr<<sortbar.size()<<endl;
                   int j = sortbar[ii].index;
-            if(sampleLabel[i][j])//&&mag[i][j]>=1e-4)
+            if(visibleLabel[i][j])//&&mag[i][j]>=1e-4)
             {
               int index = sortbar[ii].rangeindex;
 

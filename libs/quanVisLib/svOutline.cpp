@@ -12,8 +12,6 @@ namespace __svl_lib
 
 void svOutline::DrawAxis_scale(svVector3 lbbox, svVector3 rbbox, int width)
 { 
-	glDisable(GL_LIGHTING);
-	glDisable(GL_LIGHT0);
 
   GLint viewport[4];
   GLdouble mvmatrix[16];
@@ -88,7 +86,7 @@ void svOutline::DrawAxis_scale(svVector3 lbbox, svVector3 rbbox, int width)
   times[0] = rbbox[0] - lbbox[0];
   x=rbbox[0];y=rbbox[1];z=rbbox[2];
   glColor3f(font_color[0],font_color[1],font_color[2]);
-  glPointSize(2.);
+//  glPointSize(2.);
   glBegin(GL_POINTS);
   for(i=0;i<times[0];i++)
   {
@@ -101,7 +99,7 @@ void svOutline::DrawAxis_scale(svVector3 lbbox, svVector3 rbbox, int width)
   times[0] = rbbox[1] - lbbox[1];
   x=rbbox[0];y=rbbox[1];z=rbbox[2];
   glColor3f(font_color[0],font_color[1],font_color[2]);
-  glPointSize(2.);
+//  glPointSize(2.);
   glBegin(GL_POINTS);
   for(i=0;i<times[0];i++)
   {
@@ -113,7 +111,7 @@ void svOutline::DrawAxis_scale(svVector3 lbbox, svVector3 rbbox, int width)
   times[0] = rbbox[2] - lbbox[2];
   x=rbbox[0];y=rbbox[1];z=rbbox[2];
   glColor3f(font_color[0],font_color[1],font_color[2]);
-  glPointSize(2.);
+//  glPointSize(2.);
   glBegin(GL_POINTS);
   for(i=0;i<times[0];i++)
   {
@@ -123,8 +121,8 @@ void svOutline::DrawAxis_scale(svVector3 lbbox, svVector3 rbbox, int width)
   }
   glEnd();
 
-  glPointSize(5);
-  l = dd[0]/50.;
+ // glPointSize(5);
+  l = dd[0]/55;
   //l2 = (rbbox[0]-lbbox[0])/l;
   l2[0] = (rbbox[0] - lbbox[0])/l;
   l2[1] = (rbbox[0] - lbbox[0])/l;
@@ -158,11 +156,18 @@ void svOutline::DrawAxis_scale(svVector3 lbbox, svVector3 rbbox, int width)
 	if(x>=lbbox[0])
 	{
   glColor3f(font_color[0],font_color[1],font_color[2]);
-	glRasterPos3f(x,y,z);
+//	glRasterPos3f(x,y,z);
 	sprintf(str,"%.0f",(float)scale);
 	len = strlen(str);
-	for(j=0;j<len;j++)
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, str[j]);
+//	for(j=0;j<len;j++)
+//		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, str[j]);
+
+                  glPushMatrix();
+                  glTranslatef(x,y,z);
+                  glScalef(0.002,0.002,0.002);
+                  for(j=0;j<len;j++)
+                  glutStrokeCharacter(GLUT_STROKE_ROMAN,str[j]);
+                  glPopMatrix();
 
 	glColor3f(217./255.,240./255.,163./255.);
 	glBegin(GL_POINTS);
@@ -179,11 +184,17 @@ void svOutline::DrawAxis_scale(svVector3 lbbox, svVector3 rbbox, int width)
 	if(x<=rbbox[0])
 	{
   glColor3f(font_color[0],font_color[1],font_color[2]);
-	glRasterPos3f(x,y,z);
+//	glRasterPos3f(x,y,z);
 	sprintf(str,"%.0f",(float)scale);
 	len = strlen(str);
-	for(j=0;j<len;j++)
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, str[j]);
+//	for(j=0;j<len;j++)
+//		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, str[j]);
+                  glPushMatrix();
+                  glTranslatef(x,y,z);
+                  glScalef(0.002,0.002,0.002);
+                  for(j=0;j<len;j++)
+                  glutStrokeCharacter(GLUT_STROKE_ROMAN,str[j]);
+                  glPopMatrix();
 
 	glColor3f(217./255.,240./255.,163./255.);
 	glBegin(GL_POINTS);
@@ -194,7 +205,7 @@ void svOutline::DrawAxis_scale(svVector3 lbbox, svVector3 rbbox, int width)
 	}
   }
 
-  l = dd[1]/50.;
+  l = dd[1]/60.;
   //l2 = (rbbox[1]-lbbox[1])/l;
   l2[0] = (rbbox[1] - lbbox[1])/l;
   l2[1] = (rbbox[1] - lbbox[1])/l;
@@ -229,11 +240,17 @@ void svOutline::DrawAxis_scale(svVector3 lbbox, svVector3 rbbox, int width)
 	if(y>=lbbox[1])
 	{
   glColor3f(font_color[0],font_color[1],font_color[2]);
-	glRasterPos3f(x,y,z);
+//	glRasterPos3f(x,y,z);
 	sprintf(str,"%.0f",(float)scale);
 	len = strlen(str);
-	for(j=0;j<len;j++)
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, str[j]);
+//	for(j=0;j<len;j++)
+//		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, str[j]);
+                  glPushMatrix();
+                  glTranslatef(x,y,z);
+                  glScalef(0.002,0.002,0.002);
+                  for(j=0;j<len;j++)
+                  glutStrokeCharacter(GLUT_STROKE_ROMAN,str[j]);
+                  glPopMatrix();
 
 	glColor3f(217./255.,240./255.,163./255.);
 	glBegin(GL_POINTS);
@@ -250,11 +267,17 @@ void svOutline::DrawAxis_scale(svVector3 lbbox, svVector3 rbbox, int width)
 	if(y<=rbbox[1])
 	{
   glColor3f(font_color[0],font_color[1],font_color[2]);
-	glRasterPos3f(x,y,z);
+//	glRasterPos3f(x,y,z);
 	sprintf(str,"%.0f",(float)scale);
 	len = strlen(str);
-	for(j=0;j<len;j++)
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, str[j]);
+//	for(j=0;j<len;j++)
+//		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, str[j]);
+                  glPushMatrix();
+                  glTranslatef(x,y,z);
+                  glScalef(0.002,0.002,0.002);
+                  for(j=0;j<len;j++)
+                  glutStrokeCharacter(GLUT_STROKE_ROMAN,str[j]);
+                  glPopMatrix();
 
 	glColor3f(217./255.,240./255.,163./255.);
 	glBegin(GL_POINTS);
@@ -301,11 +324,17 @@ void svOutline::DrawAxis_scale(svVector3 lbbox, svVector3 rbbox, int width)
 	{
 
   glColor3f(font_color[0],font_color[1],font_color[2]);
-	glRasterPos3f(x,y,z);
+//	glRasterPos3f(x,y,z);
 	sprintf(str,"%.0f",(float)scale);
 	len = strlen(str);
-	for(j=0;j<len;j++)
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, str[j]);
+//	for(j=0;j<len;j++)
+//		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, str[j]);
+                  glPushMatrix();
+                  glTranslatef(x,y,z);
+                  glScalef(0.002,0.002,0.002);
+                  for(j=0;j<len;j++)
+                  glutStrokeCharacter(GLUT_STROKE_ROMAN,str[j]);
+                  glPopMatrix();
 
 	glColor3f(217./255.,240./255.,163./255.);
 	glBegin(GL_POINTS);
@@ -323,11 +352,17 @@ void svOutline::DrawAxis_scale(svVector3 lbbox, svVector3 rbbox, int width)
 	if(z<=rbbox[2])
 	{
   glColor3f(font_color[0],font_color[1],font_color[2]);
-	glRasterPos3f(x,y,z);
+//	glRasterPos3f(x,y,z);
 	sprintf(str,"%.0f",(float)scale);
 	len = strlen(str);
-	for(j=0;j<len;j++)
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, str[j]);
+//	for(j=0;j<len;j++)
+//		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, str[j]);
+                  glPushMatrix();
+                  glTranslatef(x,y,z);
+                  glScalef(0.002,0.002,0.002);
+                  for(j=0;j<len;j++)
+                  glutStrokeCharacter(GLUT_STROKE_ROMAN,str[j]);
+                  glPopMatrix();
 
 	glColor3f(217./255.,240./255.,163./255.);
 	glBegin(GL_POINTS);
@@ -358,10 +393,7 @@ void svOutline::DrawAxis_scale(svVector3 lbbox, svVector3 rbbox, int width)
 void svOutline::DrawAxis(svVector3 lbbox, svVector3 rbbox)
 {
 
-	glDisable(GL_LIGHTING);
-	glDisable(GL_LIGHT0);
 	//glEnable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
 	glLineWidth(0.5);
 
 	char str[50];
@@ -521,14 +553,11 @@ void svOutline::DrawAxis(svVector3 lbbox, svVector3 rbbox)
 
 
 	//glDisable(GL_DEPTH_TEST);
-	glDisable(GL_BLEND);
 	glLineWidth(1.);
 }
 
 void svOutline::DrawXYZ(svVector3 lbbox, svVector3 rbbox)
 {
-	glDisable(GL_LIGHTING);
-	glDisable(GL_LIGHT0);
 	//draw x,y,z
 	glColor3f(227./255.,26./255.,28./255.);
 	glBegin(GL_LINES);
@@ -543,9 +572,15 @@ void svOutline::DrawXYZ(svVector3 lbbox, svVector3 rbbox)
 	glVertex3f(rbbox[0]*1.5-1,0,-0.5);
 	glVertex3f(rbbox[0]*1.5-1,0.5,0);
 	glEnd();
+                  glPushMatrix();
+                  glTranslatef(rbbox[0]*1.5+2.,0,0);
+                  glScalef(0.005,0.005,0.005);
+                  glutStrokeCharacter(GLUT_STROKE_ROMAN,'x');
+                  glPopMatrix();
+
   	//glColor3f(1., 1, 1);
-  	glRasterPos3f(rbbox[0]*1.5+2.,0,0);
-  	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'x');
+//  	glRasterPos3f(rbbox[0]*1.5+2.,0,0);
+//  	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'x');
 
         glColor3f(35./255.,139./255.,69./255.); 
         glBegin(GL_LINES);
@@ -561,8 +596,15 @@ void svOutline::DrawXYZ(svVector3 lbbox, svVector3 rbbox)
         glVertex3f(-0.5,rbbox[1]*1.5-1,0);
 	glEnd();
   	//glColor3f(1., 1, 1);
-  	glRasterPos3f(0.,rbbox[1]*1.5+2.,0);
-  	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'y');
+  //	glRasterPos3f(0.,rbbox[1]*1.5+2.,0);
+ // 	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'y');
+
+                  glPushMatrix();
+                  glTranslatef(0.,rbbox[1]*1.5+2.,0);
+                  glScalef(0.005,0.005,0.005);
+                  glutStrokeCharacter(GLUT_STROKE_ROMAN,'y');
+                  glPopMatrix();
+
 
         glColor3f(33./255.,113./255.,181./255.);
         glBegin(GL_LINES);
@@ -578,8 +620,14 @@ void svOutline::DrawXYZ(svVector3 lbbox, svVector3 rbbox)
         glVertex3f(0.5,0,rbbox[2]*1.5-1);
 	glEnd();
   	//glColor3f(1., 1, 1);
-  	glRasterPos3f(0.,0.,rbbox[2]*1.5+2.);
-  	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'z');
+  //	glRasterPos3f(0.,0.,rbbox[2]*1.5+2.);
+  //	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'z');
+                  glPushMatrix();
+                  glTranslatef(0.,0.,rbbox[2]*1.5+2.);
+                  glScalef(0.005,0.005,0.005);
+                  glutStrokeCharacter(GLUT_STROKE_ROMAN,'z');
+                  glPopMatrix();
+
 }
 
 

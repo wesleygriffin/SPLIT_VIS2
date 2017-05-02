@@ -63,6 +63,7 @@ class svGlyph : public svPrimitive
   
   virtual void SetData(char *infName, int seed);
   virtual void SetFormat(char *infname, int seed);
+  virtual void SetSampleData(int size);
 
   virtual void SetSampling(svInt frequency); 
   virtual void SetSampling(vector<int> symmetrytype, svInt frequency);
@@ -72,7 +73,8 @@ class svGlyph : public svPrimitive
 
   virtual void ResetVisible();
   virtual void SetVisible(int contour);
-  virtual void SetSymmetryVisible(int type);
+  virtual void SetVisible(int contour, svScalar z1, svScalar z2, int frequency);
+  virtual void SetSymmetryVisible(vector<int> type);
   virtual void SetVisible(svScalar z1, svScalar z2);
   
   virtual void SetContourLabel();
@@ -91,6 +93,9 @@ class svGlyph : public svPrimitive
   virtual void GenerateClusters(svChar *inf);
   virtual void GenerateClusters(svIntArray *cluster);
   virtual void GenerateContours(ContourProperty & property);// const;
+  virtual void GenerateClustersBySymmetry(KmeansProperty & property,
+                     SymmetryProperty & sproperty,
+                      vector<int> symmetrytype);
   virtual void GenerateClusters(KmeansProperty & property);// const;
   virtual void GenerateSymmetry(SymmetryProperty & property);
   virtual void Generate(svVector3Array *vec3in);
@@ -98,6 +103,7 @@ class svGlyph : public svPrimitive
 
 // Rendering
   virtual void Render();
+  virtual void RenderSample(){};
   virtual void DrawGrid(svVector3 startPos, svVector3 dir1, svVector3 dir2,
                        svScalar stepD1, svScalar stepD2,
                        svInt stepN1, svInt stepN2);
@@ -115,8 +121,12 @@ class svGlyph : public svPrimitive
   virtual void SetColor(int index1, int index2, svVector4 color1, svVector4 color2);
   virtual void SetColorByCluster(svIntArray index, svVector4 c);
   virtual void SetColorByCluster(svIntArray cluster);
-  // colorModel: SV_GRAY, SV_LOCS
-  
+  virtual void SetColorByClusterMag();
+  virtual void SetColorByPower();
+   // colorModel: SV_GRAY, SV_LOCS
+  virtual void SetScaling(svInt s){scaling =s;}
+  virtual void SetNumPower(svInt power){numPower = power;}
+
   virtual void EnableLineWidth(svFloat minlw, svFloat maxlw);
   virtual void SetBBox();
   virtual void SetLut(const svLut & newlut)
@@ -165,13 +175,17 @@ class svGlyph : public svPrimitive
 								  int numCluster);
   virtual void SetClusterLabel(char *clusterfile, svIntArray clusterLayer, 
                          int clusterIndex);
-
+  virtual void SetClusterLabelBySymmetry(char *clusterfile, svIntArray clusterLayer,
+                         int clusterIndex, vector<int> symmetrytype);
   virtual void RenderStore() const;     // using vertex array
   virtual void RenderStoreDirect() const;
 
   svVector3Array *glyph; // positions
   svVector3Array *dir;   // direction
   svScalarArray  *mag;   // magnitude
+  svScalarArray *exp;
+  svScalarArray *coe;
+
   
   svInt dataSize;
   svInt glyphSize;
@@ -181,13 +195,14 @@ class svGlyph : public svPrimitive
   svIntArray *glyphFormat; 
 
   int maxClusterLabel;
+  svIntArray clusterLabelbymag;
 
   svScalarArray contourList;
   svIntArray    *contourLabel;
   svIntArray    *clusterLabel;   // store cluster result
   svIntArray    *roiLabel; //inside roi; boolean
   svIntArray    *visibleLabel;
-  svIntArray    *sampleLabel;
+  svIntArray    sampleLabel;
  
   svVector4Array *glyphColors;
   svScalarArray  *glyphWidth;
@@ -196,6 +211,8 @@ class svGlyph : public svPrimitive
   //ContourProperty contourproperty;
                               
   svScalar alpha;
+  svInt scaling;
+  svInt numPower;
 
   svScalar xdistance;
   svScalar ydistance;
@@ -204,7 +221,7 @@ class svGlyph : public svPrimitive
  //svPeeling *peeling;
 
   svChar *infile;
-  svList *symmetrylist[4];
+  svList *symmetrylist[6];
   //svChar *glyphDir;
   //svChar *glyphFile;
   //svChar *fileName1;

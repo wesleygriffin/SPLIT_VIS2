@@ -84,7 +84,7 @@ svPrimitive::~svPrimitive()
 void svPrimitive::DrawOutline( svBool set_color_flag )
 {
   if (set_color_flag)
-    glColor3f(1., 1., 1.);
+    glColor3f(0., 0.,0.);
   glLineWidth(1.0);
   if(field!=NULL)
        field->GetBoundingBox(&lbbox,&rbbox);

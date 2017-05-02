@@ -12,8 +12,8 @@
 #define to_radian(x)	((x)*PI/180.0)
 
 #define DEFAULT_ROTATE_SCALE  0.2F
-#define DEFAULT_ZOOM_SCALE    0.0002F
-#define DEFAULT_DOLLY_SCALE   0.01F
+#define DEFAULT_ZOOM_SCALE    0.02F
+#define DEFAULT_DOLLY_SCALE   0.1F
 #define DEFAULT_PAN_SCALE     0.01F
 
 //

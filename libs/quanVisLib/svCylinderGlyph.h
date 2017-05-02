@@ -69,6 +69,8 @@ protected:
    CylinderLegendProperty lproperty;
    CylinderProperty cproperty;
 
+   
+
 //the plane facing to users (for selection)
    svVector3Array *cylinderEnd1;
    svVector3Array *cylinderEnd2;

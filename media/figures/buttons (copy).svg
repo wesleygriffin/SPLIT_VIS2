@@ -1,0 +1,4707 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="2000"
+   height="1500"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.47 r22583"
+   sodipodi:docname="buttons.svg">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend"
+       style="overflow:visible">
+      <path
+         id="path3968"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <linearGradient
+       id="linearGradient3663">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3643">
+      <stop
+         style="stop-color:#e1e1e1;stop-opacity:1;"
+         offset="0"
+         id="stop3645" />
+      <stop
+         style="stop-color:#c8c8c8;stop-opacity:0;"
+         offset="1"
+         id="stop3647" />
+    </linearGradient>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective10" />
+    <filter
+       id="filter3653"
+       inkscape:label="Apparition"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Blurs"
+       inkscape:menu-tooltip="Edges are partly feathered out"
+       color-interpolation-filters="sRGB">
+      <feMorphology
+         id="feMorphology3655"
+         radius="4"
+         in="SourceGraphic"
+         result="result0" />
+      <feGaussianBlur
+         id="feGaussianBlur3657"
+         in="result0"
+         stdDeviation="8"
+         result="result91" />
+      <feComposite
+         id="feComposite3659"
+         in2="result91"
+         operator="in"
+         in="SourceGraphic" />
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3663"
+       id="linearGradient3669"
+       x1="415.80225"
+       y1="273.36218"
+       x2="415.80225"
+       y2="129.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.73667187,0,0,0.94482759,259.18114,-56.917949)" />
+    <filter
+       id="filter3673"
+       inkscape:label="Drop shadow"
+       x="-0.25"
+       y="-0.25"
+       width="1.5"
+       height="1.5"
+       inkscape:menu="Blurs"
+       inkscape:menu-tooltip="Blur as if the object flies vertically; adjust Standard Deviation to vary force"
+       color-interpolation-filters="sRGB">
+      <feMorphology
+         id="feMorphology3675"
+         radius="4"
+         in="SourceGraphic"
+         result="result0" />
+      <feGaussianBlur
+         id="feGaussianBlur3677"
+         in="result0"
+         stdDeviation="8"
+         result="result91" />
+      <feComposite
+         id="feComposite3679"
+         in2="result91"
+         operator="in"
+         in="SourceGraphic"
+         result="fbSourceGraphic" />
+      <feColorMatrix
+         result="fbSourceGraphicAlpha"
+         in="fbSourceGraphic"
+         values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+         id="feColorMatrix3698" />
+      <feColorMatrix
+         id="feColorMatrix3700"
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 "
+         result="result7"
+         in="fbSourceGraphic" />
+      <feGaussianBlur
+         id="feGaussianBlur3702"
+         result="result6"
+         stdDeviation="5" />
+      <feComposite
+         id="feComposite3704"
+         in2="result7"
+         operator="atop"
+         in="result6"
+         result="result91" />
+      <feComposite
+         id="feComposite3706"
+         in2="result91"
+         operator="in"
+         result="fbSourceGraphic" />
+      <feColorMatrix
+         result="fbSourceGraphicAlpha"
+         in="fbSourceGraphic"
+         values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+         id="feColorMatrix3708" />
+      <feGaussianBlur
+         id="feGaussianBlur3710"
+         stdDeviation="3"
+         in="fbSourceGraphic" />
+      <feColorMatrix
+         id="feColorMatrix3712"
+         result="fbSourceGraphic"
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 6 -2.5 " />
+      <feColorMatrix
+         result="fbSourceGraphicAlpha"
+         in="fbSourceGraphic"
+         values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+         id="feColorMatrix3714" />
+      <feGaussianBlur
+         id="feGaussianBlur3716"
+         stdDeviation="5"
+         result="result1"
+         in="fbSourceGraphic" />
+      <feTurbulence
+         id="feTurbulence3718"
+         numOctaves="1"
+         seed="0"
+         type="fractalNoise"
+         baseFrequency="0.1"
+         result="result2" />
+      <feDisplacementMap
+         id="feDisplacementMap3720"
+         in2="result2"
+         scale="5"
+         yChannelSelector="G"
+         xChannelSelector="R"
+         result="result3"
+         in="result1" />
+      <feComposite
+         id="feComposite3722"
+         in2="result3"
+         operator="atop"
+         result="fbSourceGraphic" />
+      <feColorMatrix
+         result="fbSourceGraphicAlpha"
+         in="fbSourceGraphic"
+         values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+         id="feColorMatrix3724" />
+      <feGaussianBlur
+         id="feGaussianBlur3726"
+         in="fbSourceGraphic"
+         stdDeviation="0.01 5"
+         result="fbSourceGraphic" />
+      <feColorMatrix
+         result="fbSourceGraphicAlpha"
+         in="fbSourceGraphic"
+         values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+         id="feColorMatrix3728" />
+      <feGaussianBlur
+         id="feGaussianBlur3730"
+         in="fbSourceGraphicAlpha"
+         stdDeviation="2.000000"
+         result="blur" />
+      <feColorMatrix
+         id="feColorMatrix3732"
+         result="bluralpha"
+         type="matrix"
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.500000 0 " />
+      <feOffset
+         id="feOffset3734"
+         in="bluralpha"
+         dx="4.000000"
+         dy="4.000000"
+         result="offsetBlur" />
+      <feMerge
+         id="feMerge3736">
+        <feMergeNode
+           id="feMergeNode3738"
+           in="offsetBlur" />
+        <feMergeNode
+           id="feMergeNode3740"
+           in="fbSourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter
+       id="filter3744"
+       inkscape:label="Drop shadow"
+       width="1.5"
+       height="1.5"
+       x="-0.25"
+       y="-0.25"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3746"
+         in="SourceAlpha"
+         stdDeviation="2.000000"
+         result="blur" />
+      <feColorMatrix
+         id="feColorMatrix3748"
+         result="bluralpha"
+         type="matrix"
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.500000 0 " />
+      <feOffset
+         id="feOffset3750"
+         in="bluralpha"
+         dx="4.000000"
+         dy="4.000000"
+         result="offsetBlur" />
+      <feMerge
+         id="feMerge3752">
+        <feMergeNode
+           id="feMergeNode3754"
+           in="offsetBlur" />
+        <feMergeNode
+           id="feMergeNode3756"
+           in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter
+       id="filter3938"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3940"
+         result="result6"
+         stdDeviation="6" />
+      <feComposite
+         id="feComposite3942"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3944"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3946"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <filter
+       id="filter3950"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <inkscape:perspective
+       id="perspective4602"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-6"
+       style="overflow:visible">
+      <path
+         id="path3968-4"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4630"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8"
+       style="overflow:visible">
+      <path
+         id="path3968-0"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <filter
+       id="filter4693"
+       inkscape:label="filter6"
+       color-interpolation-filters="sRGB" />
+    <filter
+       id="filter4695"
+       inkscape:label="filter7"
+       color-interpolation-filters="sRGB" />
+    <filter
+       id="filter4697"
+       inkscape:label="filter8"
+       color-interpolation-filters="sRGB" />
+    <filter
+       id="filter4699"
+       inkscape:label="filter9"
+       color-interpolation-filters="sRGB" />
+    <inkscape:perspective
+       id="perspective4709"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <linearGradient
+       id="linearGradient3663-1">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-3" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-1" />
+    </linearGradient>
+    <filter
+       id="filter3950-8"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-8"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-5"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-1"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-6"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <inkscape:perspective
+       id="perspective4838"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <filter
+       id="filter3950-86"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-1"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-3"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-0"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-3"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <inkscape:perspective
+       id="perspective4875"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <linearGradient
+       id="linearGradient3663-5">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4" />
+    </linearGradient>
+    <inkscape:perspective
+       id="perspective4912"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective4934"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <linearGradient
+       id="linearGradient3663-5-8">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2" />
+    </linearGradient>
+    <inkscape:perspective
+       id="perspective5009"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective3711"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <linearGradient
+       id="linearGradient3663-5-80">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-3" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-6" />
+    </linearGradient>
+    <filter
+       id="filter3950-0"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-5"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-0"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-7"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-1"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <inkscape:perspective
+       id="perspective3769"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <linearGradient
+       id="linearGradient3663-5-8-7">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-7" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-6" />
+    </linearGradient>
+    <inkscape:perspective
+       id="perspective3822"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective3844"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective3866"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective4080"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8-0"
+       style="overflow:visible">
+      <path
+         id="path3968-0-2"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4112"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8-9"
+       style="overflow:visible">
+      <path
+         id="path3968-0-20"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4140"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8-5"
+       style="overflow:visible">
+      <path
+         id="path3968-0-0"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker4146"
+       style="overflow:visible">
+      <path
+         id="path4148"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <linearGradient
+       id="linearGradient3663-5-8-7-1">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-7-9" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-6-5" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3663-5-80-6">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-3-0" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-6-9" />
+    </linearGradient>
+    <filter
+       id="filter3950-0-5"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-5-0"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-0-2"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-7-8"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-1-6"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <linearGradient
+       id="linearGradient3663-5-8-0">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-1" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-5" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3663-5-6">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-1" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-67" />
+    </linearGradient>
+    <filter
+       id="filter3950-5"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-6"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-06"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-5"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-5"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <inkscape:perspective
+       id="perspective4311"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8-53"
+       style="overflow:visible">
+      <path
+         id="path3968-0-6"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4339"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8-3"
+       style="overflow:visible">
+      <path
+         id="path3968-0-201"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker4345"
+       style="overflow:visible">
+      <path
+         id="path4347"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <linearGradient
+       id="linearGradient3663-5-8-7-1-4">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-7-9-9" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-6-5-6" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3663-5-80-6-8">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-3-0-1" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-6-9-3" />
+    </linearGradient>
+    <filter
+       id="filter3950-0-5-9"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-5-0-7"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-0-2-5"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-7-8-0"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-1-6-8"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <linearGradient
+       id="linearGradient3663-5-8-0-4">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-1-8" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-5-7" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3663-5-6-6">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-1-7" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-67-8" />
+    </linearGradient>
+    <filter
+       id="filter3950-5-9"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-6-1"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-06-0"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-5-6"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-5-0"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <inkscape:perspective
+       id="perspective4507"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8-1"
+       style="overflow:visible">
+      <path
+         id="path3968-0-61"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker4513"
+       style="overflow:visible">
+      <path
+         id="path4515"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <linearGradient
+       id="linearGradient3663-5-8-7-1-4-5">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-7-9-9-8" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-6-5-6-4" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3663-5-80-6-8-0">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-3-0-1-2" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-6-9-3-3" />
+    </linearGradient>
+    <filter
+       id="filter3950-0-5-9-2"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-5-0-7-4"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-0-2-5-7"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-7-8-0-9"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-1-6-8-5"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <linearGradient
+       id="linearGradient3663-5-8-0-4-8">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-1-8-6" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-5-7-0" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3663-5-6-6-5">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-1-7-8" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-67-8-0" />
+    </linearGradient>
+    <filter
+       id="filter3950-5-9-0"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-6-1-7"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-06-0-2"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-5-6-0"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-5-0-8"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <inkscape:perspective
+       id="perspective4675"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8-59"
+       style="overflow:visible">
+      <path
+         id="path3968-0-7"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker4681"
+       style="overflow:visible">
+      <path
+         id="path4683"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4720"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8-98"
+       style="overflow:visible">
+      <path
+         id="path3968-0-4"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker4726"
+       style="overflow:visible">
+      <path
+         id="path4728"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4765"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8-4"
+       style="overflow:visible">
+      <path
+         id="path3968-0-8"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker4771"
+       style="overflow:visible">
+      <path
+         id="path4773"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4810"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8-54"
+       style="overflow:visible">
+      <path
+         id="path3968-0-82"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker4816"
+       style="overflow:visible">
+      <path
+         id="path4818"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4852"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8-00"
+       style="overflow:visible">
+      <path
+         id="path3968-0-25"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker4858"
+       style="overflow:visible">
+      <path
+         id="path4860"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4852-9"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8-05"
+       style="overflow:visible">
+      <path
+         id="path3968-0-3"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker4858-5"
+       style="overflow:visible">
+      <path
+         id="path4860-4"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4915"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8-6"
+       style="overflow:visible">
+      <path
+         id="path3968-0-02"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker4921"
+       style="overflow:visible">
+      <path
+         id="path4923"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4915-7"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8-7"
+       style="overflow:visible">
+      <path
+         id="path3968-0-72"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker4921-3"
+       style="overflow:visible">
+      <path
+         id="path4923-1"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4915-3"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8-79"
+       style="overflow:visible">
+      <path
+         id="path3968-0-66"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker4921-4"
+       style="overflow:visible">
+      <path
+         id="path4923-9"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4999"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8-43"
+       style="overflow:visible">
+      <path
+         id="path3968-0-27"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5005"
+       style="overflow:visible">
+      <path
+         id="path5007"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4999-9"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8-11"
+       style="overflow:visible">
+      <path
+         id="path3968-0-75"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5005-5"
+       style="overflow:visible">
+      <path
+         id="path5007-0"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4999-0"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8-2"
+       style="overflow:visible">
+      <path
+         id="path3968-0-00"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5005-9"
+       style="overflow:visible">
+      <path
+         id="path5007-8"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective5104"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <filter
+       id="filter3950-82"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-63"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-8"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-4"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-10"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <linearGradient
+       id="linearGradient3663-5-9">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-4" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-3" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3663-5-8-05">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-13" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-0" />
+    </linearGradient>
+    <filter
+       id="filter3950-0-1"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-5-3"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-0-3"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-7-4"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-1-0"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <linearGradient
+       id="linearGradient3663-5-80-2">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-3-3" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-6-4" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3663-5-8-7-4">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-7-1" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-6-7" />
+    </linearGradient>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8-69"
+       style="overflow:visible">
+      <path
+         id="path3968-0-26"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5136"
+       style="overflow:visible">
+      <path
+         id="path5138"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <filter
+       id="filter3950-5-5"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-6-3"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-06-7"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-5-9"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-5-3"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <linearGradient
+       id="linearGradient3663-5-6-5">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-1-6" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-67-6" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3663-5-8-0-2">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-1-9" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-5-0" />
+    </linearGradient>
+    <filter
+       id="filter3950-0-5-4"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-5-0-0"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-0-2-59"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-7-8-6"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-1-6-5"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <linearGradient
+       id="linearGradient3663-5-80-6-0">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-3-0-0" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-6-9-6" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3663-5-8-7-1-9">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-7-9-0" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-6-5-3" />
+    </linearGradient>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5166"
+       style="overflow:visible">
+      <path
+         id="path5168"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5170"
+       style="overflow:visible">
+      <path
+         id="path5172"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <filter
+       id="filter3950-5-9-02"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-6-1-0"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-06-0-6"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-5-6-6"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-5-0-9"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <linearGradient
+       id="linearGradient3663-5-6-6-9">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-1-7-7" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-67-8-2" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3663-5-8-0-4-3">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-1-8-9" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-5-7-9" />
+    </linearGradient>
+    <filter
+       id="filter3950-0-5-9-21"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-5-0-7-6"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-0-2-5-4"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-7-8-0-7"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-1-6-8-52"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <linearGradient
+       id="linearGradient3663-5-80-6-8-02">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-3-0-1-5" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-6-9-3-8" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3663-5-8-7-1-4-2">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-7-9-9-86" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-6-5-6-5" />
+    </linearGradient>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5200"
+       style="overflow:visible">
+      <path
+         id="path5202"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5204"
+       style="overflow:visible">
+      <path
+         id="path5206"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <filter
+       id="filter3950-5-9-0-8"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-6-1-7-1"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-06-0-2-7"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-5-6-0-4"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-5-0-8-7"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <linearGradient
+       id="linearGradient3663-5-6-6-5-3">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-1-7-8-8" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-67-8-0-3" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3663-5-8-0-4-8-5">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-1-8-6-8" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-5-7-0-6" />
+    </linearGradient>
+    <filter
+       id="filter3950-0-5-9-2-7"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-5-0-7-4-2"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-0-2-5-7-8"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-7-8-0-9-3"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-1-6-8-5-8"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <linearGradient
+       id="linearGradient3663-5-80-6-8-0-0">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-3-0-1-2-0" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-6-9-3-3-1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3663-5-8-7-1-4-5-5">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-7-9-9-8-8" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-6-5-6-4-9" />
+    </linearGradient>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5234"
+       style="overflow:visible">
+      <path
+         id="path5236"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5238"
+       style="overflow:visible">
+      <path
+         id="path5240"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5242"
+       style="overflow:visible">
+      <path
+         id="path5244"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5246"
+       style="overflow:visible">
+      <path
+         id="path5248"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5250"
+       style="overflow:visible">
+      <path
+         id="path5252"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5254"
+       style="overflow:visible">
+      <path
+         id="path5256"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5258"
+       style="overflow:visible">
+      <path
+         id="path5260"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5262"
+       style="overflow:visible">
+      <path
+         id="path5264"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5266"
+       style="overflow:visible">
+      <path
+         id="path5268"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5270"
+       style="overflow:visible">
+      <path
+         id="path5272"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5274"
+       style="overflow:visible">
+      <path
+         id="path5276"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5278"
+       style="overflow:visible">
+      <path
+         id="path5280"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5282"
+       style="overflow:visible">
+      <path
+         id="path5284"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5286"
+       style="overflow:visible">
+      <path
+         id="path5288"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5290"
+       style="overflow:visible">
+      <path
+         id="path5292"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5294"
+       style="overflow:visible">
+      <path
+         id="path5296"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5298"
+       style="overflow:visible">
+      <path
+         id="path5300"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5302"
+       style="overflow:visible">
+      <path
+         id="path5304"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5306"
+       style="overflow:visible">
+      <path
+         id="path5308"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5310"
+       style="overflow:visible">
+      <path
+         id="path5312"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5314"
+       style="overflow:visible">
+      <path
+         id="path5316"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5318"
+       style="overflow:visible">
+      <path
+         id="path5320"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5322"
+       style="overflow:visible">
+      <path
+         id="path5324"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5326"
+       style="overflow:visible">
+      <path
+         id="path5328"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5330"
+       style="overflow:visible">
+      <path
+         id="path5332"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5334"
+       style="overflow:visible">
+      <path
+         id="path5336"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective3362"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <filter
+       id="filter3950-82-2"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-63-1"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-8-2"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-4-0"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-10-1"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3663-5-9-7"
+       id="linearGradient3669-59-37-0"
+       x1="415.80225"
+       y1="273.36218"
+       x2="415.80225"
+       y2="129.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.77968921,0,0,1,-217.69626,-468.9)" />
+    <linearGradient
+       id="linearGradient3663-5-9-7">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-4-9" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-3-9" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3663-5-8-05-6"
+       id="linearGradient3669-59-5-8-6"
+       x1="415.80225"
+       y1="129.36218"
+       x2="415.80225"
+       y2="273.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.77968921,0,0,1,89.825547,-470.02182)" />
+    <linearGradient
+       id="linearGradient3663-5-8-05-6">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-13-8" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-0-1" />
+    </linearGradient>
+    <filter
+       id="filter3950-0-1-4"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-5-3-2"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-0-3-2"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-7-4-4"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-1-0-3"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3663-5-80-2-7"
+       id="linearGradient3669-59-7-3-1"
+       x1="415.80225"
+       y1="273.36218"
+       x2="415.80225"
+       y2="129.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.77968921,0,0,1,717.30373,-468.9)" />
+    <linearGradient
+       id="linearGradient3663-5-80-2-7">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-3-3-9" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-6-4-5" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3663-5-8-7-4-8"
+       id="linearGradient3669-59-5-6-9-7"
+       x1="415.80225"
+       y1="129.36218"
+       x2="415.80225"
+       y2="273.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.77968921,0,0,1,400.57538,-469.77182)" />
+    <linearGradient
+       id="linearGradient3663-5-8-7-4-8">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-7-1-7" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-6-7-2" />
+    </linearGradient>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8-8"
+       style="overflow:visible">
+      <path
+         id="path3968-0-1"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3394"
+       style="overflow:visible">
+      <path
+         id="path3396"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <filter
+       id="filter3950-5-5-2"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-6-3-8"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-06-7-5"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-5-9-7"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-5-3-9"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3663-5-6-5-7"
+       id="linearGradient3669-59-3-8-7"
+       x1="415.80225"
+       y1="273.36218"
+       x2="415.80225"
+       y2="129.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.77968921,0,0,1,-222.69626,-138.9)" />
+    <linearGradient
+       id="linearGradient3663-5-6-5-7">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-1-6-2" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-67-6-8" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3663-5-8-0-2-3"
+       id="linearGradient3669-59-5-9-7-6"
+       x1="415.80225"
+       y1="129.36218"
+       x2="415.80225"
+       y2="273.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.77968921,0,0,1,84.825554,-140.02184)" />
+    <linearGradient
+       id="linearGradient3663-5-8-0-2-3">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-1-9-9" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-5-0-2" />
+    </linearGradient>
+    <filter
+       id="filter3950-0-5-4-9"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-5-0-0-8"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-0-2-59-3"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-7-8-6-5"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-1-6-5-0"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3663-5-80-6-0-0"
+       id="linearGradient3669-59-7-8-2-7"
+       x1="415.80225"
+       y1="273.36218"
+       x2="415.80225"
+       y2="129.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.77968921,0,0,1,547.38363,183.75)" />
+    <linearGradient
+       id="linearGradient3663-5-80-6-0-0">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-3-0-0-6" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-6-9-6-9" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3663-5-8-7-1-9-5"
+       id="linearGradient3669-59-5-6-0-15-9"
+       x1="415.80225"
+       y1="129.36218"
+       x2="415.80225"
+       y2="273.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.77968921,0,0,1,816.29269,183)" />
+    <linearGradient
+       id="linearGradient3663-5-8-7-1-9-5">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-7-9-0-4" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-6-5-3-6" />
+    </linearGradient>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3424"
+       style="overflow:visible">
+      <path
+         id="path3426"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3428"
+       style="overflow:visible">
+      <path
+         id="path3430"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <filter
+       id="filter3950-5-9-02-3"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-6-1-0-4"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-06-0-6-0"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-5-6-6-2"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-5-0-9-5"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3663-5-6-6-9-2"
+       id="linearGradient3669-59-3-5-7-2"
+       x1="415.80225"
+       y1="273.36218"
+       x2="415.80225"
+       y2="129.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.77968921,0,0,1,51.542819,388.75)" />
+    <linearGradient
+       id="linearGradient3663-5-6-6-9-2">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-1-7-7-0" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-67-8-2-9" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3663-5-8-0-4-3-8"
+       id="linearGradient3669-59-5-9-3-7-1"
+       x1="415.80225"
+       y1="129.36218"
+       x2="415.80225"
+       y2="273.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.77968921,0,0,1,296.54279,393.75)" />
+    <linearGradient
+       id="linearGradient3663-5-8-0-4-3-8">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-1-8-9-8" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-5-7-9-5" />
+    </linearGradient>
+    <filter
+       id="filter3950-0-5-9-21-8"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-5-0-7-6-6"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-0-2-5-4-1"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-7-8-0-7-7"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-1-6-8-52-1"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3663-5-80-6-8-02-5"
+       id="linearGradient3669-59-7-8-7-4-0"
+       x1="415.80225"
+       y1="273.36218"
+       x2="415.80225"
+       y2="129.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.77968921,0,0,1,545.38363,394.75)" />
+    <linearGradient
+       id="linearGradient3663-5-80-6-8-02-5">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-3-0-1-5-6" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-6-9-3-8-8" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3663-5-8-7-1-4-2-4"
+       id="linearGradient3669-59-5-6-0-1-6-8"
+       x1="415.80225"
+       y1="129.36218"
+       x2="415.80225"
+       y2="273.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.77968921,0,0,1,814.29269,394)" />
+    <linearGradient
+       id="linearGradient3663-5-8-7-1-4-2-4">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-7-9-9-86-8" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-6-5-6-5-6" />
+    </linearGradient>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3458"
+       style="overflow:visible">
+      <path
+         id="path3460"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3462"
+       style="overflow:visible">
+      <path
+         id="path3464"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <filter
+       id="filter3950-5-9-0-8-3"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-6-1-7-1-7"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-06-0-2-7-1"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-5-6-0-4-9"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-5-0-8-7-3"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3663-5-6-6-5-3-3"
+       id="linearGradient3669-59-3-5-6-6-6"
+       x1="415.80225"
+       y1="273.36218"
+       x2="415.80225"
+       y2="129.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.77968921,0,0,1,54.542819,575.75)" />
+    <linearGradient
+       id="linearGradient3663-5-6-6-5-3-3">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-1-7-8-8-5" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-67-8-0-3-0" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3663-5-8-0-4-8-5-7"
+       id="linearGradient3669-59-5-9-3-9-5-9"
+       x1="415.80225"
+       y1="129.36218"
+       x2="415.80225"
+       y2="273.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.77968921,0,0,1,299.54278,580.75)" />
+    <linearGradient
+       id="linearGradient3663-5-8-0-4-8-5-7">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-1-8-6-8-2" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-5-7-0-6-1" />
+    </linearGradient>
+    <filter
+       id="filter3950-0-5-9-2-7-9"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-5-0-7-4-2-5"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-0-2-5-7-8-1"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-7-8-0-9-3-9"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-1-6-8-5-8-1"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3663-5-80-6-8-0-0-6"
+       id="linearGradient3669-59-7-8-7-8-7-9"
+       x1="415.80225"
+       y1="273.36218"
+       x2="415.80225"
+       y2="129.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.77968921,0,0,1,548.38363,581.75)" />
+    <linearGradient
+       id="linearGradient3663-5-80-6-8-0-0-6">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-3-0-1-2-0-2" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-6-9-3-3-1-9" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3663-5-8-7-1-4-5-5-4"
+       id="linearGradient3669-59-5-6-0-1-8-0-9"
+       x1="415.80225"
+       y1="129.36218"
+       x2="415.80225"
+       y2="273.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.77968921,0,0,1,817.29269,581)" />
+    <linearGradient
+       id="linearGradient3663-5-8-7-1-4-5-5-4">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-7-9-9-8-8-6" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-6-5-6-4-9-5" />
+    </linearGradient>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3492"
+       style="overflow:visible">
+      <path
+         id="path3494"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3496"
+       style="overflow:visible">
+      <path
+         id="path3498"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3500"
+       style="overflow:visible">
+      <path
+         id="path3502"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3504"
+       style="overflow:visible">
+      <path
+         id="path3506"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3508"
+       style="overflow:visible">
+      <path
+         id="path3510"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3512"
+       style="overflow:visible">
+      <path
+         id="path3514"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3516"
+       style="overflow:visible">
+      <path
+         id="path3518"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3520"
+       style="overflow:visible">
+      <path
+         id="path3522"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3524"
+       style="overflow:visible">
+      <path
+         id="path3526"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3528"
+       style="overflow:visible">
+      <path
+         id="path3530"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3532"
+       style="overflow:visible">
+      <path
+         id="path3534"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3536"
+       style="overflow:visible">
+      <path
+         id="path3538"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3540"
+       style="overflow:visible">
+      <path
+         id="path3542"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3544"
+       style="overflow:visible">
+      <path
+         id="path3546"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3548"
+       style="overflow:visible">
+      <path
+         id="path3550"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3552"
+       style="overflow:visible">
+      <path
+         id="path3554"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3556"
+       style="overflow:visible">
+      <path
+         id="path3558"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3560"
+       style="overflow:visible">
+      <path
+         id="path3562"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3564"
+       style="overflow:visible">
+      <path
+         id="path3566"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3568"
+       style="overflow:visible">
+      <path
+         id="path3570"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3572"
+       style="overflow:visible">
+      <path
+         id="path3574"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3576"
+       style="overflow:visible">
+      <path
+         id="path3578"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3580"
+       style="overflow:visible">
+      <path
+         id="path3582"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3584"
+       style="overflow:visible">
+      <path
+         id="path3586"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3588"
+       style="overflow:visible">
+      <path
+         id="path3590"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3592"
+       style="overflow:visible">
+      <path
+         id="path3594"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective5669"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective5691"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective5713"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective5735"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-8-592"
+       style="overflow:visible">
+      <path
+         id="path3968-0-23"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5741"
+       style="overflow:visible">
+      <path
+         id="path5743"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3663-5-80-2-7-0"
+       id="linearGradient3669-59-7-3-1-1"
+       x1="415.80225"
+       y1="273.36218"
+       x2="415.80225"
+       y2="129.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.77968921,0,0,1,712.30373,-138.9)" />
+    <linearGradient
+       id="linearGradient3663-5-80-2-7-0">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-3-3-9-3" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-6-4-5-2" />
+    </linearGradient>
+    <filter
+       id="filter3950-0-1-4-9"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-5-3-2-3"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-0-3-2-7"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-7-4-4-3"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-1-0-3-2"
+         in2="result92"
+         operator="in" />
+    </filter>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5754"
+       style="overflow:visible">
+      <path
+         id="path5756"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5758"
+       style="overflow:visible">
+      <path
+         id="path5760"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3663-5-8-7-4-8-7"
+       id="linearGradient3669-59-5-6-9-7-1"
+       x1="415.80225"
+       y1="129.36218"
+       x2="415.80225"
+       y2="273.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.77968921,0,0,1,395.57538,-139.77182)" />
+    <linearGradient
+       id="linearGradient3663-5-8-7-4-8-7">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-7-1-7-9" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-6-7-2-8" />
+    </linearGradient>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5766"
+       style="overflow:visible">
+      <path
+         id="path5768"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5770"
+       style="overflow:visible">
+      <path
+         id="path5772"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5774"
+       style="overflow:visible">
+      <path
+         id="path5776"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker5778"
+       style="overflow:visible">
+      <path
+         id="path5780"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3663-5-8-05-6-4"
+       id="linearGradient3669-59-5-8-6-8"
+       x1="415.80225"
+       y1="129.36218"
+       x2="415.80225"
+       y2="273.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.77968921,0,0,1,84.82555,-140.02182)" />
+    <linearGradient
+       id="linearGradient3663-5-8-05-6-4">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-8-13-8-4" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-2-0-1-7" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3663-5-9-7-1"
+       id="linearGradient3669-59-37-0-6"
+       x1="415.80225"
+       y1="273.36218"
+       x2="415.80225"
+       y2="129.36218"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.77968921,0,0,1,-222.69626,-138.9)" />
+    <linearGradient
+       id="linearGradient3663-5-9-7-1">
+      <stop
+         style="stop-color:#323232;stop-opacity:0.49019608;"
+         offset="0"
+         id="stop3665-6-4-9-9" />
+      <stop
+         style="stop-color:#cbd5e8;stop-opacity:0;"
+         offset="1"
+         id="stop3667-4-3-9-0" />
+    </linearGradient>
+    <filter
+       id="filter3950-82-2-0"
+       inkscape:label="Feather"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Blurred mask on the edge without altering the contents"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3952-63-1-1"
+         result="result6"
+         stdDeviation="3.5" />
+      <feComposite
+         id="feComposite3954-8-2-3"
+         in2="result6"
+         operator="atop"
+         in="SourceGraphic"
+         result="result91" />
+      <feComposite
+         id="feComposite3956-4-0-3"
+         in2="result91"
+         operator="in"
+         result="result92" />
+      <feComposite
+         id="feComposite3958-10-1-2"
+         in2="result92"
+         operator="in" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.8"
+     inkscape:cx="448.75"
+     inkscape:cy="402.5534"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1057"
+     inkscape:window-x="1920"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     showguides="true"
+     inkscape:guide-bbox="true" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,447.63782)">
+    <rect
+       style="fill:none;stroke:#ffffff;stroke-width:5.14804745;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2911-5-3-7"
+       width="177.89563"
+       height="150.89563"
+       x="323.57404"
+       y="-345.60748"
+       ry="23.053497"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetrydown.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:none;stroke:#ffffff;stroke-width:5.14804745;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2911-5-7"
+       width="177.89563"
+       height="150.89563"
+       x="19.052177"
+       y="-343.48563"
+       ry="23.053497"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryup.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="-342.15967"
+       x="327.4696"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-7-3"
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetrydown.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter3950-82-2)"
+       id="rect3948"
+       width="215.60451"
+       height="144"
+       x="214"
+       y="199.36218"
+       ry="29"
+       transform="matrix(0.77968921,0,0,1,-138.74656,-535.4)"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryup.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="-341.53781"
+       x="22.447746"
+       height="144"
+       width="168.10451"
+       id="rect3616-1"
+       style="fill:#ffffb3;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryup.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:url(#linearGradient3669-59-37-0);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3661-8"
+       width="168.10451"
+       height="144"
+       x="22.44799"
+       y="-339.53781"
+       ry="22"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryup.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="-340.65967"
+       x="329.9696"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-7"
+       style="fill:#e0dd00;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetrydown.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:url(#linearGradient3669-59-5-8-6);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3661-8-8"
+       width="168.10451"
+       height="144"
+       x="329.96985"
+       y="-340.65967"
+       ry="22"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetrydown.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 71.999972,-270.03782 0,-63"
+       id="path3880"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryup.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 145,-266.53782 0,63"
+       id="path3880-1"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryup.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 111.59754,-268.03782 66.8049,0"
+       id="path4100"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryup.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 107.99998,-338.03782 0,137"
+       id="path4102"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryup.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:none;stroke:#fdb462;stroke-width:5.14804745;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2911-5-6"
+       width="177.89563"
+       height="150.89563"
+       x="785.13208"
+       y="309.66434"
+       ry="23.053497"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positiveupselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter3950-0-5-4-9)"
+       id="rect3948-3-7"
+       width="215.60451"
+       height="144"
+       x="214"
+       y="199.36218"
+       ry="29"
+       transform="matrix(0.77968921,0,0,1,626.33334,117.25)"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positiveupselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="311.11218"
+       x="787.52765"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-1-3"
+       style="fill:#ffffb3;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positiveupselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:url(#linearGradient3669-59-7-8-2-7);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3661-8-2-1"
+       width="168.10451"
+       height="144"
+       x="787.52789"
+       y="313.11218"
+       ry="22"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positiveupselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="310.86218"
+       x="1053.9368"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-7-3-2-7"
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positiveselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="312.36218"
+       x="1056.4368"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-7-9-5"
+       style="fill:#e0dd00;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positiveselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:url(#linearGradient3669-59-5-6-0-15-9);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3661-8-8-6-1"
+       width="168.10451"
+       height="144"
+       x="1056.437"
+       y="312.36218"
+       ry="22"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positiveselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:none;stroke:#fdb462;stroke-width:5.14804745;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2911-5-3-3"
+       width="177.89563"
+       height="150.89563"
+       x="1049.2913"
+       y="307.16437"
+       ry="23.053497"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positiveselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:none;stroke:#ffffff;stroke-width:5.14804745;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2911-5-3-7-7-6"
+       width="177.89563"
+       height="150.89563"
+       x="530.29126"
+       y="518.16437"
+       ry="23.053497"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1down.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:none;stroke:#ffffff;stroke-width:5.14804745;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2911-5-7-0-9"
+       width="177.89563"
+       height="150.89563"
+       x="288.29126"
+       y="514.16437"
+       ry="23.053497"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1up.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="521.61218"
+       x="534.18683"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-7-3-6-2"
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1down.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter3950-5-9-02-3)"
+       id="rect3948-9-9"
+       width="215.60451"
+       height="144"
+       x="214"
+       y="199.36218"
+       ry="29"
+       transform="matrix(0.77968921,0,0,1,130.49252,322.25)"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1up.png"
+       inkscape:export-xdpi="100"
+       inkscape:export-ydpi="100" />
+    <rect
+       ry="22"
+       y="516.11218"
+       x="291.68683"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-3-2"
+       style="fill:#ffffb3;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1up.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:url(#linearGradient3669-59-3-5-7-2);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3661-8-7-5"
+       width="168.10451"
+       height="144"
+       x="291.68707"
+       y="518.11218"
+       ry="22"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1up.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="523.11218"
+       x="536.68683"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-7-4-3"
+       style="fill:#e0dd00;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1down.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:url(#linearGradient3669-59-5-9-3-7-1);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3661-8-8-2-2"
+       width="168.10451"
+       height="144"
+       x="536.68707"
+       y="523.11218"
+       ry="22"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1down.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:none;stroke:#fdb462;stroke-width:5.14804745;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2911-5-6-2"
+       width="177.89563"
+       height="150.89563"
+       x="783.13208"
+       y="520.66431"
+       ry="23.053497"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1upselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter3950-0-5-9-21-8)"
+       id="rect3948-3-7-3"
+       width="215.60451"
+       height="144"
+       x="214"
+       y="199.36218"
+       ry="29"
+       transform="matrix(0.77968921,0,0,1,624.33334,328.25)"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1upselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="522.11218"
+       x="785.52765"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-1-3-2"
+       style="fill:#ffffb3;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1upselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:url(#linearGradient3669-59-7-8-7-4-0);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3661-8-2-1-5"
+       width="168.10451"
+       height="144"
+       x="785.52789"
+       y="524.11218"
+       ry="22"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1upselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="521.86218"
+       x="1051.9368"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-7-3-2-7-6"
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1select.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="523.36218"
+       x="1054.4368"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-7-9-5-1"
+       style="fill:#e0dd00;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1select.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:url(#linearGradient3669-59-5-6-0-1-6-8);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3661-8-8-6-1-2"
+       width="168.10451"
+       height="144"
+       x="1054.437"
+       y="523.36218"
+       ry="22"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1select.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:none;stroke:#fdb462;stroke-width:5.14804745;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2911-5-3-3-3"
+       width="177.89563"
+       height="150.89563"
+       x="1047.2913"
+       y="518.16437"
+       ry="23.053497"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1select.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 304.49998,588.11218 63,0"
+       id="path3880-6-3"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1up.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 377.23905,519.61218 0,137"
+       id="path4102-3-2"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1up.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 449.5,588.11218 -63,0"
+       id="path3880-6-2-7"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1up.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:none;stroke:#ffffff;stroke-width:5.14804745;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2911-5-3-7-7-6-3"
+       width="177.89563"
+       height="150.89563"
+       x="533.2912"
+       y="705.16443"
+       ry="23.053497"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2down.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:none;stroke:#ffffff;stroke-width:5.14804745;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2911-5-7-0-9-9"
+       width="177.89563"
+       height="150.89563"
+       x="291.29123"
+       y="701.16443"
+       ry="23.053497"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2up.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="708.61218"
+       x="537.18677"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-7-3-6-2-9"
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2down.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter3950-5-9-0-8-3)"
+       id="rect3948-9-9-1"
+       width="215.60451"
+       height="144"
+       x="214"
+       y="199.36218"
+       ry="29"
+       transform="matrix(0.77968921,0,0,1,133.49252,509.25)"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2up.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="703.11218"
+       x="294.6868"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-3-2-1"
+       style="fill:#ffffb3;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2up.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:url(#linearGradient3669-59-3-5-6-6-6);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3661-8-7-5-7"
+       width="168.10451"
+       height="144"
+       x="294.68704"
+       y="705.11218"
+       ry="22"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2up.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="710.11218"
+       x="539.68677"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-7-4-3-8"
+       style="fill:#e0dd00;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2down.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:url(#linearGradient3669-59-5-9-3-9-5-9);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3661-8-8-2-2-9"
+       width="168.10451"
+       height="144"
+       x="539.68701"
+       y="710.11218"
+       ry="22"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2down.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:none;stroke:#fdb462;stroke-width:5.14804745;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2911-5-6-2-1"
+       width="177.89563"
+       height="150.89563"
+       x="786.13208"
+       y="707.66431"
+       ry="23.053497"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2upselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter3950-0-5-9-2-7-9)"
+       id="rect3948-3-7-3-6"
+       width="215.60451"
+       height="144"
+       x="214"
+       y="199.36218"
+       ry="29"
+       transform="matrix(0.77968921,0,0,1,627.33334,515.25)"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2upselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="709.11218"
+       x="788.52765"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-1-3-2-9"
+       style="fill:#ffffb3;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2upselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:url(#linearGradient3669-59-7-8-7-8-7-9);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3661-8-2-1-5-5"
+       width="168.10451"
+       height="144"
+       x="788.52789"
+       y="711.11218"
+       ry="22"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2upselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="708.86218"
+       x="1054.9368"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-7-3-2-7-6-1"
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2select.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="710.36218"
+       x="1057.4368"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-7-9-5-1-4"
+       style="fill:#e0dd00;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2select.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:url(#linearGradient3669-59-5-6-0-1-8-0-9);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3661-8-8-6-1-2-1"
+       width="168.10451"
+       height="144"
+       x="1057.437"
+       y="710.36218"
+       ry="22"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2select.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:none;stroke:#fdb462;stroke-width:5.14804745;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2911-5-3-3-3-1"
+       width="177.89563"
+       height="150.89563"
+       x="1050.2913"
+       y="705.16443"
+       ry="23.053497"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2select.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 370.49997,775.11218 -63,0"
+       id="path3880-6-3-3"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2up.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 380.23904,706.61218 0,137"
+       id="path4102-3-2-7"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2up.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 389.5,775.11218 63,0"
+       id="path3880-6-2-7-2"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2up.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 376.44561,-269.65963 0,-63"
+       id="path3880-3"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetrydown.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 449.44561,-266.15963 0,63"
+       id="path3880-1-4"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetrydown.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 416.04317,-267.65963 66.80488,0"
+       id="path4100-2"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetrydown.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 412.44561,-337.65963 0,137"
+       id="path4102-1"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetrydown.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 839,414.11218 0,-63"
+       id="path3880-6-8-5"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positiveupselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 872.23907,314.11218 0,137"
+       id="path4102-3-0-6"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positiveupselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 905,414.11218 0,-63"
+       id="path3880-6-2-72-9"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positiveupselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 1106,416.11218 0,-63"
+       id="path3880-6-8-6"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positiveselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 1139.2391,316.11218 0,137"
+       id="path4102-3-0-9"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positiveselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 1172,416.11218 0,-63"
+       id="path3880-6-2-72-4"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positiveselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 548.5,594.61218 63,0"
+       id="path3880-6-3-7"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1down.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 621.23907,526.11218 0,137"
+       id="path4102-3-2-5"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1down.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 693.5,594.61218 -63,0"
+       id="path3880-6-2-7-3"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1down.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 796,593.61218 63,0"
+       id="path3880-6-3-2"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1upselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 868.73907,525.11218 0,137"
+       id="path4102-3-2-2"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1upselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 941,593.61218 -63,0"
+       id="path3880-6-2-7-25"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1upselect.png" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 1064.5,593.61218 63,0"
+       id="path3880-6-3-0"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1select.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 1137.2391,525.11218 0,137"
+       id="path4102-3-2-9"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1select.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 1209.5,593.61218 -63,0"
+       id="path3880-6-2-7-9"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative1select.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 613.5,782.61218 -63,0"
+       id="path3880-6-3-3-3"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2down.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 623.23906,714.11218 0,137"
+       id="path4102-3-2-7-2"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2down.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 632.5,782.61218 63,0"
+       id="path3880-6-2-7-2-0"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2down.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 863.5,780.61218 -63,0"
+       id="path3880-6-3-3-5"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2upselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 873.23906,712.11218 0,137"
+       id="path4102-3-2-7-8"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2upselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 882.5,780.61218 63,0"
+       id="path3880-6-2-7-2-4"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2upselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 1131.5,783.61218 -63,0"
+       id="path3880-6-3-3-58"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2select.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 1141.2391,715.11218 0,137"
+       id="path4102-3-2-7-6"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2select.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 1150.5,783.61218 63,0"
+       id="path3880-6-2-7-2-3"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/negative2select.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="-341.90967"
+       x="638.21942"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-7-3-2"
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="-340.40967"
+       x="640.71942"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-7-9"
+       style="fill:#e0dd00;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:url(#linearGradient3669-59-5-6-9-7);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3661-8-8-6"
+       width="168.10451"
+       height="144"
+       x="640.71967"
+       y="-340.40967"
+       ry="22"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:none;stroke:#fdb462;stroke-width:5.14804745;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2911-5-3"
+       width="177.89563"
+       height="150.89563"
+       x="633.57404"
+       y="-345.60748"
+       ry="23.053497"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 689.02177,-269.65964 0,-63"
+       id="path3880-0-0"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 762.02177,-266.15964 0,63"
+       id="path3880-1-9-9"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 728.61937,-267.65964 66.8048,0"
+       id="path4100-9-8"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 725.02177,-337.65964 0,137"
+       id="path4102-39-8"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:none;stroke:#fdb462;stroke-width:5.14804745;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2911-5"
+       width="177.89563"
+       height="150.89563"
+       x="955.05219"
+       y="-342.98566"
+       ry="23.053497"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryupselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter3950-0-1-4)"
+       id="rect3948-3"
+       width="215.60451"
+       height="144"
+       x="214"
+       y="199.36218"
+       ry="29"
+       transform="matrix(0.77968921,0,0,1,796.25344,-535.4)"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryupselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="-341.53784"
+       x="957.44775"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-1"
+       style="fill:#ffffb3;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryupselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:url(#linearGradient3669-59-7-3-1);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3661-8-2"
+       width="168.10451"
+       height="144"
+       x="957.448"
+       y="-339.53784"
+       ry="22"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryupselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 1005.6592,-270.53782 0,-63"
+       id="path3880-0"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryupselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 1078.6592,-267.03782 0,63"
+       id="path3880-1-9"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryupselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 1045.2567,-268.53782 66.8049,0"
+       id="path4100-9"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryupselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 1041.6592,-338.53782 0,137"
+       id="path4102-39"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryupselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="-11.909671"
+       x="633.21942"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-7-3-2-4"
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="-10.409671"
+       x="635.71942"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-7-9-6"
+       style="fill:#e0dd00;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:url(#linearGradient3669-59-5-6-9-7-1);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3661-8-8-6-3"
+       width="168.10451"
+       height="144"
+       x="635.71967"
+       y="-10.409671"
+       ry="22"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:none;stroke:#fdb462;stroke-width:5.14804745;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2911-5-3-5"
+       width="177.89563"
+       height="150.89563"
+       x="628.57404"
+       y="-15.607486"
+       ry="23.053497"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 684.02177,60.340354 0,-62.9999996"
+       id="path3880-0-0-6"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 757.02177,63.840354 0,63.000006"
+       id="path3880-1-9-9-3"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 723.61937,62.340354 66.8048,0"
+       id="path4100-9-8-7"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 720.02177,-7.6596456 0,137.0000056"
+       id="path4102-39-8-9"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/antisymmetryselect.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:none;stroke:#fdb462;stroke-width:5.14804745;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2911-5-1"
+       width="177.89563"
+       height="150.89563"
+       x="950.05225"
+       y="-12.98566"
+       ry="23.053497" />
+    <rect
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter3950-0-1-4-9)"
+       id="rect3948-3-4"
+       width="215.60451"
+       height="144"
+       x="214"
+       y="199.36218"
+       ry="29"
+       transform="matrix(0.77968921,0,0,1,791.25344,-205.4)" />
+    <rect
+       ry="22"
+       y="-11.537845"
+       x="952.44775"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-1-0"
+       style="fill:#ffffb3;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+    <rect
+       style="fill:url(#linearGradient3669-59-7-3-1-1);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3661-8-2-6"
+       width="168.10451"
+       height="144"
+       x="952.448"
+       y="-9.5378447"
+       ry="22" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 1000.6592,59.462174 0,-62.9999996"
+       id="path3880-0-1" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 1073.6592,62.962174 0,63.000006"
+       id="path3880-1-9-5" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 1040.2567,61.462174 66.8049,0"
+       id="path4100-9-4" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 1036.6592,-8.5378256 0,137.0000056"
+       id="path4102-39-9" />
+    <rect
+       style="fill:none;stroke:#ffffff;stroke-width:5.14804745;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2911-5-7-0"
+       width="177.89563"
+       height="150.89563"
+       x="14.052176"
+       y="-13.485635"
+       ry="23.053497"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positiveup.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter3950-5-5-2)"
+       id="rect3948-9"
+       width="215.60451"
+       height="144"
+       x="214"
+       y="199.36218"
+       ry="29"
+       transform="matrix(0.77968921,0,0,1,-143.74656,-205.4)"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positiveup.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="-11.53782"
+       x="17.447744"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-3"
+       style="fill:#ffffb3;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positiveup.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:url(#linearGradient3669-59-3-8-7);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3661-8-7"
+       width="168.10451"
+       height="144"
+       x="17.447989"
+       y="-9.5378199"
+       ry="22"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positiveup.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 69.760896,91.962177 0,-63"
+       id="path3880-6"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positiveup.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 102.99997,-8.0378226 0,137.0000026"
+       id="path4102-3"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positiveup.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 135.76092,91.962177 0,-63"
+       id="path3880-6-2"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positiveup.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:none;stroke:#ffffff;stroke-width:5.14804745;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2911-5-3-7-7"
+       width="177.89563"
+       height="150.89563"
+       x="318.57404"
+       y="-15.607473"
+       ry="23.053497"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positivedown.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="-12.159658"
+       x="322.4696"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-7-3-6"
+       style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positivedown.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       ry="22"
+       y="-10.659658"
+       x="324.9696"
+       height="144"
+       width="168.10451"
+       id="rect3616-1-7-4"
+       style="fill:#e0dd00;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positivedown.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <rect
+       style="fill:url(#linearGradient3669-59-5-9-7-6);fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3661-8-8-2"
+       width="168.10451"
+       height="144"
+       x="324.96985"
+       y="-10.659658"
+       ry="22"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positivedown.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 374.28276,94.340339 0,-63"
+       id="path3880-6-8"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positivedown.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1.5, 1.5;stroke-dashoffset:0"
+       d="m 407.52183,-5.6596613 0,137.0000013"
+       id="path4102-3-0"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positivedown.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend-8)"
+       d="m 440.28276,94.340339 0,-63"
+       id="path3880-6-2-72"
+       inkscape:export-filename="/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/media/figures/positivedown.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
+  </g>
+</svg>

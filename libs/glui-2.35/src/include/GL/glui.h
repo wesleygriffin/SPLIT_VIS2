@@ -2288,6 +2288,8 @@ public:
     void set_object_callback(GLUI_CB cb=GLUI_CB(), GLUI_Control*obj=NULL)
     { object_cb=cb; associated_object=obj; }
 
+    //byHenan
+    bool ifmouseup(){if(state==GLUI_SCROLL_STATE_NONE)return true;else return false;}
 protected:
     void common_init ( void );
     void common_construct(

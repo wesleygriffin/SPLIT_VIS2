@@ -1,5 +1,9 @@
 
 #include "svUtil.h"
+#include <SOIL.h>
+
+#define TEXTURE_LOAD_ERROR 0
+
 
 namespace __svl_lib {
 
@@ -749,7 +753,7 @@ svInt  getNumOfIntegerDigits(svScalar num)
 
           if(numCopy<1&&numCopy!=0)
           {
-            while ((fabs(numCopy-1.)>0.000001)&&(numCopy-1.)<0.000001)
+            while (numCopy<1)//(fabs(numCopy-1.)>0.000001)&&(numCopy-1.)<0.000001)
                 {
                        multiplier--;
                        numCopy *=10;
@@ -772,20 +776,148 @@ svInt  getNumOfIntegerDigits(svScalar num)
           return multiplier;
 }
 
+void RenderSphere(svVector3 glyph, svScalar radius, svVector3 dir,
+                   int segment1, int segment2)
+{
+   svVector3 sphere_seg_pos[segment1+1][segment2+1];
+   svVector3 sphere_seg_norm[segment1+1][segment2+1];
+   svVector3 center;
+  
+   center[0]=0;center[1]=0;center[2]=0;
+   svVector3 pos;pos[0]=0;pos[1]=0;pos[2]=-1;
+   svVector3 head;
+   svVector3 x;x[0]=1;x[1]=0;x[2]=0;
+   svVector3 y;y[0]=0;y[1]=1;y[2]=0;
+   svVector3 z;z[0]=0;z[1]=0;z[2]=1;
+   for(int i=0;i<segment1+1;i++)//0-180
+   {
+        head = svGetRotatePoint(pos, center, x, (svScalar)i * (svScalar)(180./segment1));
+        svVector3 c;
+        c[0]=0;c[1]=0;c[2]=head[2];
+        for(int j=0;j<segment2+1;j++)//0-360
+        {
+             sphere_seg_pos[i][j]=svGetRotatePoint(head, c, z, (svScalar)j * (svScalar)(360./segment2)); 
+        }
+   }
+
+   for(int i=0;i<segment1+1;i++)//0-180
+   {
+        for(int j=0;j<segment2+1;j++)//0-360
+        {
+             sphere_seg_pos[i][j]=sphere_seg_pos[i][j] * radius
+                            + glyph + radius * dir;
+             sphere_seg_norm[i][j]=sphere_seg_pos[i][j]-(glyph + radius * dir);
+             sphere_seg_norm[i][j]=normalize(sphere_seg_norm[i][j]);
+        }
+   } 
+
+   for(int i=0;i<segment1;i++)//0-180
+   {
+        glBegin(GL_QUAD_STRIP);
+        for(int j=0;j<segment2+1;j++)//0-360
+        {
+            glNormal3f(sphere_seg_norm[i][j][0],sphere_seg_norm[i][j][1],sphere_seg_norm[i][j][2]);
+            glVertex3f(sphere_seg_pos[i][j][0],sphere_seg_pos[i][j][1],sphere_seg_pos[i][j][2]);
+            glNormal3f(sphere_seg_norm[i+1][j][0],sphere_seg_norm[i+1][j][1],sphere_seg_norm[i+1][j][2]);
+            glVertex3f(sphere_seg_pos[i+1][j][0],sphere_seg_pos[i+1][j][1],sphere_seg_pos[i+1][j][2]);
+        }
+        glEnd(); 
+   } 
+}
+void RenderCylinderTexture(svVector3 glyph, svVector3 dir,
+                svScalar radius, svScalar height,svVector4 col,
+                svScalar ratio, int texture_num, int segment)
+{
+        int num = texture_num;
+        svScalar whole_degree = 360./num;
+        int bar_segment, white_segment;
+
+        svScalar bar_degree;
+        bar_degree = whole_degree * ratio;
+        svScalar white_degree;
+        white_degree = whole_degree - bar_degree;
+
+        bar_segment = segment * ratio;// (segment/num) * ratio;
+//        if(bar_segment == 0)
+//                bar_segment = 1;
+        white_segment = segment - bar_segment;//segment/num - bar_segment;
+
+        svVector3 v;
+        svVector3 rotate_base, rotate_top, rotate_normal;
+        v = svGetPerpendicularVector(dir);
+        svVector3 head = glyph + radius * v;
+        svVector3 top = glyph + height* dir;
+
+        vector<svVector3> base;
+        for(int i=0;i<num;i++)
+        {
+                svVector3 tmphead = glyph + radius * v;
+                head = svGetRotatePoint(tmphead, glyph, dir, i * whole_degree);
+
+                glColor4f(1,1,1,col[3]);
+                glBegin(GL_QUAD_STRIP);
+                for(int j=0;j<=white_segment;j++)
+                {
+                        rotate_base = svGetRotatePoint(head, glyph,dir, 
+                               (svScalar)j * white_degree/(svScalar)white_segment);
+                        rotate_top = rotate_base + height*dir;
+                        rotate_normal = normalize(rotate_base - glyph);
+
+                        glNormal3f(rotate_normal[0], rotate_normal[1], rotate_normal[2]);
+                        glVertex3f(rotate_base[0], rotate_base[1], rotate_base[2]);
+                        glNormal3f(rotate_normal[0], rotate_normal[1], rotate_normal[2]);
+                        glVertex3f(rotate_top[0], rotate_top[1], rotate_top[2]);
+                        base.push_back(rotate_base);
+                }
+                glEnd();
+
+                glColor4f(col[0],col[1],col[2],col[3]);
+                glBegin(GL_QUAD_STRIP);
+                for(int j=0;j<=bar_segment;j++)
+                {
+                        rotate_base = svGetRotatePoint(head, glyph,dir, 
+                       (svScalar)j * bar_degree/(svScalar)bar_segment + white_degree);
+
+                        rotate_normal = normalize(rotate_base - glyph);
+                        rotate_top = rotate_base + height*dir;
+
+                        glNormal3f(rotate_normal[0], rotate_normal[1], rotate_normal[2]);
+                        glVertex3f(rotate_base[0], rotate_base[1], rotate_base[2]);
+                        glNormal3f(rotate_normal[0], rotate_normal[1], rotate_normal[2]);
+                        glVertex3f(rotate_top[0], rotate_top[1], rotate_top[2]);
+                        base.push_back(rotate_base);
+                }
+                glEnd();
+
+        }
+
+        glColor4f(col[0], col[1], col[2], col[3]);
+        glBegin(GL_POLYGON);
+        glNormal3f(-dir[0],-dir[1],-dir[2]);
+        for(int i=0;i<base.size();i++)
+        {
+          glVertex3f(base[i][0],base[i][1],base[i][2]);
+        }
+        glEnd();
+
+       base.clear();
+}
 void RenderCylinder(svVector3 glyph, svVector3 dir,
                 svScalar radius, svScalar height,
                 int segment)
 {
-    svVector3 cylinder_seg_norm[segment+1];
+
+    svVector3 cylinder_seg_norm[(segment+1)*2];
     svVector3 cylinder_seg_pos[(segment+1)*2];
     float interval_degree  = 360./(float)segment;
     for(int i=0;i<=segment;i++) {
         if(i == 0)
         {
-           svVector3 ori =  normalize(svGetPerpendicularVector(dir));
+           svVector3 ori =  svGetPerpendicularVector(dir);
            cylinder_seg_pos[0] = glyph + radius * ori;
            cylinder_seg_pos[1] = cylinder_seg_pos[0] + height * dir;
            cylinder_seg_norm[0] = normalize(cylinder_seg_pos[0] - glyph);
+           cylinder_seg_norm[1] = normalize(cylinder_seg_pos[0] - glyph);
          }
         else
         {
@@ -794,30 +926,54 @@ void RenderCylinder(svVector3 glyph, svVector3 dir,
                                          dir,
                                          i * interval_degree);
            cylinder_seg_pos[i*2+1] = cylinder_seg_pos[i*2] + height * dir;
-           cylinder_seg_norm[i] = normalize(cylinder_seg_pos[i*2] - glyph); 
+           cylinder_seg_norm[i*2] = normalize(cylinder_seg_pos[i*2] - glyph);
+           cylinder_seg_norm[i*2+1] = normalize(cylinder_seg_pos[i*2] - glyph);
         }
     }
  
     glBegin(GL_QUAD_STRIP);
     for(int i=0;i<=segment;i++)
     {
-          glNormal3f(cylinder_seg_norm[i][0], 
-                    cylinder_seg_norm[i][1],
-                    cylinder_seg_norm[i][2]);
+          glNormal3f(cylinder_seg_norm[2*i+1][0], 
+                    cylinder_seg_norm[2*i+1][1],
+                    cylinder_seg_norm[2*i+1][2]);
+          glVertex3f(cylinder_seg_pos[2*i+1][0],
+                    cylinder_seg_pos[2*i+1][1],
+                    cylinder_seg_pos[2*i+1][2]);
+
+          glNormal3f(cylinder_seg_norm[2*i][0],
+                    cylinder_seg_norm[2*i][1],
+                    cylinder_seg_norm[2*i][2]);
           glVertex3f(cylinder_seg_pos[2*i][0],
                     cylinder_seg_pos[2*i][1],
                     cylinder_seg_pos[2*i][2]);
 
-          glNormal3f(cylinder_seg_norm[i][0],
-                    cylinder_seg_norm[i][1],
-                    cylinder_seg_norm[i][2]);
-          glVertex3f(cylinder_seg_pos[2*i+1][0],
-                    cylinder_seg_pos[2*i+1][1],
-                    cylinder_seg_pos[2*i+1][2]);
     } 
     glEnd();
 
-    glBegin(GL_POLYGON);
+  /*
+   glDisable(GL_LIGHTING);
+
+   glBegin(GL_LINES);  
+   for(int i=0;i<=segment;i++)
+    {
+          glVertex3f(cylinder_seg_pos[2*i+1][0],
+                    cylinder_seg_pos[2*i+1][1],
+                    cylinder_seg_pos[2*i+1][2]);
+          glVertex3f(cylinder_seg_pos[2*i+1][0]+cylinder_seg_norm[2*i+1][0],
+                    cylinder_seg_pos[2*i+1][1]+cylinder_seg_norm[2*i+1][1],
+                    cylinder_seg_pos[2*i+1][2]+cylinder_seg_norm[2*i+1][2]);
+    }
+
+   glEnd();
+
+   glEnable(GL_LIGHTING);
+*/
+ 
+
+    if(height >1e-3)
+    {
+/*    glBegin(GL_POLYGON);
     glNormal3f(dir[0],dir[1],dir[2]);
     for(int i=0;i<=segment;i++)
     {
@@ -826,7 +982,7 @@ void RenderCylinder(svVector3 glyph, svVector3 dir,
                     cylinder_seg_pos[2*i+1][2]);
     }
     glEnd();
-
+*/
     glBegin(GL_POLYGON);
     glNormal3f(-dir[0],-dir[1],-dir[2]);
     for(int i=0;i<=segment;i++)
@@ -836,7 +992,122 @@ void RenderCylinder(svVector3 glyph, svVector3 dir,
                     cylinder_seg_pos[2*i][2]);
     }
     glEnd();
+    }
+    else
+    {
+
+//    glNormal3f(dir[0],dir[1],dir[2]);
+    glNormal3f(-dir[0],-dir[1],-dir[2]);
+    for(int i=0;i<=segment;i++)
+    {
+          glVertex3f(cylinder_seg_pos[2*i+1][0],
+                    cylinder_seg_pos[2*i+1][1],
+                    cylinder_seg_pos[2*i+1][2]);
+    }
+    glEnd();
+//    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
+
+    }
+
+
 }
+void GetCylinder(svVector3 glyph, svVector3 dir,
+                svScalar radius, svScalar height,
+                int segment,
+                svVector3 *cylinder_seg_norm,
+                 svVector3 *cylinder_seg_pos)
+{
+//    svVector3 cylinder_seg_norm[(segment+1)*2];
+//    svVector3 cylinder_seg_pos[(segment+1)*2];
+    float interval_degree  = 360./(float)segment;
+    for(int i=0;i<=segment;i++) {
+        if(i == 0)
+        {
+           svVector3 ori =  svGetPerpendicularVector(dir);
+           cylinder_seg_pos[0] = glyph + radius * ori;
+           cylinder_seg_pos[1] = cylinder_seg_pos[0] + height * dir;
+           cylinder_seg_norm[0] = normalize(cylinder_seg_pos[0] - glyph);
+           cylinder_seg_norm[1] = normalize(cylinder_seg_pos[0] - glyph);
+         }
+        else
+        {
+           cylinder_seg_pos[i*2] = svGetRotatePoint(cylinder_seg_pos[0],
+                                         glyph,
+                                         dir,
+                                         360-i * interval_degree);
+           cylinder_seg_pos[i*2+1] = cylinder_seg_pos[i*2] + height * dir;
+           cylinder_seg_norm[i*2] = normalize(cylinder_seg_pos[i*2] - glyph);
+           cylinder_seg_norm[i*2+1] = normalize(cylinder_seg_pos[i*2] - glyph);
+        }
+    }
+}
+void GetCone(svVector3 glyph, svVector3 dir,
+                svScalar radius, svScalar height,
+                int segment,
+              svVector3 *cone_seg_norm, svVector3 *cone_seg_pos)
+{
+//    svVector3 cone_seg_norm[segment+1];
+//    svVector3 cone_seg_pos[segment];
+//    cone_seg_norm[0]= normalize(dir);
+    float interval_degree  = 360./(float)segment;
+    for(int i=0;i<segment;i++) {
+        if(i == 0)
+        {
+           svVector3 ori =  normalize(svGetPerpendicularVector(dir));
+           cone_seg_pos[0] = glyph + radius * ori;
+         }
+        else
+        {
+           cone_seg_pos[i] = svGetRotatePoint(cone_seg_pos[0],
+                                         glyph,
+                                         dir,
+                                         i * interval_degree);
+        }
+    }
+
+      glyph = glyph + height * dir;
+
+    for(int i=1;i<=segment;i++){
+        if(i==1)
+        {
+           cone_seg_norm[0] = svAverage(
+                                  svGetNorm(
+                                            glyph,
+                                            cone_seg_pos[0],
+                                            cone_seg_pos[segment-1]
+                                           ),
+                                  svGetNorm(glyph,
+                                            cone_seg_pos[1],
+                                            cone_seg_pos[0]
+                                            )
+                                        );
+          }
+          else if(i == segment){
+            cone_seg_norm[i-1] = svAverage(
+                                   svGetNorm(glyph,
+                                        cone_seg_pos[i-1],
+                                        cone_seg_pos[i-2]),
+                                   svGetNorm(glyph,
+                                             cone_seg_pos[0],
+                                             cone_seg_pos[i-1]
+                                             )
+                                        );
+          }
+          else
+          {
+            cone_seg_norm[i-1] = svAverage(
+                                   svGetNorm(glyph,
+                                        cone_seg_pos[i-1],
+                                        cone_seg_pos[i-2]),
+                                   svGetNorm(glyph,
+                                             cone_seg_pos[i],
+                                             cone_seg_pos[i-1]
+                                             )
+                                        );
+          }
+        }
+}
+
 void RenderCone(svVector3 glyph, svVector3 dir,
                 svScalar radius, svScalar height,
                 int segment)
@@ -935,17 +1206,280 @@ void RenderCone(svVector3 glyph, svVector3 dir,
         }
         glEnd();
 }
-void RenderButtonUp(svScalar width, svScalar height,
-                 int segment)
-{
-    svVector3 boundary_pos[segment * 4];
 
-    
+void RenderButtonUp(svScalar width, svScalar height,
+                 int segment, svScalar radius)
+{
+    svVector3 boundary_pos[segment+1];
+
+    for(int i=0;i<=segment;i++)
+    {
+         double degree = (i * 2*SV_PI)/segment;
+         boundary_pos[i][0] = cos(degree) * radius;
+         boundary_pos[i][1] = sin(degree) * radius;
+         boundary_pos[i][2] = 0;      
+    } 
 }
+
 void RenderButtonDown(svScalar width, svScalar height,
                  int segment)
 {
 
 }
+/*
+GLuint loadTexture(GLuint texture, const string filename, int &width, int &height) 
+{
+   png_byte header[8];
+   FILE *fp = fopen(filename.c_str(), "rb");
+   if (!fp) {
+     return TEXTURE_LOAD_ERROR;
+   }
+   fread(header, 1, 8, fp);
+   int is_png = !png_sig_cmp(header, 0, 8);
+   if (!is_png) {
+     fclose(fp);
+     return TEXTURE_LOAD_ERROR;
+   }
 
+   png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL,
+       NULL, NULL);
+   if (!png_ptr) {
+     fclose(fp);
+     return (TEXTURE_LOAD_ERROR);
+   }
+
+   png_infop info_ptr = png_create_info_struct(png_ptr);
+   if (!info_ptr) {
+     png_destroy_read_struct(&png_ptr, (png_infopp) NULL, (png_infopp) NULL);
+     fclose(fp);
+     return (TEXTURE_LOAD_ERROR);
+   }
+
+   png_infop end_info = png_create_info_struct(png_ptr);
+   if (!end_info) {
+     png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp) NULL);
+     fclose(fp);
+     return (TEXTURE_LOAD_ERROR);
+   }
+
+   if (setjmp(png_jmpbuf(png_ptr))) {
+     png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
+     fclose(fp);
+     return (TEXTURE_LOAD_ERROR);
+   }
+
+   png_init_io(png_ptr, fp);
+
+   png_read_info(png_ptr, info_ptr);
+
+   int bit_depth, color_type;
+   png_uint_32 twidth, theight;
+   png_get_IHDR(png_ptr, info_ptr, &twidth, &theight, &bit_depth, &color_type,
+       NULL, NULL, NULL);
+   width = twidth;
+   height = theight;
+   png_read_update_info(png_ptr, info_ptr);
+
+   int rowbytes = png_get_rowbytes(png_ptr, info_ptr);
+
+   png_byte *image_data = new png_byte[rowbytes * height];
+   if (!image_data) {
+
+     png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
+     fclose(fp);
+     return TEXTURE_LOAD_ERROR;
+   }
+
+   png_bytep *row_pointers = new png_bytep[height];
+   if (!row_pointers) {
+
+     png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
+     delete[] image_data;
+     fclose(fp);
+     return TEXTURE_LOAD_ERROR;
+   }
+
+  for (int i = 0; i < height; ++i)
+     row_pointers[height - 1 - i] = image_data + i * rowbytes;
+
+   png_read_image(png_ptr, row_pointers);
+
+   GLuint texture1;
+   glGenTextures(1, &texture1);
+   glBindTexture(GL_TEXTURE_2D, texture1);
+   glTexImage2D(GL_TEXTURE_2D,0, GL_RGBA, width, height, 0,
+       GL_RGB, GL_UNSIGNED_BYTE, (GLvoid*) image_data);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+   png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
+   delete[] image_data;
+   delete[] row_pointers;
+   fclose(fp);
+ 
+   return texture1;
+}
+
+*/
+/*
+GLuint loadBMP(const char * filename)
+{
+  unsigned char header[54]; // Each BMP file begins by a 54-bytes header
+  unsigned int dataPos;     // Position in the file where the actual data begins
+  unsigned int width, height;
+  unsigned int imageSize;   // = width*height*3
+  unsigned char * data;
+
+  FILE * file = fopen(filename,"rb");
+  if (!file){printf("Image could not be opened\n"); return 0;}
+
+  if ( fread(header, 1, 54, file)!=54 ){ // If not 54 bytes read : problem
+    printf("Not a correct BMP file\n");
+    return false;
+  }
+
+  if ( header[0]!='B' || header[1]!='M' ){
+    printf("Not a correct BMP file\n");
+    return 0;
+  }
+
+  dataPos    = *(int*)&(header[0x0A]);
+  imageSize  = *(int*)&(header[0x22]);
+  width      = *(int*)&(header[0x12]);
+  height     = *(int*)&(header[0x16]);
+
+  if (imageSize==0)    imageSize=width*height*3; // 3 : one byte for each Red, Green and Blue component
+  if (dataPos==0)      dataPos=54; // The BMP header is done that way
+
+  data = new unsigned char [imageSize];
+  fread(data,1,imageSize,file);
+  fclose(file);
+
+  GLuint texName;
+   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+   glGenTextures(1, &texName);
+   glBindTexture(GL_TEXTURE_2D, texName);
+
+//   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+//   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+                   GL_NEAREST);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                   GL_NEAREST);
+   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width,
+                height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                data);
+
+
+  return texName;
+}
+*/
+/*
+GLuint loadBMP2( const char * filename )
+{
+
+  GLuint texture;
+
+  int width, height;
+
+  unsigned char * data;
+
+  FILE * file;
+
+  file = fopen( filename, "rb" );
+
+  if ( file == NULL ) return 0;
+  width = 256;
+  height = 256;
+  data = (unsigned char *)malloc( width * height * 3 );
+  //int size = fseek(file,);
+  fread( data, width * height * 3, 1, file );
+  fclose( file );
+
+ for(int i = 0; i < width * height ; ++i)
+{
+   int index = i*3;
+   unsigned char B,R;
+   B = data[index];
+   R = data[index+2];
+
+   data[index] = R;
+   data[index+2] = B;
+
+}
+
+  GLuint texName;
+
+   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+   glGenTextures(1, &texName);
+   glBindTexture(GL_TEXTURE_2D, texName);
+
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+                   GL_NEAREST);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                   GL_NEAREST);
+   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width,
+                height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                data);
+
+
+  return texName;
+}*/
+/*#define checkImageWidth 64
+#define checkImageHeight 64
+static GLubyte checkImage[checkImageHeight][checkImageWidth][4];
+
+void makeCheckImage(void)
+{
+   int i, j, c;
+    
+   for (i = 0; i < checkImageHeight; i++) {
+      for (j = 0; j < checkImageWidth; j++) {
+         c = ((((i&0x8)==0)^((j&0x8))==0))*255;
+         checkImage[i][j][0] = (GLubyte) c;
+         checkImage[i][j][1] = (GLubyte) c;
+         checkImage[i][j][2] = (GLubyte) c;
+         checkImage[i][j][3] = (GLubyte) 255;
+      }
+   }
+static GLuint texName;
+
+      glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+   glGenTextures(1, &texName);
+   glBindTexture(GL_TEXTURE_2D, texName);
+
+  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, 
+                   GL_NEAREST);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, 
+                   GL_NEAREST);
+   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, checkImageWidth, 
+                checkImageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 
+                checkImage);
+}
+*/
+void SOILTexture(const char *filename, GLuint & texture)
+{
+     int width, height;
+     unsigned char* image = SOIL_load_image(filename, &width, &height, 0, SOIL_LOAD_RGBA);
+
+//   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
+   glGenTextures(1, &texture);
+   glBindTexture(GL_TEXTURE_2D, texture);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+                   GL_NEAREST);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                   GL_NEAREST);
+
+   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
+              GL_UNSIGNED_BYTE, image);
+
+
+    free(image);
+}
 }

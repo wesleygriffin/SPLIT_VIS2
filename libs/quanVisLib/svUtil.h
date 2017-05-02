@@ -7,7 +7,6 @@
 #include <GL/glut.h>
 #endif
 #include "svVectorField.h"
-
 namespace __svl_lib {
 #define SWAP(T, a, b)   { T t; t=a; a=b; b=t;  }
 
@@ -65,6 +64,16 @@ bool LessAngle(svVector3 p1, svVector3 p2, svVector3 p);
 double pointtoPlane(svVector3 a, svVector3 p, svVector3 n);
 svVector3 CrossProduct(svVector3 u, svVector3 v);
 
+
+void GetCylinder(svVector3 glyph, svVector3 dir,
+                svScalar radius, svScalar height,
+                int segment,
+                svVector3 *cylinder_seg_norm,
+                 svVector3 *cylinder_seg_pos);
+void GetCone(svVector3 glyph, svVector3 dir,
+                svScalar radius, svScalar height,
+                int segment,
+              svVector3 *cone_seg_norm, svVector3 *cone_seg_pos);
 //===========Rendering==================
 void RenderCone(svVector3 glyph, svVector3 dir,
                 svScalar radius, svScalar height,
@@ -72,10 +81,22 @@ void RenderCone(svVector3 glyph, svVector3 dir,
 void RenderCylinder(svVector3 glyph, svVector3 dir,
                 svScalar radius, svScalar height,
                 int segment); 
+void RenderCylinderTexture(svVector3 glyph, svVector3 dir,
+                svScalar radius, svScalar height,svVector4 col,
+                svScalar ratio, int texture_num, int segment);
+void RenderSphere(svVector3 glyph, svScalar radius,svVector3 dir, 
+                   int segment1, int segment2);
 void RenderButtonUp(svScalar width, svScalar height,
                  int segment);
 void RenderButtonDown(svScalar width, svScalar height,
                  int segment);
+
+//https://en.wikibooks.org/wiki/OpenGL_Programming/Intermediate/Textures
+//GLuint loadTexture(GLuint texture, const string filename, int &width, int &height);
+//GLuint loadBMP(const char* filename);
+//GLuint loadBMP2( const char * filename );
+void SOILTexture(const char *filename, GLuint &texture);
+//void makeCheckImage();
 //=======================================
 svInt  getNumOfIntegerDigits(svScalar num);
 GLboolean invert_matrix( const GLfloat *m, GLfloat *out );

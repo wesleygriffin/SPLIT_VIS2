@@ -49,7 +49,7 @@ void svSplitVectorsBar::Generate(SplitVectorsProperty &property,ViewProperty &vi
       for(int ii=0;ii<sortbar.size();ii++)
       {
             int j = sortbar[ii].index;
-            if(sampleLabel[i][j])
+            if(visibleLabel[i][j])
             {
 
              svVector3 v1 = dir[i][j];
@@ -83,7 +83,7 @@ void svSplitVectorsBar::Generate(SplitVectorsProperty &property,ViewProperty &vi
       for(int ii=0;ii<sortbar.size();ii++)
       {
            int j = sortbar[ii].index;
-           if(sampleLabel[i][j])
+           if(visibleLabel[i][j])
           {
            svScalar exp = getNumOfIntegerDigits(mag[i][j]);
            svScalar coe = mag[i][j]/pow(10., exp);

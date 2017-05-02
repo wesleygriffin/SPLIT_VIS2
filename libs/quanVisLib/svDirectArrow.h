@@ -4,7 +4,7 @@
 #ifndef __SV_DIRECT_ARROW_H
 #define __SV_DIRECT_ARROW_H
 
-#include "svGlyph.h"
+#include "svArrowGlyph.h"
 
 //#include "svArray.h"
 //#include "svVectorField.h"
@@ -21,7 +21,7 @@
 
 namespace __svl_lib {
 
-class svDirectArrow : public svGlyph {
+class svDirectArrow : public svArrowGlyph {
   public:
     svDirectArrow(svChar *inf);
     svDirectArrow(svVectorField *f);
@@ -29,10 +29,17 @@ class svDirectArrow : public svGlyph {
     virtual ~svDirectArrow(){};
 
     virtual void SaveToFile(char *fname);
-  
-    virtual void Render();
-    virtual void Generate();
+ 
+    virtual void GenerateArrows();
+    virtual void GenerateTubes();
+    virtual void GenerateIndex();
 
+    virtual void RenderSample();
+
+    virtual void Render();
+    //virtual void RenderSample();
+    virtual void Generate();
+    virtual void GenerateSample(int frequency);
   private:
     void RenderStore() const; 
  //   svScalar   glyphSize;

@@ -1,5 +1,5 @@
 #datadir:
-/home/davinci/Documents/henan/NIST/NIST_SPLIT/data/2014Mar/
+/home/davinci/Documents/henan/NIST/data/2014Mar
 #dataname:
 spin_proj_norm_vs_pos_p_v_z_10z
 #folderToStoreFiles:
@@ -7,21 +7,18 @@ tmp
 #planeCenter 0 0 0
 #planeDirection  0 0 1
 #planeDistance 0.25
-#ifcontour:
+#ifcontour
 0
 #contours:
-4
+1
 G R 0.5
-G A 1e-8
-G A 1e-6
-G A 1e-4
 #clusters:
 #step1:
 #weights: 1 1 1 1 1 1 1
-#layer: 0 92
+#layer: 0 108
 #bywhole: 1
 #magrange: 0 1
-#numofclusters: 20
+#numofclusters: 25
 #step2:
 #weights: 1 1 1 1 1 1 1
 #layer: 0 -1 
@@ -29,6 +26,7 @@ G A 1e-4
 #magrange: 1e-4 1e-3
 #numofclusters: 5
 #symmetry
-2
-0 0 0 1 1 0
-0 0 0 -1 1 0
+0 0 0 
+-1 1 0
+1 1 0
+0 0 1

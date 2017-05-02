@@ -22,6 +22,16 @@ typedef bool             svBool;
 
 typedef svVector3		svColor3;
 typedef svVector4		svColor4;
+
+typedef struct{
+  float pos[3];
+  float norm[3];
+  float color[4]; 
+} VBOVertex;
+
+typedef struct{
+  float pos[3];
+} VBOVertex1;
 }
 
 #endif // __SV_TYPE_H

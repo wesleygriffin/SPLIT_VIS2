@@ -411,6 +411,7 @@ svVector4Array svColors::GetContinuousColors(svScalarArray &value)
 
        return color;
 }
+
 svColors::~svColors()
 {
         spiralColor.free();

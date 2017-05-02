@@ -26,16 +26,16 @@ COMPILER_FLAGS= -g
 INCLUDE= $(OPENGL_INC)
 LIBS= $(OPENGL_LIB) $(LLDLIBS)
 
-#TARGETS = splitToolkit  ccStudy
-TARGETS =ccStudy
+TARGETS = splitToolkit
+#TARGETS =ccStudy
 #SRCS = qdotFile.cpp qdotVis.cpp qdotGUI.cpp qdotFunction.cpp
 #OBJECTS = qdotFile.o qdotVis.o qdotGUI.o qdotFunction.o
 
-#SRCS=splitToolkit.cpp  ccStudy.cpp
-#OBJECTS=splitToolkit.o ccStudy.o
+SRCS=splitToolkit.cpp 
+OBJECTS=splitToolkit.o 
 
-SRCS= ccStudy.cpp
-OBJECTS=ccStudy.o
+#SRCS= ccStudy.cpp
+#OBJECTS=ccStudy.o
 
 
 default: $(TARGETS)
@@ -46,10 +46,10 @@ OBJS = $(SRCS:.cpp=.o)
 .cpp.o:
 	$(CXX) -c -Wno-deprecated  $(COMPILER_FLAGS) -o $@ $< $(INCLUDE)
 
-#splitToolkit: splitToolkit.o
-#	$(CXX) $(COMPILER_FLAGS) $(LIBS) splitToolkit.o -o splitToolkit -lglui -lsvl-1.0 -lLU -ljcUtil-1.0 -lm
-ccStudy: ccStudy.o
-	 $(CXX) $(COMPILER_FLAGS) $(LIBS) ccStudy.o -o ccStudy -lGLEW  -lsvl-1.0 -lLU -ljcUtil-1.0 -lm
+splitToolkit: splitToolkit.o
+	$(CXX) $(COMPILER_FLAGS) $(LIBS) splitToolkit.o -o splitToolkit -lglui -lsvl-1.0 -lLU -ljcUtil-1.0 -lm
+#ccStudy: ccStudy.o
+#	 $(CXX) $(COMPILER_FLAGS) $(LIBS) ccStudy.o -o ccStudy -lGLEW  -lsvl-1.0 -lLU -ljcUtil-1.0 -lm
 #splitToolkitmono: splitToolkitmono.o
 #	$(CXX) $(COMPILER_FLAGS) $(LIBS) splitToolkitmono.o -o splitToolkitmono -lglui -lsvl-1.0 -lLU -ljcUtil-1.0  -lm
 

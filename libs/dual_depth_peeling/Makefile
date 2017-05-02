@@ -10,10 +10,10 @@ CPP_FILES=$(wildcard *.cpp)
 OBJ_FILES=$(addprefix obj/,$(notdir $(CPP_FILES:.cpp=.o)))
 
 
-NVIDIA_COMMON_INC=-I../../GLEW/include -I../../common/include/ -I../../common/nvModel/include
+NVIDIA_COMMON_INC=-I./common/GLEW/include -I./common/include/ -I./common/nvModel/include
 
 OPENGL_LIB= -L/usr/lib64
-GLUT_LIB=-lGLEW -lglut -lGL -lGLU -lGL -lXmu -lXext -lX11 -lm
+GLUT_LIB= -L../glew-2.0.0/lib -lGLEW -lglut -lGL -lGLU -lGL -lXmu -lXext -lX11 -lm
 
 LIB+=$(OPENGL_LIB) $(GLUT_LIB)
 INC+=$(NVIDIA_COMMON_INC)

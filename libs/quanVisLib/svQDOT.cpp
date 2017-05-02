@@ -83,6 +83,7 @@ void svQDOT::SetVTK(svChar *rawdir, svChar *rawfile, svChar *dir,
   char *sortfile = new char[200];
   sprintf(sortfile, "%s/%s/%s", dir, rawfile, sortFile);//sort.txt
 
+
   char *input = new char[200];
   sprintf(input, "%s/preprocessing/generateVTK/input",SRC_DIR);
 // cerr<<input<<endl; 

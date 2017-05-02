@@ -210,9 +210,10 @@ int    GLUI_Scrollbar::mouse_up_handler( int local_x, int local_y, bool inside )
   state = GLUI_SCROLL_STATE_NONE;
   GLUI_Master.glui_setIdleFuncIfNecessary();
 
-  /*  printf("spinner: mouse up  : %d/%d    inside: %d\n",local_x,local_y,inside);              */
-
-  /*glutSetCursor( GLUT_CURSOR_INHERIT );              */
+/*
+    printf("spinner: mouse up  : %d/%d    inside: %d\n",local_x,local_y,inside);              
+*/
+ /*glutSetCursor( GLUT_CURSOR_INHERIT );              */
   glutSetCursor( GLUT_CURSOR_LEFT_ARROW );
 
   redraw();
@@ -666,7 +667,6 @@ void    GLUI_Scrollbar::do_drag( int x, int y )
     set_int_val(new_int_val);
   else if (data_type==GLUI_SCROLL_FLOAT)
     set_float_val(new_float_val);
-
   callback_count++;
   if ( (callback_count % GLUI_SCROLL_CALLBACK_INTERVAL ) == 0 )
     do_callbacks();

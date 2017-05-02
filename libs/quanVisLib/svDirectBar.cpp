@@ -50,7 +50,7 @@ void svDirectBar::Generate(DirectProperty &property, ViewProperty &viewproperty,
       {
 
                   int j = sortbar[ii].index;
-            if(sampleLabel[i][j])
+            if(visibleLabel[i][j])
             {
               int index = sortbar[ii].rangeindex;
 
@@ -86,7 +86,7 @@ void svDirectBar::Generate(DirectProperty &property, ViewProperty &viewproperty,
       {
            int j = sortbar[ii].index;
 
-           if(sampleLabel[i][j])
+           if(visibleLabel[i][j])
           {
              svVector3Array halop;
 

@@ -28,16 +28,16 @@ The CXX compiler identification is GNU, found in "/home/davinci/Documents/henan/
 Determining if the C compiler works passed with the following output:
 Change Dir: /home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp
 
-Run Build Command:/home/davinci/Documents/MATLAB/bin/glnxa64/gmake "cmTryCompileExec2156227966/fast"
+Run Build Command:/home/davinci/Documents/MATLAB/bin/glnxa64/gmake "cmTryCompileExec1129560335/fast"
 gmake[3]: Entering directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp'
-/home/davinci/Documents/MATLAB/bin/glnxa64/gmake -f CMakeFiles/cmTryCompileExec2156227966.dir/build.make CMakeFiles/cmTryCompileExec2156227966.dir/build
+/home/davinci/Documents/MATLAB/bin/glnxa64/gmake -f CMakeFiles/cmTryCompileExec1129560335.dir/build.make CMakeFiles/cmTryCompileExec1129560335.dir/build
 gmake[4]: Entering directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp'
 /usr/bin/cmake -E cmake_progress_report /home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp/CMakeFiles 1
-Building C object CMakeFiles/cmTryCompileExec2156227966.dir/testCCompiler.c.o
-/usr/bin/cc    -o CMakeFiles/cmTryCompileExec2156227966.dir/testCCompiler.c.o   -c /home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp/testCCompiler.c
-Linking C executable cmTryCompileExec2156227966
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2156227966.dir/link.txt --verbose=1
-/usr/bin/cc       CMakeFiles/cmTryCompileExec2156227966.dir/testCCompiler.c.o  -o cmTryCompileExec2156227966 -rdynamic 
+Building C object CMakeFiles/cmTryCompileExec1129560335.dir/testCCompiler.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec1129560335.dir/testCCompiler.c.o   -c /home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTryCompileExec1129560335
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1129560335.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTryCompileExec1129560335.dir/testCCompiler.c.o  -o cmTryCompileExec1129560335 -rdynamic 
 gmake[4]: Leaving directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp'
 gmake[3]: Leaving directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp'
 
@@ -45,16 +45,16 @@ gmake[3]: Leaving directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT
 Detecting C compiler ABI info compiled with the following output:
 Change Dir: /home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp
 
-Run Build Command:/home/davinci/Documents/MATLAB/bin/glnxa64/gmake "cmTryCompileExec401611853/fast"
+Run Build Command:/home/davinci/Documents/MATLAB/bin/glnxa64/gmake "cmTryCompileExec2735801873/fast"
 gmake[3]: Entering directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp'
-/home/davinci/Documents/MATLAB/bin/glnxa64/gmake -f CMakeFiles/cmTryCompileExec401611853.dir/build.make CMakeFiles/cmTryCompileExec401611853.dir/build
+/home/davinci/Documents/MATLAB/bin/glnxa64/gmake -f CMakeFiles/cmTryCompileExec2735801873.dir/build.make CMakeFiles/cmTryCompileExec2735801873.dir/build
 gmake[4]: Entering directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp'
 /usr/bin/cmake -E cmake_progress_report /home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp/CMakeFiles 1
-Building C object CMakeFiles/cmTryCompileExec401611853.dir/CMakeCCompilerABI.c.o
-/usr/bin/cc    -o CMakeFiles/cmTryCompileExec401611853.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake/Modules/CMakeCCompilerABI.c
-Linking C executable cmTryCompileExec401611853
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec401611853.dir/link.txt --verbose=1
-/usr/bin/cc     -v CMakeFiles/cmTryCompileExec401611853.dir/CMakeCCompilerABI.c.o  -o cmTryCompileExec401611853 -rdynamic  
+Building C object CMakeFiles/cmTryCompileExec2735801873.dir/CMakeCCompilerABI.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec2735801873.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake/Modules/CMakeCCompilerABI.c
+Linking C executable cmTryCompileExec2735801873
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2735801873.dir/link.txt --verbose=1
+/usr/bin/cc     -v CMakeFiles/cmTryCompileExec2735801873.dir/CMakeCCompilerABI.c.o  -o cmTryCompileExec2735801873 -rdynamic  
 Using built-in specs.
 Target: x86_64-redhat-linux
 Configured with: ../configure --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=http://bugzilla.redhat.com/bugzilla --enable-bootstrap --enable-shared --enable-threads=posix --enable-checking=release --with-system-zlib --enable-__cxa_atexit --disable-libunwind-exceptions --enable-gnu-unique-object --enable-languages=c,c++,objc,obj-c++,java,fortran,ada --enable-java-awt=gtk --disable-dssi --with-java-home=/usr/lib/jvm/java-1.5.0-gcj-1.5.0.0/jre --enable-libgcj-multifile --enable-java-maintainer-mode --with-ecj-jar=/usr/share/java/eclipse-ecj.jar --disable-libjava-multilib --with-ppl --with-cloog --with-tune=generic --with-arch_32=i686 --build=x86_64-redhat-linux
@@ -62,8 +62,8 @@ Thread model: posix
 gcc version 4.4.7 20120313 (Red Hat 4.4.7-17) (GCC) 
 COMPILER_PATH=/usr/libexec/gcc/x86_64-redhat-linux/4.4.7/:/usr/libexec/gcc/x86_64-redhat-linux/4.4.7/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/4.4.7/:/usr/lib/gcc/x86_64-redhat-linux/:/usr/libexec/gcc/x86_64-redhat-linux/4.4.7/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/4.4.7/:/usr/lib/gcc/x86_64-redhat-linux/
 LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/4.4.7/:/usr/lib/gcc/x86_64-redhat-linux/4.4.7/:/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../:/lib/:/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTryCompileExec401611853' '-rdynamic' '-mtune=generic'
- /usr/libexec/gcc/x86_64-redhat-linux/4.4.7/collect2 --eh-frame-hdr --build-id -m elf_x86_64 --hash-style=gnu -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTryCompileExec401611853 /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../.. CMakeFiles/cmTryCompileExec401611853.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /usr/lib/gcc/x86_64-redhat-linux/4.4.7/crtend.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crtn.o
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTryCompileExec2735801873' '-rdynamic' '-mtune=generic'
+ /usr/libexec/gcc/x86_64-redhat-linux/4.4.7/collect2 --eh-frame-hdr --build-id -m elf_x86_64 --hash-style=gnu -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTryCompileExec2735801873 /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../.. CMakeFiles/cmTryCompileExec2735801873.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /usr/lib/gcc/x86_64-redhat-linux/4.4.7/crtend.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crtn.o
 gmake[4]: Leaving directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp'
 gmake[3]: Leaving directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp'
 
@@ -72,16 +72,16 @@ Parsed C implicit link information from above output:
   link line regex: [^( *|.*[/\])(ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command:/home/davinci/Documents/MATLAB/bin/glnxa64/gmake "cmTryCompileExec401611853/fast"]
+  ignore line: [Run Build Command:/home/davinci/Documents/MATLAB/bin/glnxa64/gmake "cmTryCompileExec2735801873/fast"]
   ignore line: [gmake[3]: Entering directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp']
-  ignore line: [/home/davinci/Documents/MATLAB/bin/glnxa64/gmake -f CMakeFiles/cmTryCompileExec401611853.dir/build.make CMakeFiles/cmTryCompileExec401611853.dir/build]
+  ignore line: [/home/davinci/Documents/MATLAB/bin/glnxa64/gmake -f CMakeFiles/cmTryCompileExec2735801873.dir/build.make CMakeFiles/cmTryCompileExec2735801873.dir/build]
   ignore line: [gmake[4]: Entering directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp']
   ignore line: [/usr/bin/cmake -E cmake_progress_report /home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp/CMakeFiles 1]
-  ignore line: [Building C object CMakeFiles/cmTryCompileExec401611853.dir/CMakeCCompilerABI.c.o]
-  ignore line: [/usr/bin/cc    -o CMakeFiles/cmTryCompileExec401611853.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake/Modules/CMakeCCompilerABI.c]
-  ignore line: [Linking C executable cmTryCompileExec401611853]
-  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec401611853.dir/link.txt --verbose=1]
-  ignore line: [/usr/bin/cc     -v CMakeFiles/cmTryCompileExec401611853.dir/CMakeCCompilerABI.c.o  -o cmTryCompileExec401611853 -rdynamic  ]
+  ignore line: [Building C object CMakeFiles/cmTryCompileExec2735801873.dir/CMakeCCompilerABI.c.o]
+  ignore line: [/usr/bin/cc    -o CMakeFiles/cmTryCompileExec2735801873.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake/Modules/CMakeCCompilerABI.c]
+  ignore line: [Linking C executable cmTryCompileExec2735801873]
+  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2735801873.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/cc     -v CMakeFiles/cmTryCompileExec2735801873.dir/CMakeCCompilerABI.c.o  -o cmTryCompileExec2735801873 -rdynamic  ]
   ignore line: [Using built-in specs.]
   ignore line: [Target: x86_64-redhat-linux]
   ignore line: [Configured with: ../configure --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=http://bugzilla.redhat.com/bugzilla --enable-bootstrap --enable-shared --enable-threads=posix --enable-checking=release --with-system-zlib --enable-__cxa_atexit --disable-libunwind-exceptions --enable-gnu-unique-object --enable-languages=c,c++,objc,obj-c++,java,fortran,ada --enable-java-awt=gtk --disable-dssi --with-java-home=/usr/lib/jvm/java-1.5.0-gcj-1.5.0.0/jre --enable-libgcj-multifile --enable-java-maintainer-mode --with-ecj-jar=/usr/share/java/eclipse-ecj.jar --disable-libjava-multilib --with-ppl --with-cloog --with-tune=generic --with-arch_32=i686 --build=x86_64-redhat-linux]
@@ -89,8 +89,8 @@ Parsed C implicit link information from above output:
   ignore line: [gcc version 4.4.7 20120313 (Red Hat 4.4.7-17) (GCC) ]
   ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-redhat-linux/4.4.7/:/usr/libexec/gcc/x86_64-redhat-linux/4.4.7/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/4.4.7/:/usr/lib/gcc/x86_64-redhat-linux/:/usr/libexec/gcc/x86_64-redhat-linux/4.4.7/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/4.4.7/:/usr/lib/gcc/x86_64-redhat-linux/]
   ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/4.4.7/:/usr/lib/gcc/x86_64-redhat-linux/4.4.7/:/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../:/lib/:/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTryCompileExec401611853' '-rdynamic' '-mtune=generic']
-  link line: [ /usr/libexec/gcc/x86_64-redhat-linux/4.4.7/collect2 --eh-frame-hdr --build-id -m elf_x86_64 --hash-style=gnu -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTryCompileExec401611853 /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../.. CMakeFiles/cmTryCompileExec401611853.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /usr/lib/gcc/x86_64-redhat-linux/4.4.7/crtend.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crtn.o]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTryCompileExec2735801873' '-rdynamic' '-mtune=generic']
+  link line: [ /usr/libexec/gcc/x86_64-redhat-linux/4.4.7/collect2 --eh-frame-hdr --build-id -m elf_x86_64 --hash-style=gnu -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTryCompileExec2735801873 /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../.. CMakeFiles/cmTryCompileExec2735801873.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /usr/lib/gcc/x86_64-redhat-linux/4.4.7/crtend.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crtn.o]
     arg [/usr/libexec/gcc/x86_64-redhat-linux/4.4.7/collect2] ==> ignore
     arg [--eh-frame-hdr] ==> ignore
     arg [--build-id] ==> ignore
@@ -101,7 +101,7 @@ Parsed C implicit link information from above output:
     arg [-dynamic-linker] ==> ignore
     arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTryCompileExec401611853] ==> ignore
+    arg [cmTryCompileExec2735801873] ==> ignore
     arg [/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crt1.o] ==> ignore
     arg [/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crti.o] ==> ignore
     arg [/usr/lib/gcc/x86_64-redhat-linux/4.4.7/crtbegin.o] ==> ignore
@@ -111,7 +111,7 @@ Parsed C implicit link information from above output:
     arg [-L/lib/../lib64] ==> dir [/lib/../lib64]
     arg [-L/usr/lib/../lib64] ==> dir [/usr/lib/../lib64]
     arg [-L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../..] ==> dir [/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../..]
-    arg [CMakeFiles/cmTryCompileExec401611853.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [CMakeFiles/cmTryCompileExec2735801873.dir/CMakeCCompilerABI.c.o] ==> ignore
     arg [-lgcc] ==> lib [gcc]
     arg [--as-needed] ==> ignore
     arg [-lgcc_s] ==> lib [gcc_s]
@@ -141,16 +141,16 @@ Parsed C implicit link information from above output:
 Determining if the CXX compiler works passed with the following output:
 Change Dir: /home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp
 
-Run Build Command:/home/davinci/Documents/MATLAB/bin/glnxa64/gmake "cmTryCompileExec2054795623/fast"
+Run Build Command:/home/davinci/Documents/MATLAB/bin/glnxa64/gmake "cmTryCompileExec4099279867/fast"
 gmake[3]: Entering directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp'
-/home/davinci/Documents/MATLAB/bin/glnxa64/gmake -f CMakeFiles/cmTryCompileExec2054795623.dir/build.make CMakeFiles/cmTryCompileExec2054795623.dir/build
+/home/davinci/Documents/MATLAB/bin/glnxa64/gmake -f CMakeFiles/cmTryCompileExec4099279867.dir/build.make CMakeFiles/cmTryCompileExec4099279867.dir/build
 gmake[4]: Entering directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp'
 /usr/bin/cmake -E cmake_progress_report /home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp/CMakeFiles 1
-Building CXX object CMakeFiles/cmTryCompileExec2054795623.dir/testCXXCompiler.cxx.o
-/usr/bin/c++     -o CMakeFiles/cmTryCompileExec2054795623.dir/testCXXCompiler.cxx.o -c /home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
-Linking CXX executable cmTryCompileExec2054795623
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2054795623.dir/link.txt --verbose=1
-/usr/bin/c++        CMakeFiles/cmTryCompileExec2054795623.dir/testCXXCompiler.cxx.o  -o cmTryCompileExec2054795623 -rdynamic 
+Building CXX object CMakeFiles/cmTryCompileExec4099279867.dir/testCXXCompiler.cxx.o
+/usr/bin/c++     -o CMakeFiles/cmTryCompileExec4099279867.dir/testCXXCompiler.cxx.o -c /home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
+Linking CXX executable cmTryCompileExec4099279867
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec4099279867.dir/link.txt --verbose=1
+/usr/bin/c++        CMakeFiles/cmTryCompileExec4099279867.dir/testCXXCompiler.cxx.o  -o cmTryCompileExec4099279867 -rdynamic 
 gmake[4]: Leaving directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp'
 gmake[3]: Leaving directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp'
 
@@ -158,16 +158,16 @@ gmake[3]: Leaving directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT
 Detecting CXX compiler ABI info compiled with the following output:
 Change Dir: /home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp
 
-Run Build Command:/home/davinci/Documents/MATLAB/bin/glnxa64/gmake "cmTryCompileExec473547241/fast"
+Run Build Command:/home/davinci/Documents/MATLAB/bin/glnxa64/gmake "cmTryCompileExec2953843654/fast"
 gmake[3]: Entering directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp'
-/home/davinci/Documents/MATLAB/bin/glnxa64/gmake -f CMakeFiles/cmTryCompileExec473547241.dir/build.make CMakeFiles/cmTryCompileExec473547241.dir/build
+/home/davinci/Documents/MATLAB/bin/glnxa64/gmake -f CMakeFiles/cmTryCompileExec2953843654.dir/build.make CMakeFiles/cmTryCompileExec2953843654.dir/build
 gmake[4]: Entering directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp'
 /usr/bin/cmake -E cmake_progress_report /home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp/CMakeFiles 1
-Building CXX object CMakeFiles/cmTryCompileExec473547241.dir/CMakeCXXCompilerABI.cpp.o
-/usr/bin/c++     -o CMakeFiles/cmTryCompileExec473547241.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake/Modules/CMakeCXXCompilerABI.cpp
-Linking CXX executable cmTryCompileExec473547241
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec473547241.dir/link.txt --verbose=1
-/usr/bin/c++      -v CMakeFiles/cmTryCompileExec473547241.dir/CMakeCXXCompilerABI.cpp.o  -o cmTryCompileExec473547241 -rdynamic  
+Building CXX object CMakeFiles/cmTryCompileExec2953843654.dir/CMakeCXXCompilerABI.cpp.o
+/usr/bin/c++     -o CMakeFiles/cmTryCompileExec2953843654.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake/Modules/CMakeCXXCompilerABI.cpp
+Linking CXX executable cmTryCompileExec2953843654
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2953843654.dir/link.txt --verbose=1
+/usr/bin/c++      -v CMakeFiles/cmTryCompileExec2953843654.dir/CMakeCXXCompilerABI.cpp.o  -o cmTryCompileExec2953843654 -rdynamic  
 Using built-in specs.
 Target: x86_64-redhat-linux
 Configured with: ../configure --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=http://bugzilla.redhat.com/bugzilla --enable-bootstrap --enable-shared --enable-threads=posix --enable-checking=release --with-system-zlib --enable-__cxa_atexit --disable-libunwind-exceptions --enable-gnu-unique-object --enable-languages=c,c++,objc,obj-c++,java,fortran,ada --enable-java-awt=gtk --disable-dssi --with-java-home=/usr/lib/jvm/java-1.5.0-gcj-1.5.0.0/jre --enable-libgcj-multifile --enable-java-maintainer-mode --with-ecj-jar=/usr/share/java/eclipse-ecj.jar --disable-libjava-multilib --with-ppl --with-cloog --with-tune=generic --with-arch_32=i686 --build=x86_64-redhat-linux
@@ -175,8 +175,8 @@ Thread model: posix
 gcc version 4.4.7 20120313 (Red Hat 4.4.7-17) (GCC) 
 COMPILER_PATH=/usr/libexec/gcc/x86_64-redhat-linux/4.4.7/:/usr/libexec/gcc/x86_64-redhat-linux/4.4.7/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/4.4.7/:/usr/lib/gcc/x86_64-redhat-linux/:/usr/libexec/gcc/x86_64-redhat-linux/4.4.7/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/4.4.7/:/usr/lib/gcc/x86_64-redhat-linux/
 LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/4.4.7/:/usr/lib/gcc/x86_64-redhat-linux/4.4.7/:/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../:/lib/:/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTryCompileExec473547241' '-rdynamic' '-shared-libgcc' '-mtune=generic'
- /usr/libexec/gcc/x86_64-redhat-linux/4.4.7/collect2 --eh-frame-hdr --build-id -m elf_x86_64 --hash-style=gnu -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTryCompileExec473547241 /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../.. CMakeFiles/cmTryCompileExec473547241.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-redhat-linux/4.4.7/crtend.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crtn.o
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTryCompileExec2953843654' '-rdynamic' '-shared-libgcc' '-mtune=generic'
+ /usr/libexec/gcc/x86_64-redhat-linux/4.4.7/collect2 --eh-frame-hdr --build-id -m elf_x86_64 --hash-style=gnu -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTryCompileExec2953843654 /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../.. CMakeFiles/cmTryCompileExec2953843654.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-redhat-linux/4.4.7/crtend.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crtn.o
 gmake[4]: Leaving directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp'
 gmake[3]: Leaving directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp'
 
@@ -185,16 +185,16 @@ Parsed CXX implicit link information from above output:
   link line regex: [^( *|.*[/\])(ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command:/home/davinci/Documents/MATLAB/bin/glnxa64/gmake "cmTryCompileExec473547241/fast"]
+  ignore line: [Run Build Command:/home/davinci/Documents/MATLAB/bin/glnxa64/gmake "cmTryCompileExec2953843654/fast"]
   ignore line: [gmake[3]: Entering directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp']
-  ignore line: [/home/davinci/Documents/MATLAB/bin/glnxa64/gmake -f CMakeFiles/cmTryCompileExec473547241.dir/build.make CMakeFiles/cmTryCompileExec473547241.dir/build]
+  ignore line: [/home/davinci/Documents/MATLAB/bin/glnxa64/gmake -f CMakeFiles/cmTryCompileExec2953843654.dir/build.make CMakeFiles/cmTryCompileExec2953843654.dir/build]
   ignore line: [gmake[4]: Entering directory `/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp']
   ignore line: [/usr/bin/cmake -E cmake_progress_report /home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/CMakeTmp/CMakeFiles 1]
-  ignore line: [Building CXX object CMakeFiles/cmTryCompileExec473547241.dir/CMakeCXXCompilerABI.cpp.o]
-  ignore line: [/usr/bin/c++     -o CMakeFiles/cmTryCompileExec473547241.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake/Modules/CMakeCXXCompilerABI.cpp]
-  ignore line: [Linking CXX executable cmTryCompileExec473547241]
-  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec473547241.dir/link.txt --verbose=1]
-  ignore line: [/usr/bin/c++      -v CMakeFiles/cmTryCompileExec473547241.dir/CMakeCXXCompilerABI.cpp.o  -o cmTryCompileExec473547241 -rdynamic  ]
+  ignore line: [Building CXX object CMakeFiles/cmTryCompileExec2953843654.dir/CMakeCXXCompilerABI.cpp.o]
+  ignore line: [/usr/bin/c++     -o CMakeFiles/cmTryCompileExec2953843654.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake/Modules/CMakeCXXCompilerABI.cpp]
+  ignore line: [Linking CXX executable cmTryCompileExec2953843654]
+  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2953843654.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/c++      -v CMakeFiles/cmTryCompileExec2953843654.dir/CMakeCXXCompilerABI.cpp.o  -o cmTryCompileExec2953843654 -rdynamic  ]
   ignore line: [Using built-in specs.]
   ignore line: [Target: x86_64-redhat-linux]
   ignore line: [Configured with: ../configure --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=http://bugzilla.redhat.com/bugzilla --enable-bootstrap --enable-shared --enable-threads=posix --enable-checking=release --with-system-zlib --enable-__cxa_atexit --disable-libunwind-exceptions --enable-gnu-unique-object --enable-languages=c,c++,objc,obj-c++,java,fortran,ada --enable-java-awt=gtk --disable-dssi --with-java-home=/usr/lib/jvm/java-1.5.0-gcj-1.5.0.0/jre --enable-libgcj-multifile --enable-java-maintainer-mode --with-ecj-jar=/usr/share/java/eclipse-ecj.jar --disable-libjava-multilib --with-ppl --with-cloog --with-tune=generic --with-arch_32=i686 --build=x86_64-redhat-linux]
@@ -202,8 +202,8 @@ Parsed CXX implicit link information from above output:
   ignore line: [gcc version 4.4.7 20120313 (Red Hat 4.4.7-17) (GCC) ]
   ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-redhat-linux/4.4.7/:/usr/libexec/gcc/x86_64-redhat-linux/4.4.7/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/4.4.7/:/usr/lib/gcc/x86_64-redhat-linux/:/usr/libexec/gcc/x86_64-redhat-linux/4.4.7/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/4.4.7/:/usr/lib/gcc/x86_64-redhat-linux/]
   ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/4.4.7/:/usr/lib/gcc/x86_64-redhat-linux/4.4.7/:/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../:/lib/:/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTryCompileExec473547241' '-rdynamic' '-shared-libgcc' '-mtune=generic']
-  link line: [ /usr/libexec/gcc/x86_64-redhat-linux/4.4.7/collect2 --eh-frame-hdr --build-id -m elf_x86_64 --hash-style=gnu -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTryCompileExec473547241 /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../.. CMakeFiles/cmTryCompileExec473547241.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-redhat-linux/4.4.7/crtend.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crtn.o]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTryCompileExec2953843654' '-rdynamic' '-shared-libgcc' '-mtune=generic']
+  link line: [ /usr/libexec/gcc/x86_64-redhat-linux/4.4.7/collect2 --eh-frame-hdr --build-id -m elf_x86_64 --hash-style=gnu -export-dynamic -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTryCompileExec2953843654 /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../.. CMakeFiles/cmTryCompileExec2953843654.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-redhat-linux/4.4.7/crtend.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crtn.o]
     arg [/usr/libexec/gcc/x86_64-redhat-linux/4.4.7/collect2] ==> ignore
     arg [--eh-frame-hdr] ==> ignore
     arg [--build-id] ==> ignore
@@ -214,7 +214,7 @@ Parsed CXX implicit link information from above output:
     arg [-dynamic-linker] ==> ignore
     arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTryCompileExec473547241] ==> ignore
+    arg [cmTryCompileExec2953843654] ==> ignore
     arg [/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crt1.o] ==> ignore
     arg [/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crti.o] ==> ignore
     arg [/usr/lib/gcc/x86_64-redhat-linux/4.4.7/crtbegin.o] ==> ignore
@@ -224,7 +224,7 @@ Parsed CXX implicit link information from above output:
     arg [-L/lib/../lib64] ==> dir [/lib/../lib64]
     arg [-L/usr/lib/../lib64] ==> dir [/usr/lib/../lib64]
     arg [-L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../..] ==> dir [/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../..]
-    arg [CMakeFiles/cmTryCompileExec473547241.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+    arg [CMakeFiles/cmTryCompileExec2953843654.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
     arg [-lstdc++] ==> lib [stdc++]
     arg [-lm] ==> lib [m]
     arg [-lgcc_s] ==> lib [gcc_s]

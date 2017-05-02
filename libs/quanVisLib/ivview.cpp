@@ -15,8 +15,8 @@ void view3d::init()
 {
   //type = PARALLEL;
   type = PERSPECTIVE;
-  yon  = 1000;
-  hither = 0.001;
+  yon  = 200;
+  hither = 0.1;
   //yon  = 200;
   //hither = 1;
   image_plane = hither;

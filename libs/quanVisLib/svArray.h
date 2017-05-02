@@ -18,5 +18,6 @@ typedef svVector4Array* svVector4ArrayPtr;
 
 typedef svVector3* svVector3Ptr;
 typedef MArray<svVector3Ptr> svVector3PtrArray;
+
 }
 #endif // __SV_ARRAY_H

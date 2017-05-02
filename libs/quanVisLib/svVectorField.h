@@ -14,16 +14,21 @@
 #define  LIB_DIR  "/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2"
 #endif
 
+#ifndef SYMMETYR_TYPE 
+#define SYMMETRY_TYPE 6
+#endif
 
 using namespace std;
 
 namespace __svl_lib {
 typedef enum
 {
-    _ANTISYMMETRY = 0,
-    _POSITIVE = 1,
-    _NEGATIVENEAR = 2,
-    _NEGATIVEFAR = 3,
+    _ZANTI = 0,
+    _ZSYM = 1,
+    _XANTI = 2,
+    _XSYM = 3,
+    _YANTI = 4,
+    _YSYM = 5
 }SYMMETRYTYPE;
 
 typedef struct _KmeansProperty {
@@ -51,9 +56,11 @@ typedef struct _ContourProperty {
 typedef struct _SymmetryProperty{
    svChar *inputfile;
    svChar *datafile;
-   svChar *outputfile;
-   svVector3Array pos;
-   svVector3Array dir; 
+   svChar *outputdir;
+   svVector3 pos;
+   svVector3 dir;
+   svVector3 x;
+   svVector3 y; 
    svVector3 planepos;
    svVector3 planedir;
    svScalar planedistance;
@@ -200,6 +207,8 @@ class svVectorField {
 		void ComputeClusters(char *datafName, char *clusterfName, int dim, int dataSize,int numCluster);
 //		private:
 //
+//
+//
 //			void Clustering(svInt numCluster, 
 //					svInt dataSize, svInt dimensions, 
 //					char *infile, char *outfile);
@@ -209,15 +218,19 @@ class svVectorField {
     struct svSymmetry{
        svVectorField *field;
        svSymmetry(svVectorField *inputfield);
-       int SymmetryPair(SymmetryProperty &property, svVector3 pos, svVector3 dir,
-                    svVector3 *pair, svVector3 *pairdir,
+       void SymmetryPair(SymmetryProperty &property, 
+                    svVector3 pos, svVector3 dir,
+                    svVector3 &pair, svVector3 &pairdir,
                     SYMMETRYTYPE type);
-       void ComputeAntiSymmetry(SymmetryProperty &property);
-       void ComputePositiveSymmetry(SymmetryProperty &property);
-       void ComputeNegativeFarSymmetry(SymmetryProperty &property);
-       void ComputeNegativeNearSymmetry(SymmetryProperty &property);
-       void ComputeSymmetry(SymmetryProperty &property, SYMMETRYTYPE type);
-
+      // int SymmetryPair(SymmetryProperty &property, svVector3 pos, svVector3 dir,
+        //            svVector3 *pair, svVector3 *pairdir,
+          //          SYMMETRYTYPE type);
+      // void ComputeAntiSymmetry(SymmetryProperty &property);
+      // void ComputePositiveSymmetry(SymmetryProperty &property);
+      // void ComputeNegativeFarSymmetry(SymmetryProperty &property);
+      // void ComputeNegativeNearSymmetry(SymmetryProperty &property);
+      // void ComputeSymmetry(SymmetryProperty &property, SYMMETRYTYPE type);
+       void ComputeSymmetry(SymmetryProperty &property);
     } *symmetry;
     friend struct svSymmetry;
    

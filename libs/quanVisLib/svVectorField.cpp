@@ -64,6 +64,8 @@ void svContour::ComputeContours(char *vtkfName, char *contourfName, float contou
       char *exe = new char[2048];
 	  //char *contourname = new char[400];
 	  //sprintf(contourname, "%s/%s/%s", field->dataDir, field->dataFile, outContourfname); //contour.txt
+
+
       sprintf(exe, "%s/Contour %s %s %g",  BIN_DIR,
 	      vtkfName, contourfName, contourValue);
 //cerr<<exe<<endl;		  
@@ -261,7 +263,7 @@ void svKmeans::ComputeClusters(char *datafName, char *clusterfName,
 		//if(dataNum > 0)
 		//{	
 			char *exe = new char[2048];
-			
+
 			sprintf(exe, "%s/kmlsample -d %d -k %d -max %d -df %s > %s 2>&1",  BIN_DIR,
 			dim,
 			numCluster,
@@ -300,7 +302,47 @@ svSymmetry::svSymmetry(svVectorField *inputfield)
 {
     field = inputfield;
 }
+void svSymmetry::SymmetryPair(SymmetryProperty &property, svVector3 pos, svVector3 dir,
+                    svVector3 &pair, svVector3 &pairdir,
+                    SYMMETRYTYPE type)
+{
+            int count = 0;
+            svVector3 d = property.pos - pos;
+//cerr<<d[0]<<" "<<d[1]<<" "<<d[2]<<" ";
+            svVector3 norm;
+            if(dot(d, property.dir)<0)
+            {
+                  norm = - property.dir;
+            }
+            else norm = property.dir;
+//cerr<<norm[0]<<" "<<norm[1]<<" "<<norm[2]<<" ";
+            svScalar distance = dot(d, norm)*2;
+//cerr<<dot(d, norm)<<" "<<distance<<endl;
+            svVector3 p = pos + norm * distance;
+                 
+            svVector3 d2 = property.pos - (pos+dir);
+            svScalar distance2 = dot(d2, norm) * 2;
+            svVector3 p2 = (pos + dir) + norm * distance2;
 
+            svVector3 dir2 = p2 - p;
+
+               if(!(fabs(p[0]-pos[0])<0.001
+                    && fabs(p[1]-pos[1])<0.001
+                    && fabs(p[2]-pos[2])<0.001))
+               {
+                  if(type == _XSYM || type == _YSYM || type == _ZSYM)
+                  { 
+                      pairdir = dir2;
+                      pair = p;
+                  } 
+                  else
+                  {
+                       pairdir = -dir2;
+                       pair = p;
+                  } 
+               }
+}
+/*:
 int svSymmetry::SymmetryPair(SymmetryProperty &property, svVector3 pos, svVector3 dir,
                     svVector3 *pair, svVector3 *pairdir,
                     SYMMETRYTYPE type)
@@ -383,9 +425,350 @@ void svSymmetry::ComputeNegativeFarSymmetry(SymmetryProperty &property)
 {
       ComputeSymmetry(property, _NEGATIVEFAR);
 }
+*/
+void svSymmetry::ComputeSymmetry(SymmetryProperty &property)
+{
+   cout<<"Symmetry processing ..."<<endl;
+   char *str = new char[400];
 
+   char *symmetrystr = new char[200];
+   for(int j=0;j<200;j++) symmetrystr[j] = '\0';
+   for(int j=0;j<property.dir.size();j++)
+   {
+            sprintf(symmetrystr, "%s(%0.2f%0.2f%0.2f%0.2f%0.2f%0.2f)", symmetrystr,
+                  property.pos[0], property.pos[1], property.pos[2],
+                  property.dir[0], property.dir[1], property.dir[2]);
+   }
+  sprintf(str,"%s/zanti%s.txt",
+                 property.outputdir, symmetrystr);
 
-void svSymmetry::ComputeSymmetry(SymmetryProperty &property, SYMMETRYTYPE type)
+  ifstream test(str);
+//cerr<<property.outputdir<<" "<<str<<endl;
+  if(!test.is_open())
+  {
+   svIntArray * index[SYMMETRY_TYPE];
+   svVector3Array *pos;
+   svVector3Array *dir;
+   svScalarArray *mag;
+   svVector3Array *projectdir[3]; 
+
+   ifstream infile(property.inputfile);
+   int n;
+   infile>>n;
+   pos = new svVector3Array[n];
+   dir = new svVector3Array[n];
+   mag = new svScalarArray[n];
+   for(int i=0;i<SYMMETRY_TYPE;i++)
+         index[i] = new svIntArray[n];
+   projectdir[0] = new svVector3Array[n];//x
+   projectdir[1] = new svVector3Array[n];//y
+   projectdir[2] = new svVector3Array[n];//z
+   int N = 0;
+   for(int i=0;i<n;i++)
+   {
+       int m;
+       infile>>m;
+       for(int j=0;j<m;j++)
+       {
+         svVector3 p,d;
+         svScalar m;
+         infile>>p[0]>>p[1]>>p[2]
+             >>d[0]>>d[1]>>d[2]>>m;
+         pos[i].add(p);
+         dir[i].add(d);
+         mag[i].add(m*1e+17);
+
+         svVector3 tmpdir = dir[i][j] * mag[i][j];
+         svScalar value[3];
+         value[0] = dot(tmpdir, property.x);
+         value[1] = dot(tmpdir, property.y);
+         value[2] = dot(tmpdir, property.dir);
+
+//project on three dimensions
+         d = value[0] * property.x;
+         projectdir[0][i].add(d);
+         d = value[1] * property.y;
+         projectdir[1][i].add(d);
+         d = value[2] * property.dir;
+         projectdir[2][i].add(d);
+
+         for(int t=0;t<SYMMETRY_TYPE;t++)
+               index[t][i].add(-1);
+         N++;
+       }
+   }
+//cerr<<"========================================================="<<endl;
+   vector< vector<int> > symmetry[2*SYMMETRY_TYPE];
+   for(int i=0;i<2*SYMMETRY_TYPE;i++)
+          symmetry[i].resize(N);
+//   symmetry[0].resize(N);
+//   symmetry[1].resize(N);   
+
+   infile.close();
+   int count[SYMMETRY_TYPE];
+   for(int i=0;i<SYMMETRY_TYPE;i++)
+         count[i] = -1;
+//   cerr<<property.inputfile<<n<<endl;
+   for(int i=0;i<n;i++)
+   {cerr<<"="<<" "; 
+      for(int j=0;j<pos[i].size();j++)
+      {
+        int symmetryindex[2*SYMMETRY_TYPE];
+        vector<svVector3> pair;
+        vector<svVector3> pairdir;
+        vector<int> planeindex;
+
+        pair.resize(SYMMETRY_TYPE);
+        pairdir.resize(SYMMETRY_TYPE);
+
+        SymmetryPair(property, pos[i][j], projectdir[0][i][j],
+                    pair[0], pairdir[0],
+                    _XSYM);
+//cerr<<pos[i][j][0]<<" "<<pos[i][j][1]<<" "<<pos[i][j][2]<<" "<<dir[i][j][0]<<" "<<dir[i][j][1]<<" "<<dir[i][j][2]<<" "<<projectdir[0][i][j][0]<<" "<<projectdir[0][i][j][1]<<" "<<projectdir[0][i][j][2]<<" "<<pair[0][0]<<" "<<pair[0][1]<<" "<<pair[0][2]<<" "<<pairdir[0][0]<<" "<<pairdir[0][1]<<" "<<pairdir[0][2]<<endl;
+        SymmetryPair(property, pos[i][j], projectdir[0][i][j],
+                    pair[1], pairdir[1],
+                    _XANTI);
+        SymmetryPair(property, pos[i][j], projectdir[1][i][j],
+                    pair[2], pairdir[2],
+                    _YSYM);
+        SymmetryPair(property, pos[i][j], projectdir[1][i][j],
+                    pair[3], pairdir[3],
+                    _YANTI);
+        SymmetryPair(property, pos[i][j], projectdir[2][i][j],
+                    pair[4], pairdir[4],
+                    _ZSYM);
+        SymmetryPair(property, pos[i][j], projectdir[2][i][j],
+                    pair[5], pairdir[5],
+                    _ZANTI);
+//cerr<<"========================================================="<<endl;
+
+        for(int t=0;t<SYMMETRY_TYPE;t++)
+        {
+             svScalar distance = dot(pair[t] - property.planepos, property.planedir);
+             planeindex.push_back(distance/property.planedistance);
+//             cerr<<pos[i][j][0]<<" "<<pos[i][j][1]<<" "<<pos[i][j][2]<<" "<<pair[t][0]<<" "<<pair[t][1]<<" "<<pair[t][2]<<" "<<planeindex[t]<<endl;
+        }
+
+        int layer = planeindex[0];
+        for(int t=0;t<SYMMETRY_TYPE;t++)
+        {
+                        symmetryindex[t*2]=-1;
+                        symmetryindex[t*2+1]=-1;
+        }
+        if(layer >=0 && layer<n)
+        {
+           for(int tt=0;tt<pos[layer].size();tt++)
+           {
+           //   if(tt == j)
+           //       cerr<<pair.size()<<" "<<projectdir[0][layer][tt][0]<<" "<<projectdir[0][layer][tt][1]<<" "<<projectdir[0][layer][tt][2]<<endl; 
+             for(int t=0;t<pair.size();t++)
+              {
+ //                 if(tt==j)cerr<<t/2<<endl;
+               // double sum = projectdir[t/2][layer][tt][0]*projectdir[t/2][layer][tt][0] + projectdir[t/2][layer][tt][1] * projectdir[t/2][layer][tt][1] + projectdir[t/2][layer][tt][2] * projectdir[t/2][layer][tt][2];
+                if(fabs(pos[layer][tt][0] - pair[t][0])<1e-3
+                  && fabs(pos[layer][tt][1] - pair[t][1])<1e-3
+                  && fabs(pos[layer][tt][2] - pair[t][2])<1e-3
+                  && fabs(projectdir[t/2][layer][tt][0] - pairdir[t][0])<1e-3
+                  && fabs(projectdir[t/2][layer][tt][1] - pairdir[t][1])<1e-3
+                  && fabs(projectdir[t/2][layer][tt][2] - pairdir[t][2])<1e-3
+                  && !(fabs(projectdir[t/2][layer][tt][0])<1e-3
+                   && fabs(projectdir[t/2][layer][tt][1])<1e-3
+                   && fabs(projectdir[t/2][layer][tt][2])<1e-3) 
+                  )
+                {
+                        symmetryindex[t*2]=layer;
+                        symmetryindex[t*2+1]=tt;
+             //           cerr<<layer<<" "<<tt<<endl;
+                } 
+              }
+           }
+        }
+        pair.clear();
+        pairdir.clear();
+        planeindex.clear();
+//cerr<<"========================================================="<<endl;
+
+//======================================================================= 
+        for(int t=0;t<SYMMETRY_TYPE;t++)
+        {
+            int value = -1;
+            int index1=  symmetryindex[t*2];
+            int index2=  symmetryindex[t*2+1];
+            if(index1<0 || index2<0)continue;
+
+            if(index[t][index1][index2]!=-1)
+            {
+                  value = index[t][index1][index2];
+            }
+            index[t][i][j] = value;
+            if(index[t][i][j] == -1)
+            {
+                 count[t]++;
+                 index[t][i][j] = count[t];
+            }
+            bool flag = false;
+           
+            index[t][index1][index2] = index[t][i][j];
+            for(int m=0;m<symmetry[t*2][index[t][i][j]].size();m++)
+            {
+                  if(index1 == symmetry[t*2][index[t][i][j]][m]
+                      && index2 == symmetry[2*t+1][index[t][i][j]][m])
+                        {
+                        //      cerr<<index1<<" "<<index2<<" "<< symmetry[t*2][index[t][i][j]][m]<<" "<<symmetry[2*t+1][index[t][i][j]][m]<<endl;
+                              flag = true;
+                              break;
+                        }
+             }                 
+            if(!flag)
+            {
+               symmetry[t*2][index[t][i][j]].push_back(index1);
+               symmetry[t*2+1][index[t][i][j]].push_back(index2);
+           //    cerr<<index1<<" "<<index2<<endl;
+            } 
+//cerr<<"flag1========================================================="<<endl;
+
+            flag = false;
+            for(int m=0;m<symmetry[t*2][index[t][i][j]].size();m++)
+             {
+                        if(i == symmetry[t*2][index[t][i][j]][m]
+                           && j == symmetry[t*2+1][index[t][i][j]][m])
+                        {
+     //                         cerr<<i<<" "<<j<<" "<<symmetry[t*2][index[t][i][j]][m]<<" "<<symmetry[t*2+1][index[t][i][j]][m]<<" "<<symmetry[t*2][index[t][i][j]].size()<<endl;
+                              flag = true;
+                              break;
+                        }
+            }
+//cerr<<"flag2========================================================="<<endl;
+            if(!flag)
+             {
+//                      cerr<<t*2<<endl;
+//                      cerr<<symmetry[t*2].size()<<" "<<symmetry[t*2+1].size()<<endl;
+                      symmetry[t*2][index[t][i][j]].push_back(i);
+                      symmetry[t*2+1][index[t][i][j]].push_back(j);
+             }
+//cerr<<"flag3========================================================="<<endl;
+
+        }
+      }
+
+   }cerr<<endl;
+//-----------savetofile-----------------
+
+   for(int tt=0;tt<SYMMETRY_TYPE;tt++)
+   {
+     char *str2 = new char[400];
+     switch(tt)
+     {
+        case 0:  sprintf(str2,"%s/xsym%s.txt",
+                     property.outputdir, symmetrystr);break;
+        case 1:  sprintf(str2,"%s/xanti%s.txt",
+                     property.outputdir, symmetrystr);break;
+        case 2:  sprintf(str2,"%s/ysym%s.txt",
+                     property.outputdir, symmetrystr);break;
+        case 3:  sprintf(str2,"%s/yanti%s.txt",
+                     property.outputdir, symmetrystr);break;
+        case 4:  sprintf(str2,"%s/zsym%s.txt",
+                     property.outputdir, symmetrystr);break;
+        case 5:  sprintf(str2,"%s/zanti%s.txt",
+                     property.outputdir, symmetrystr);break;
+     }  
+     ofstream outfile(str2);
+     outfile<<count[tt]+1<<endl;
+        
+     vector< vector< vector<int> > > list[2];
+     list[0].resize(n);
+     list[1].resize(n);
+
+     for(int i=0;i<n;i++)
+     {
+          list[0][i].resize(pos[i].size());
+          list[1][i].resize(pos[i].size());
+
+          for(int j=0;j<pos[i].size();j++)
+          {
+              list[0][i][j].push_back(i);
+              list[1][i][j].push_back(j);
+              for(int t=0;t<symmetry[tt*2][index[tt][i][j]].size();t++)
+              {
+                     if(i == symmetry[tt*2][index[tt][i][j]][t]
+                      && j == symmetry[tt*2+1][index[tt][i][j]][t])
+                     {
+
+                     }
+                     else
+                     {
+                          list[0][i][j].push_back(symmetry[tt*2][index[tt][i][j]][t]);
+                          list[1][i][j].push_back(symmetry[tt*2+1][index[tt][i][j]][t]);
+                     }
+
+              }
+
+          }
+     }
+     for(int i=0;i<n;i++)
+     {
+        for(int j=0;j<pos[i].size();j++)
+        {
+               outfile<<list[0][i][j].size()<<" ";
+               for(int ii=0;ii<list[0][i][j].size();ii++)
+                       outfile<<list[0][i][j][ii]<<" "<<list[1][i][j][ii]<<" ";
+               outfile<<endl;
+        }
+     }
+
+    outfile.close();
+    delete [] str2;
+     for(int i=0;i<n;i++)
+     {
+          for(int j=0;j<pos[i].size();j++)
+          {
+                list[0][i][j].clear();
+                list[1][i][j].clear();
+          }
+          list[0][i].clear();
+          list[1][i].clear();
+     }
+     list[0].clear();
+     list[1].clear();
+
+  }
+   
+  for(int t=0;t<SYMMETRY_TYPE;t++)
+  {
+   for(int i=0;i<N;i++)
+   {
+       symmetry[t*2][i].clear();
+       symmetry[t*2+1][i].clear();
+   }
+   
+   symmetry[t*2].clear();
+   symmetry[t*2+1].clear();
+  }
+
+  for(int i=0;i<n;i++)
+  {  pos[i].free();
+     projectdir[0][i].free();
+     projectdir[1][i].free();
+     projectdir[2][i].free();
+     dir[i].free();
+     for(int j=0;j<SYMMETRY_TYPE;j++)
+        index[j][i].free();
+   }
+  
+   delete [] projectdir[0];
+   delete [] projectdir[1]; 
+   delete [] projectdir[2];
+   delete [] dir;
+   delete [] pos;
+   for(int j=0;j<SYMMETRY_TYPE;j++)
+         delete [] index[j];
+   delete [] str;
+  }
+  else 
+    test.close();
+
+}
+/*void svSymmetry::ComputeSymmetry(SymmetryProperty &property, SYMMETRYTYPE type)
 {
 
 cout<<"Symmetry processing ..."<<endl;
@@ -438,23 +821,6 @@ cerr<<property.inputfile<<n<<endl;
              vector<svVector3> pair;
              vector<svVector3> pairdir;
              vector<int> planeindex;
-/*            for(int t=0;t<property.pos.size();t++)
-            {
-                 svVector3 d = property.pos[t] - pos[i][j];
-                 svVector3 norm;
-                 if(dot(d, property.dir[t])<0)
-                 {
-                          norm = - property.dir[t];
-                 }
-                 else norm = property.dir[t];
-                 svScalar distance = dot(d, norm)*2;
-                 svVector3 p = pos[i][j] + norm * distance;
-               if(!(fabs(p[0]-pos[i][j][0])<0.001
-                    && fabs(p[1]-pos[i][j][1])<0.001
-                    && fabs(p[2]-pos[i][j][2])<0.001))
-                 pair.push_back(p);
-            }  
-*/
 
            svVector3 *pp = new svVector3[property.pos.size()];
            svVector3 *dd = new svVector3[property.pos.size()];
@@ -576,16 +942,6 @@ cerr<<property.inputfile<<n<<endl;
         ii++;
       }
    }
-/*
-  for(int i=0;i<n;i++)
-  {
-    for(int j=0;j<pos[i].size();j++)
-    {
-          if(index[i][j] == 1)
-               cout<<"a"<<symmetry[0][index[i][j]].size()<<endl;
-    }
-  }
-*/
 cerr<<n<<endl;
 //-----------savetofile-----------------
    ofstream outfile(property.outputfile);
@@ -594,12 +950,6 @@ cerr<<n<<endl;
    vector< vector< vector<int> > > list[2];
    list[0].resize(n);
    list[1].resize(n);
- /* for(int i=0;i<N;i++)
-   { for(int j=0;j<symmetry[0][i].size();j++)
-     cout<<symmetry[0][i][j]<<" "<<symmetry[1][i][j]<<" ";
-     cout<<endl;
-   }cout<<endl; 
-*/
    for(int i=0;i<n;i++)
    {
        // cerr<<i<<" "<<n<<endl;
@@ -672,7 +1022,7 @@ cerr<<n<<endl;
   else
      test.close();
 }
-
+*/
 /*Symmetry end*/
 
 //

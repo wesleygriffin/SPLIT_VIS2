@@ -1,4 +1,4 @@
-
+#include <GL/glew.h>
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
@@ -18,9 +18,9 @@
 using namespace std;
 
 namespace __svl_lib {
-svSplitArrow::svDirectArrow(svVectorField *f):svGlyph()//svVectorField* f, int numPlane)
+svSplitArrow::svSplitArrow(svVectorField *f):svArrowGlyph(f)//svVectorField* f, int numPlane)
 {
-  field = f;
+  //field = f;
   // only handle internal format
   ENABLE_COLOR=false;
   ENABLE_LINEWIDTH = false;
@@ -34,7 +34,457 @@ svSplitArrow::svDirectArrow(svVectorField *f):svGlyph()//svVectorField* f, int n
 //  display_list = DEFAULT_DISPLAYLIST;
 }
 
+void svSplitArrow::GenerateSample(int frequency)//(int contour, svScalar z1, svScalar z2, int z, int frequency)
+{
+  display_mode = SV_DISPLAYLIST;
+  glEnable(GL_CULL_FACE);
+  svGlyph::STILL_UPDATE = false;
 
+	if(glIsList(display_list))
+		glDeleteLists(display_list, 1); 
+    glNewList(display_list, GL_COMPILE);
+    int f = 1./(float)frequency*200;
+    if(frequency>20) f = 1;
+    for(int i =0;i<seed_num;i++)
+    {		
+            //if(i>=z1 && i<=z2)
+            //{
+            int count = 0;
+            
+		for(int j=0;j<glyph[i].size();j++)
+		{
+			if(visibleLabel[i][j]) //&& count%2==0) 
+			{
+                              count ++;
+                        }
+                        if(count%f==0&&visibleLabel[i][j])
+                        {
+			glColor4f(glyphColors[i][j][0],glyphColors[i][j][1],glyphColors[i][j][2],alpha);
+			double radius = glyphRadius;
+
+			//-----------------endpoint-----------------------
+			svVector3 end1, end2;
+//			svScalar exp = getNumOfIntegerDigits(mag[i][j]);
+//			svScalar coe = mag[i][j]/pow(10.,(double)exp);
+                        svScalar scale1 = coe[i][j]*glyphScale;
+//cerr<<mag[i][j]<<" "<<glyphScale<<" "<<exp<<" "<<pow(10.,(double)exp)<<" "<<coe<<" "<<scale1<<" ";
+                        svScalar scale2 = (exp[i][j]+expScale)*glyphScale;
+                        if(fabs(exp[i][j])<1e-16)scale2 = 0; 
+//cerr<<scale2<<endl;
+			end1[0] = glyph[i][j][0]+scale1*dir[i][j][0];
+			end1[1] = glyph[i][j][1]+scale1*dir[i][j][1];
+			end1[2] = glyph[i][j][2]+scale1*dir[i][j][2];
+			end2[0] = glyph[i][j][0]+scale2*dir[i][j][0];
+                        end2[1] = glyph[i][j][1]+scale2*dir[i][j][1];
+                        end2[2] = glyph[i][j][2]+scale2*dir[i][j][2];
+			//------------------render -------------------
+                        RenderCone(end1, dir[i][j], radius, radius*3, 3);
+                        //RenderSphere(end2, radius, dir[i][j],3,4);
+                        svVector3 end;
+                        svScalar length;
+                            length = scale1;
+                        //RenderCylinderTexture(glyph[i][j], dir[i][j], glyphTubeRadius,
+                        //               length, 
+                        //               glyphColors[i][j],
+                         //              (exp+expScale)/12., 2, 12);
+                        RenderCylinder(glyph[i][j], dir[i][j], glyphTubeRadius,
+                                       length, 3); 
+
+  //                      glColor3f(0,0,0);
+//                        RenderCylinder(glyph[i][j], dir[i][j], 0.005,
+    //                                   5.*glyphScale, 3);
+                        //  count++;
+			}
+                   // if(count>40)break;
+		}	
+            //}
+          //i = i + z;
+	}	
+    glDisable(GL_CULL_FACE);
+	
+	glEndList();
+}
+
+void svSplitArrow::GenerateArrows()
+{
+    //arrow_indices_size = 0;
+    int count = 0;
+    int index = 0;
+   //cerr<<"arrow "<<count<<" "<<index<<" "<<arrow_vertices_size<<" "<<arrow_indices_size<<" "<<arrow_base_vertices_size<<endl;
+
+    for(int i =0;i<seed_num;i++)
+    {
+                for(int j=0;j<glyph[i].size();j++)
+                {
+                        double radius = glyphRadius;
+                        svVector3 end;
+                        svScalar scale = coe[i][j]*glyphScale;
+                        end[0] = glyph[i][j][0]+scale*dir[i][j][0];
+                        end[1] = glyph[i][j][1]+scale*dir[i][j][1];
+                        end[2] = glyph[i][j][2]+scale*dir[i][j][2];
+                        svVector3 cone_seg_norm[ARROWSLICE];
+                        svVector3  cone_seg_pos[ARROWSLICE];
+                        GetCone(end, dir[i][j], radius, 
+                                 radius*3,  ARROWSLICE,
+                                  cone_seg_norm, cone_seg_pos);
+                        int start1 = count;
+                   arrow_vertices[start1].pos[0]= end[0]+radius*3*dir[i][j][0];
+                   arrow_vertices[start1].pos[1]= end[1]+radius*3*dir[i][j][1];
+                   arrow_vertices[start1].pos[2]= end[2]+radius*3*dir[i][j][2];
+                   arrow_vertices[start1].norm[0]= dir[i][j][0];
+                   arrow_vertices[start1].norm[1]= dir[i][j][1];
+                   arrow_vertices[start1].norm[2]= dir[i][j][2];
+                   arrow_vertices[start1].color[0]=glyphColors[i][j][0];
+                   arrow_vertices[start1].color[1]=glyphColors[i][j][1];
+                   arrow_vertices[start1].color[2]=glyphColors[i][j][2];
+                   arrow_vertices[start1].color[3]=glyphColors[i][j][3];
+                   int start2 = count;
+                   arrow_base_vertices[start2].pos[0]= end[0];
+                   arrow_base_vertices[start2].pos[1]= end[1];
+                   arrow_base_vertices[start2].pos[2]= end[2];
+                   arrow_base_vertices[start2].norm[0]= -dir[i][j][0];
+                   arrow_base_vertices[start2].norm[1]= -dir[i][j][1];
+                   arrow_base_vertices[start2].norm[2]= -dir[i][j][2];
+                   arrow_base_vertices[start2].color[0]=glyphColors[i][j][0];
+                   arrow_base_vertices[start2].color[1]=glyphColors[i][j][1];
+                   arrow_base_vertices[start2].color[2]=glyphColors[i][j][2];
+                   arrow_base_vertices[start2].color[3]=glyphColors[i][j][3];
+                   count++;
+                        for(int t=0;t<ARROWSLICE;t++)
+                        {
+                   /*           arrow_indices[index]=start1;
+                              if(t==ARROWSLICE-1)
+                              {
+                                arrow_indices[index+1] = count;
+                                arrow_indices[index+2] = count-(ARROWSLICE-1);
+                              }
+                              else
+                              {
+                                arrow_indices[index+1] = count;
+                                arrow_indices[index+2] = count+1;
+                              }
+*/
+
+                            arrow_vertices[count].pos[0]=cone_seg_pos[t][0];
+                            arrow_vertices[count].pos[1]=cone_seg_pos[t][1];
+                            arrow_vertices[count].pos[2]=cone_seg_pos[t][2];
+                            arrow_vertices[count].norm[0]=cone_seg_norm[t][0];
+                            arrow_vertices[count].norm[1]=cone_seg_norm[t][1];
+                            arrow_vertices[count].norm[2]=cone_seg_norm[t][2];
+                            arrow_vertices[count].color[0]=glyphColors[i][j][0];
+                            arrow_vertices[count].color[1]=glyphColors[i][j][1];
+                            arrow_vertices[count].color[2]=glyphColors[i][j][2];
+                            arrow_vertices[count].color[3]=glyphColors[i][j][3];
+
+                       arrow_base_vertices[count].pos[0]=cone_seg_pos[t][0];
+                       arrow_base_vertices[count].pos[1]=cone_seg_pos[t][1];
+                       arrow_base_vertices[count].pos[2]=cone_seg_pos[t][2];
+                       arrow_base_vertices[count].norm[0]=-dir[i][j][0];
+                       arrow_base_vertices[count].norm[1]=-dir[i][j][1];
+                       arrow_base_vertices[count].norm[2]=-dir[i][j][2];
+                       arrow_base_vertices[count].color[0]=glyphColors[i][j][0];
+                       arrow_base_vertices[count].color[1]=glyphColors[i][j][1];
+                       arrow_base_vertices[count].color[2]=glyphColors[i][j][2];
+                       arrow_base_vertices[count].color[3]=glyphColors[i][j][3];
+
+                            count++;
+                            index+=3;
+                        }
+                }
+   }
+   //cerr<<"arrow "<<count<<" "<<index<<" "<<arrow_vertices_size<<" "<<arrow_indices_size<<" "<<arrow_base_vertices_size<<endl;
+}
+void svSplitArrow::GenerateTubes()
+{
+    int count1 = 0;
+    int count2 = 0;
+    for(int i =0;i<seed_num;i++)
+    {
+                for(int j=0;j<glyph[i].size();j++)
+                {
+                        double radius = glyphTubeRadius;
+                        svVector3 end;
+                        svScalar scale = coe[i][j]*glyphScale;
+                        svVector3 tube_seg_norm[(CYLINDERSLICE+1)*2];
+                        svVector3  tube_seg_pos[(CYLINDERSLICE+1)*2];
+                        GetCylinder(glyph[i][j], dir[i][j], radius,
+                                 scale,  CYLINDERSLICE,
+                                  tube_seg_norm, tube_seg_pos);
+                        int start= count2;
+                       tube_base_vertices[count2].pos[0]=glyph[i][j][0];
+                       tube_base_vertices[count2].pos[1]=glyph[i][j][1];
+                       tube_base_vertices[count2].pos[2]=glyph[i][j][2];
+                       tube_base_vertices[count2].norm[0]=-dir[i][j][0];
+                       tube_base_vertices[count2].norm[1]=-dir[i][j][1];
+                       tube_base_vertices[count2].norm[2]=-dir[i][j][2];
+                       tube_base_vertices[count2].color[0]=glyphColors[i][j][0];
+                       tube_base_vertices[count2].color[1]=glyphColors[i][j][1];
+                       tube_base_vertices[count2].color[2]=glyphColors[i][j][2];
+                       tube_base_vertices[count2].color[3]=glyphColors[i][j][3];
+                        count2++;
+                        for(int t=0;t<(CYLINDERSLICE+1)*2;t++)
+                        {
+                            tube_vertices[count1].pos[0]=tube_seg_pos[t][0];
+                            tube_vertices[count1].pos[1]=tube_seg_pos[t][1];
+                            tube_vertices[count1].pos[2]=tube_seg_pos[t][2];
+                            tube_vertices[count1].norm[0]=tube_seg_norm[t][0];
+                            tube_vertices[count1].norm[1]=tube_seg_norm[t][1];
+                            tube_vertices[count1].norm[2]=tube_seg_norm[t][2];
+                            tube_vertices[count1].color[0]=glyphColors[i][j][0];
+                            tube_vertices[count1].color[1]=glyphColors[i][j][1];
+                            tube_vertices[count1].color[2]=glyphColors[i][j][2];
+                            tube_vertices[count1].color[3]=glyphColors[i][j][3];
+                            if(t%2==0)
+                        {
+                        tube_base_vertices[count2].pos[0]=tube_seg_pos[t][0];
+                        tube_base_vertices[count2].pos[1]=tube_seg_pos[t][1];
+                        tube_base_vertices[count2].pos[2]=tube_seg_pos[t][2];
+                        tube_base_vertices[count2].norm[0]=-dir[i][j][0];
+                        tube_base_vertices[count2].norm[1]=-dir[i][j][1];
+                        tube_base_vertices[count2].norm[2]=-dir[i][j][2];
+                        tube_base_vertices[count2].color[0]=glyphColors[i][j][0];
+                        tube_base_vertices[count2].color[1]=glyphColors[i][j][1];
+                        tube_base_vertices[count2].color[2]=glyphColors[i][j][2];
+                        tube_base_vertices[count2].color[3]=glyphColors[i][j][3];
+                        count2++;
+                         }
+/*
+                            if(t%2==0&&t<CYLINDERSLICE*2)
+                            {
+                                  tube_indices[index]  =count;
+                                  tube_indices[index+1]=count+1;
+                                  tube_indices[index+2]=count+3;
+                                  tube_indices[index+3]=count+2;
+                                  index+=4;
+                             } 
+ */
+                            count1++;
+                                       
+                        }
+                }
+   }
+   //cerr<<"tube "<<count1<<" "<<tube_vertices_size<<" "<<count2<<" "<<tube_base_vertices_size<<endl;
+}
+
+void svSplitArrow::GenerateIndex()
+{
+    int index1 = 0;
+    int count1 = 0;
+    int index2 = 0;
+    int count2 = 0;
+
+    int abindex = 0;
+    int abcount = 0;
+    int tbindex = 0; 
+    int tbcount = 0;
+
+    for(int i =0;i<seed_num;i++)
+    {
+                for(int j=0;j<glyph[i].size();j++)
+                {
+                        int start1 = tbcount;
+                        tbcount++;
+                        for(int t=0;t<(CYLINDERSLICE+1)*2;t++)
+                        {
+                            if(t%2==0&&t<CYLINDERSLICE*2)
+                            {
+                                 if(visibleLabel[i][j])
+                                 { 
+                                  tube_indices[index1]  =count1;
+                                  tube_indices[index1+1]=count1+1;
+                                  tube_indices[index1+2]=count1+3;
+                                  tube_indices[index1+3]=count1+2;
+                                  index1+=4;
+
+                                  tube_base_indices[tbindex]  =start1;
+                                  tube_base_indices[tbindex+1]=tbcount+1;
+                                  tube_base_indices[tbindex+2]=tbcount;
+                                  tbindex+=3;
+                                 }
+                             }
+                             count1++;
+                             if(t%2==0) tbcount++;
+                        }
+
+                        start1 = count2;
+                        int start2 = count2;
+                        count2++;
+                        for(int t=0;t<ARROWSLICE;t++)
+                        {
+                            if(visibleLabel[i][j])
+                            {
+                              arrow_indices[index2]=start1;
+                              arrow_base_indices[abindex]=start1;
+                              if(t==ARROWSLICE-1)
+                              {
+                                arrow_indices[index2+1] = count2;
+                                arrow_indices[index2+2] = count2-(ARROWSLICE-1);
+                                arrow_base_indices[abindex+1] = count2;
+                                arrow_base_indices[abindex+2] = count2-(ARROWSLICE-1);
+                              }
+                              else
+                              {
+                                arrow_indices[index2+1] = count2;
+                                arrow_indices[index2+2] = count2+1;
+                                arrow_base_indices[abindex+1] = count2;
+                                arrow_base_indices[abindex+2] = count2+1;
+                              }
+                              index2+=3;
+                              abindex+=3;
+                             }
+                            count2++;
+                        }
+                }
+   }
+   //cerr<<arrow_indices_size<<" "<<tube_indices_size<<" "<<count1<<" "<<count2<<" "<<index1<<" "<<index2<<" "<<arrow_base_indices_size<<" "<<tube_base_indices_size<<" "<<tbindex<<" "<<abindex<<" "<<tbcount<<endl;
+}
+
+void svSplitArrow::GenerateLegend()
+{
+    int count = 0;
+    for(int i =0;i<seed_num;i++)
+    {
+                for(int j=0;j<glyph[i].size();j++)
+                {
+                        double radius = glyphRadius;
+                        svVector3 end;
+                        svScalar scale = 5.*glyphScale;
+                        end[0] = glyph[i][j][0]+scale*dir[i][j][0];
+                        end[1] = glyph[i][j][1]+scale*dir[i][j][1];
+                        end[2] = glyph[i][j][2]+scale*dir[i][j][2];
+                        legend_vertices[count].pos[0]=glyph[i][j][0];
+                        legend_vertices[count].pos[1]=glyph[i][j][1];
+                        legend_vertices[count].pos[2]=glyph[i][j][2];
+                        legend_vertices[count+1].pos[0]=end[0];
+                        legend_vertices[count+1].pos[1]=end[1];
+                        legend_vertices[count+1].pos[2]=end[2];
+                        count+=2;
+
+                 //       legend_vertices[i].add(end);
+                   /*     svVector3 tube_seg_norm[(CYLINDERSLICE+1)*2];
+                        svVector3  tube_seg_pos[(CYLINDERSLICE+1)*2];
+                        GetCylinder(glyph[i][j], dir[i][j], radius,
+                                 scale,  CYLINDERSLICE,
+                                  tube_seg_norm, tube_seg_pos);
+                        for(int t=0;t<(CYLINDERSLICE+1)*2;t++)
+                        {
+                               tube_vertices[i].add(tube_seg_pos[t]);
+                               tube_normals[i].add(tube_seg_norm[t]);
+                        }
+                   */
+
+                }
+   }
+}
+
+void svSplitArrow::RenderLegend()
+{
+   glDisable(GL_LIGHTING);
+   int count = 0;
+   glColor3f(0.,0.,0.);
+   glBegin(GL_LINES);
+   for(int i=0;i<seed_num;i++)
+   {
+        for(int j=0;j<glyph[i].size();j++)
+        {
+             if(visibleLabel[i][j])
+            {
+             glVertex3f(legend_vertices[count].pos[0],
+                       legend_vertices[count].pos[1],
+                       legend_vertices[count].pos[2]);
+             glVertex3f(legend_vertices[count+1].pos[0],
+                       legend_vertices[count+1].pos[1],
+                       legend_vertices[count+1].pos[2]);
+            }
+             count+=2;
+        }
+   }  
+   glEnd();
+   glEnable(GL_LIGHTING);
+}
+/*
+void svSplitArrow::GenerateVBO()
+{
+   arrow_indices_size = dataSize*3*ARROWSLICE;
+   int num =dataSize*(ARROWSLICE+1); 
+
+   glGenBuffers(1, &ARROW_VBO);
+   glBindBuffer(GL_ARRAY_BUFFER, ARROW_VBO);
+   glBufferData(GL_ARRAY_BUFFER, sizeof(VBOVertex)*num,
+                arrow_vertices,GL_DYNAMIC_DRAW);
+   glBindBuffer(GL_ARRAY_BUFFER,0);
+
+   glGenBuffers(1, &ARROW_IVBO);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ARROW_IVBO);
+   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*arrow_indices_size,
+                arrow_indices,GL_DYNAMIC_DRAW);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
+
+
+   num =dataSize*(CYLINDERSLICE+1)*2;
+
+   glGenBuffers(1, &TUBE_VBO);
+   glBindBuffer(GL_ARRAY_BUFFER, TUBE_VBO);
+   glBufferData(GL_ARRAY_BUFFER, sizeof(VBOVertex)*num,
+                tube_vertices,GL_DYNAMIC_DRAW);
+   glBindBuffer(GL_ARRAY_BUFFER,0);
+
+   glGenBuffers(1, &TUBE_IVBO);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, TUBE_IVBO);
+   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*tube_indices_size,
+                tube_indices,GL_DYNAMIC_DRAW);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
+
+}
+
+void svSplitArrow::RenderVBO()
+{
+   glBindBuffer(GL_ARRAY_BUFFER, ARROW_VBO);
+   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ARROW_IVBO);
+
+   glEnableClientState(GL_VERTEX_ARRAY);
+   glEnableClientState(GL_NORMAL_ARRAY);
+   glEnableClientState(GL_COLOR_ARRAY);
+
+   glVertexPointer(3, GL_FLOAT, sizeof(VBOVertex), (char*)NULL+0);
+   glNormalPointer(GL_FLOAT, sizeof(VBOVertex), (char*)NULL+sizeof(float)*3);
+   glColorPointer(4, GL_FLOAT, sizeof(VBOVertex),(char*)NULL+sizeof(float)*6);
+
+   glDrawElements(GL_TRIANGLES, arrow_indices_size, GL_UNSIGNED_INT,NULL);
+
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+   glDisableClientState(GL_VERTEX_ARRAY);
+   glDisableClientState(GL_NORMAL_ARRAY);
+   glDisableClientState(GL_COLOR_ARRAY);
+
+//==============================================
+
+   glBindBuffer(GL_ARRAY_BUFFER, TUBE_VBO);
+   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, TUBE_IVBO);
+
+   glEnableClientState(GL_VERTEX_ARRAY);
+   glEnableClientState(GL_NORMAL_ARRAY);
+   glEnableClientState(GL_COLOR_ARRAY);
+
+   glVertexPointer(3, GL_FLOAT, sizeof(VBOVertex), (char*)NULL+0);
+   glNormalPointer(GL_FLOAT, sizeof(VBOVertex), (char*)NULL+sizeof(float)*3);
+   glColorPointer(4, GL_FLOAT, sizeof(VBOVertex),(char*)NULL+sizeof(float)*6);
+
+   glDrawElements(GL_QUADS, tube_indices_size, GL_UNSIGNED_INT,NULL);
+
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+   glDisableClientState(GL_VERTEX_ARRAY);
+   glDisableClientState(GL_NORMAL_ARRAY);
+   glDisableClientState(GL_COLOR_ARRAY);
+
+}
+*/
 void svSplitArrow::Generate() // this read specific data format
 {
  // svGlyph::STILL_UPDATE = true;
@@ -72,6 +522,7 @@ void svSplitArrow::Generate() // this read specific data format
       }*/
  // }
 
+
   display_mode = SV_DISPLAYLIST;
   //display_list = 1;
   svGlyph::STILL_UPDATE = false;
@@ -79,6 +530,125 @@ void svSplitArrow::Generate() // this read specific data format
 	if(glIsList(display_list))
 		glDeleteLists(display_list, 1); 
     glNewList(display_list, GL_COMPILE);
+
+//   GLfloat mat[4];
+//   mat[0] = 0.135; mat[1] = 0.2225; mat[2] = 0.1575; mat[3] = 1.0;
+   //glMaterialfv(GL_FRONT, GL_AMBIENT, mat);
+//   mat[0] = 0.54; mat[1] = 0.89; mat[2] = 0.63;
+//   glMaterialfv(GL_FRONT, GL_DIFFUSE, mat);
+//   mat[0] = 0.2; mat[1] = 0.2; mat[2] = 0.2;mat[3]=0.2;
+//   glMaterialfv(GL_FRONT, GL_SPECULAR, mat);
+//   glMaterialf(GL_FRONT, GL_SHININESS, 20);
+    
+    for(int i =0;i<seed_num;i++)
+    {		
+		for(int j=0;j<glyph[i].size();j++)
+		{
+			if(visibleLabel[i][j])
+			{
+			glColor4f(glyphColors[i][j][0],glyphColors[i][j][1],glyphColors[i][j][2],alpha);
+			double radius = glyphRadius;
+
+	//-----------------endpoint-----------------------
+			svVector3 end1, end2;
+		//	svScalar exp = getNumOfIntegerDigits(mag[i][j]);
+		//	svScalar coe = mag[i][j]/pow(10.,(double)exp);
+                        svScalar scale1 = coe[i][j]*glyphScale;
+                        svScalar scale2 = (exp[i][j]+expScale)*glyphScale;
+                        if(fabs(exp[i][j])<1e-16)scale2 = 0; 
+			end1[0] = glyph[i][j][0]+scale1*dir[i][j][0];
+			end1[1] = glyph[i][j][1]+scale1*dir[i][j][1];
+			end1[2] = glyph[i][j][2]+scale1*dir[i][j][2];
+//			end2[0] = glyph[i][j][0]+scale2*dir[i][j][0];
+//                      end2[1] = glyph[i][j][1]+scale2*dir[i][j][1];
+//                      end2[2] = glyph[i][j][2]+scale2*dir[i][j][2];
+			//------------------render -------------------
+                        RenderCone(end1, dir[i][j], radius, radius*3, ARROWSLICE);
+                //        RenderSphere(end2, radius, dir[i][j],SPHERESLICE, SPHERESTACK);
+                        svVector3 end;
+                        svScalar length = scale1;
+        /*                if(scale1 > scale2)
+                        {
+                            end = end1; 
+                            length = scale1;
+                        } 
+                        else
+                        {
+                            end = end2;
+                            length = scale2;
+                        }
+*/
+                        //RenderCylinderTexture(glyph[i][j], dir[i][j], glyphTubeRadius,
+                        //               length, 
+                        //               glyphColors[i][j],
+                         //              (exp+expScale)/12., 2, 12);
+                        RenderCylinder(glyph[i][j], dir[i][j], glyphTubeRadius,
+                                       length, CYLINDERSLICE); 
+
+                        glColor3f(0,0,0);
+                        RenderCylinder(glyph[i][j], dir[i][j], 0.005,
+                                       5.*glyphScale, 5);
+			}
+		}	
+	}	
+
+	
+	glEndList();
+}
+void svSplitArrow::GenerateTexture() // this read specific data format
+{
+ // svGlyph::STILL_UPDATE = true;
+
+  //numOfCriticalPoints = GetNumberOfCriticalPoints(infile);
+  //seed_num = numOfCriticalPoints;
+
+  //cerr <<"num of criticalpoints = " <<  numOfCriticalPoints << endl;
+  //eigen_vectors = new svVector3[numOfCriticalPoints*3];
+  //critical_point_type = new svUint[numOfCriticalPoints];
+  //glyph= new svVector3Array[numOfCriticalPoints]; 
+
+  //readCriticalPointInfo(infile, glyph, 
+   //      eigen_values_r, eigen_values_i, eigen_vectors,
+    //     critical_point_type, seed_num);
+
+//cerr << "====================================" << endl;
+//cerr << "SVCRTICAL POINT GLYPH: NUM OF CRTICAL POINTS ==>  " << seed_num << endl;
+//cerr << "====================================" << endl;
+  // write to display list
+  //cleanDisplayList(SV_DISPLAYLIST);
+  //BuildDisplayListFromStore();
+  //cleanStreamLine();
+
+ // if(isContour)
+ // {
+      //ComputeContours();
+  
+      /*for(int i=0;i<seed_num;i++)
+      {
+           if(contourLabel[i])
+           {
+                   SetContourData(i);
+           }
+      }*/
+ // }
+
+
+  display_mode = SV_DISPLAYLIST;
+  //display_list = 1;
+  svGlyph::STILL_UPDATE = false;
+
+	if(glIsList(display_list))
+		glDeleteLists(display_list, 1); 
+    glNewList(display_list, GL_COMPILE);
+
+   GLfloat mat[4];
+   mat[0] = 0.135; mat[1] = 0.2225; mat[2] = 0.1575; mat[3] = 1.0;
+   //glMaterialfv(GL_FRONT, GL_AMBIENT, mat);
+   mat[0] = 0.54; mat[1] = 0.89; mat[2] = 0.63;
+//   glMaterialfv(GL_FRONT, GL_DIFFUSE, mat);
+   mat[0] = 0.2; mat[1] = 0.2; mat[2] = 0.2;mat[3]=0.2;
+//   glMaterialfv(GL_FRONT, GL_SPECULAR, mat);
+//   glMaterialf(GL_FRONT, GL_SHININESS, 20);
     
     for(int i =0;i<seed_num;i++)
     {		
@@ -88,130 +658,79 @@ void svSplitArrow::Generate() // this read specific data format
 			if(visibleLabel[i][j])
 			{
 			glColor4f(glyphColors[i][j][0],glyphColors[i][j][1],glyphColors[i][j][2],alpha);
-
-			double radius = mag[i][j] * glyphRadius;
-			
-
-			//-----------------rotation------------------------------
-			double angle_x = acos(dir[i][j][2]);
-			if(dir[i][j][1] > 0)
-			{
-				angle_x = - angle_x;
-			}
-			double xy_project = dir[i][j][0] * dir[i][j][0] + dir[i][j][1] * dir[i][j][1];
-			xy_project = sqrt(xy_project);
-			double angle_z = acos(dir[i][j][1]/xy_project);
-			if(angle_x < 0)
-			{	
-					if (dir[i][j][0] > 0)
-					 {
-						angle_z =  -angle_z;
-					  }
-			}
-			else
-			{
-					angle_z = 3.1415926 - angle_z;
-					if(dir[i][j][0] < 0)
-						angle_z =  -angle_z;		
-			}
+			double radius = glyphRadius;
 
 			//-----------------endpoint-----------------------
-			svVector3 end;
-			svScalar exp = getNumOfIntegerDigits(mag[i][j]);
-			svScalar coe = mag[i][i]/power(10.,exp);
-			end[0] = glyph[i][j][0]+coe*coeScale*dir[i][j][0];
-			end[1] = glyph[i][j][1]+coe*coeScale*dir[i][j][1];
-			end[2] = glyph[i][j][2]+coe*coeScale*dir[i][j][2];
-			
-			//cerr<<mag[i][j]<<" "<<glyphScale<<" "<<dir[i][j][0]<<" "<<end[0]<<" "<<glyph[i][j][0]<<endl;
-
+			svVector3 end1, end2;
+//			svScalar exp = getNumOfIntegerDigits(mag[i][j]);
+//			svScalar coe = mag[i][j]/pow(10.,(double)exp);
+                        svScalar scale1 = coe[i][j]*glyphScale;
+//cerr<<mag[i][j]<<" "<<glyphScale<<" "<<exp<<" "<<pow(10.,(double)exp)<<" "<<coe<<" "<<scale1<<" ";
+                        svScalar scale2 = (exp[i][j]+expScale)*glyphScale;
+                        if(fabs(exp[i][j])<1e-16)scale2 = 0; 
+//cerr<<scale2<<endl;
+			end1[0] = glyph[i][j][0]+scale1*dir[i][j][0];
+			end1[1] = glyph[i][j][1]+scale1*dir[i][j][1];
+			end1[2] = glyph[i][j][2]+scale1*dir[i][j][2];
+		//	end2[0] = glyph[i][j][0]+scale2*dir[i][j][0];
+                //        end2[1] = glyph[i][j][1]+scale2*dir[i][j][1];
+                //        end2[2] = glyph[i][j][2]+scale2*dir[i][j][2];
 			//------------------render -------------------
-			glPushMatrix();
-
-			glTranslatef(end[0],end[1],end[2]);
-			glRotatef(angle_z/PI * 180.,0,0,1);
-			glRotatef(angle_x/PI * 180.,1,0,0);
-
-			double base = radius * 1.5;
-			 glutSolidCone(base, base*3, 4, 1);
-			glPopMatrix();
-
-		//	glDisable(GL_LIGHTING);
-		//	glDisable(GL_LIGHT0);
-
-                        end[0] = glyph[i][j][0]+exp*expScale*dir[i][j][0];
-                        end[1] = glyph[i][j][1]+exp*expScale*dir[i][j][1];
-                        end[2] = glyph[i][j][2]+exp*expScale*dir[i][j][2];
-
-                        glPushMatrix();
-
-                        glTranslatef(end[0],end[1],end[2]);
-
-                        //double base = radius * 1.5;
-                         glutSolidSphere(base, 6, 6);
-                        glPopMatrix();
-
-                        glDisable(GL_LIGHTING);
-                        glDisable(GL_LIGHT0);
-			//-------------------straight line or string-------------
-               svScalar l =5;
-                        end[0] = glyph[i][j][0]+l*coeScale*dir[i][j][0];
-                        end[1] = glyph[i][j][1]+l*coeScale*dir[i][j][1];
-                        end[2] = glyph[i][j][2]+l*coeScale*dir[i][j][2];
-
-			glLineWidth(2.);
-                        glColor4f(0.,0.,0.,alpha);
-                        glBegin(GL_LINES);
-                        glVertex3f(glyph[i][j][0],glyph[i][j][1],glyph[i][j][2]);
-                        glVertex3f(end[0],end[1],end[2]);
-                        glEnd();
-//-------------------------------------------------
-                        if(exp < coe)
+                        RenderCone(end1, dir[i][j], radius, radius*3, ARROWSLICE);
+                //        RenderSphere(end2, radius, dir[i][j],SPHERESLICE, SPHERESTACK);
+                        svVector3 end;
+                        svScalar length = scale1;
+                       /* if(scale1 > scale2)
                         {
-                                end[0] = glyph[i][j][0]+coe*coeScale*dir[i][j][0];
-                                end[1] = glyph[i][j][1]+coe*coeScale*dir[i][j][1];
-                                end[2] = glyph[i][j][2]+coe*coeScale*dir[i][j][2];
-                        }
-			else
+                            end = end1; 
+                            length = scale1;
+                        } 
+                        else
                         {
-                                end[0] = glyph[i][j][0]+exp*expScale*dir[i][j][0];
-                                end[1] = glyph[i][j][1]+exp*expScale*dir[i][j][1];
-                                end[2] = glyph[i][j][2]+exp*expScale*dir[i][j][2];
-                        }
+                            end = end2;
+                            length = scale2;
+                        }*/
+                        RenderCylinderTexture(glyph[i][j], dir[i][j], glyphTubeRadius,
+                                       length, 
+                                       glyphColors[i][j],
+                                      (exp[i][j]+expScale)/(numPower-1), REPEAT_TEXTURE, (numPower-1));
+                        //RenderCylinder(glyph[i][j], dir[i][j], glyphTubeRadius,
+                        //               length, CYLINDERSLICE); 
 
-                        glBegin(GL_LINES);
-                        glVertex3f(glyph[i][j][0],glyph[i][j][1],glyph[i][j][2]);
-                        glVertex3f(end[0],end[1],end[2]);
-                        glEnd();
-
-                        glLineWidth(6.);
-                        glColor4f(0.,0.,0.,alpha);
-                        glBegin(GL_LINES);
-                        glVertex3f(glyph[i][j][0],glyph[i][j][1],glyph[i][j][2]);
-                        glVertex3f(end[0],end[1],end[2]);
-                        glEnd();
-
-
-			glEnable(GL_LIGHTING);
-			glEnable(GL_LIGHT0);
+                        glColor3f(0,0,0);
+                        RenderCylinder(glyph[i][j], dir[i][j], 0.005,
+                                       5.*glyphScale, 5);
 			}
 		}	
 	}	
 
-    //glDisable(GL_LIGHTING);
-    //glDisable(GL_LIGHT0);
-
-	glLineWidth(1.);
 	
 	glEndList();
 }
 
+void svSplitArrow::RenderSample()
+{
+    for(int i=0;i<sampleLabel.size();)
+    {
+           int layer = sampleLabel[i];
+           int index = sampleLabel[i+1];
+
+           svScalar length = coe[layer][index] * glyphScale;
+           svVector3 end = glyph[layer][index] 
+                       + dir[layer][index] * length;
+           glColor4f(glyphColors[layer][index][0],glyphColors[layer][index][1],
+                     glyphColors[layer][index][2],glyphColors[layer][index][3]);
+           RenderCone(end, dir[layer][index], glyphRadius, 
+                       glyphRadius*3, ARROWSLICE);
+           RenderCylinder(glyph[layer][index], dir[layer][index], 
+                       glyphTubeRadius,
+                       length, CYLINDERSLICE);  
+           i+=2;
+    }	
+}
+
 void svSplitArrow::Render()
 {
-  glDisable(GL_LIGHTING);
-  glDisable(GL_TEXTURE_2D);
- // glColor3fv(render_property.color.getValue());
-  
    
   //if(display_mode == SV_IMMEDIATE) {
     //Generate();
