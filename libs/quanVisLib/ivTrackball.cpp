@@ -99,6 +99,8 @@ void Trackball::reset()
 	//dolly_mat.identity();
 	action = _NONE;
 	dolly_all.identity();
+        world2focus.setColVector(3, -focus);
+        focus2world.setColVector(3, focus);
 }
 void Trackball::setx()
 {

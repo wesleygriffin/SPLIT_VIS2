@@ -514,11 +514,14 @@ void svGlyph::SetSampleData(int size)
              if(visibleLabel[i][j])
              {
               int c = clusterLabel[i][j];
+              if(c>-1)
+              {
               if(count[c] < size)
               {
                     sampleLabel.add(i);
                     sampleLabel.add(j);
                     count[c]++;
+              }
               }
              }              
          }
@@ -702,22 +705,35 @@ void svGlyph::SetSampling(vector<int> symmetrytype, svInt frequency)
          {
             if(visibleLabel[i][j] == true)
             {
+              bool flag = false;
               for(int t=0;t<symmetrytype.size();t++)
               {
                    int size = symmetrylist[symmetrytype[t]]->getSize(count);
-                   int data1[size];
-                   int data2[size];
- 
+                    if((t==0&&size>1)||(flag&&size>1))
+                        flag = true;
+                    else
+                        flag = false;
+              }
+              if(flag)
+              {
+                for(int t=0;t<symmetrytype.size();t++)
+                {
+                   int size = symmetrylist[symmetrytype[t]]->getSize(count);
+                   int data1[size], data2[size];
                    symmetrylist[symmetrytype[t]]->getData(count, data1, data2);
-
                     for(int m=0;m<size;m++)
                     {
                           visibleLabel[data1[m]][data2[m]] = true;
-                    }
-              }
-             }
+                    }         
+                }
+            }
+            else
+            {
+                visibleLabel[i][j] = false;
+            }
             count++;
          }
+       }
     }
    }
 }

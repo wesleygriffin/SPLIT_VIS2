@@ -80,7 +80,112 @@ svVector3 svAverage(const svVector3& v1, const svVector3& v2)
 }
 
 
+svVector3 GetRotateVector(svVector3 v, GLfloat *m)
+{
+  svVector3 newv;
+  svVector3 newp;
+  newp[0] = m[12];
+  newp[1] = m[13];
+  newp[2] = m[14];
+ 
+  newv[0]  = v[0] * m[0] +
+             v[1] * m[4] +
+             v[2] * m[8] +
+             m[12] ;
+  newv[1]  = v[0] * m[1] +
+             v[1] * m[5] +
+             v[2] * m[9] +
+             m[13];
+  newv[2]  = v[0] * m[2] +
+             v[1] * m[6] +
+             v[2] * m[10] +
+             m[14] ;
 
+  return normalize(newv-newp);
+}
+
+svVector3 GetNewVector(svVector3 v, GLfloat *m)
+{
+  svVector3 newv;
+
+  newv[0]  = v[0] * m[0] +
+             v[1] * m[4] +
+             v[2] * m[8] +
+             m[12] ;
+  newv[1]  = v[0] * m[1] +
+             v[1] * m[5] +
+             v[2] * m[9] +
+             m[13];
+  newv[2]  = v[0] * m[2] +
+             v[1] * m[6] +
+             v[2] * m[10] +
+             m[14] ;
+
+  return newv;
+}
+
+void GetRotateAngle(svVector3 dir, double &angle_x,  double &angle_z)
+{
+            angle_x = acos(dir[2]);
+                if(dir[1] > 0)
+                {
+                        angle_x = - angle_x;
+                }
+                double xy_project = dir[0] * dir[0] + dir[1] * dir[1];
+                xy_project = sqrt(xy_project);
+                 angle_z = acos(dir[1]/xy_project);
+                if(angle_x < 0)
+                {
+                                if (dir[0] > 0)
+                                 {
+                                        angle_z =  -angle_z;
+                                  }
+                }
+                else
+                {
+                                angle_z = 3.1415926 - angle_z;
+                                if(dir[0] < 0)
+                                        angle_z =  -angle_z;
+                }
+
+}
+
+void GetRotateAngleX(svVector3 dir, double &angle_y,  double &angle_x)
+{
+            angle_y = acos(dir[0]);
+                if(dir[2] > 0)
+                {
+                        angle_y = - angle_y;
+                }
+                double yz_project = dir[1] * dir[1] + dir[2] * dir[2];
+                yz_project = sqrt(yz_project);
+                angle_x = acos(dir[2]/yz_project);
+                if(angle_y < 0)
+                {
+                                if (dir[1] > 0)
+                                 {
+                                        angle_x =  -angle_x;
+                                  }
+                }
+                else
+                {
+                                angle_y = 3.1415926 - angle_y;
+                                if(dir[1] < 0)
+                                        angle_y =  -angle_y;
+                }
+
+}
+
+
+void GetRotateFont(svVector3 dir, double &angle_x,  double &angle_z,
+                   ViewProperty &property)
+{
+     svVector3 newdir = GetRotateVector(dir, property.tm);
+     cerr<<newdir[0]<<" "<<newdir[1]<<" "<<newdir[2]<<endl;
+     GetRotateAngle(newdir, angle_x, angle_z);
+     angle_x = -angle_x;
+     angle_z = -angle_z;
+}
 //----------------------------------------------------------
 svVector3 GetVertical(svVector3 pos, svVector3 dir,  ViewProperty &property)
 {

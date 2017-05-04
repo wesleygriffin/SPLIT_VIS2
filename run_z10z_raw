@@ -1,1 +1,0 @@
-LD_LIBRARY_PATH=/local/HEV/external/vtk/installed/lib/vtk-5.10/ bin/splitToolkit SplitTool/config_raw_z_10z

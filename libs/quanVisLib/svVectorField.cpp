@@ -433,12 +433,12 @@ void svSymmetry::ComputeSymmetry(SymmetryProperty &property)
 
    char *symmetrystr = new char[200];
    for(int j=0;j<200;j++) symmetrystr[j] = '\0';
-   for(int j=0;j<property.dir.size();j++)
-   {
+//   for(int j=0;j<property.dir.size();j++)
+//   {
             sprintf(symmetrystr, "%s(%0.2f%0.2f%0.2f%0.2f%0.2f%0.2f)", symmetrystr,
                   property.pos[0], property.pos[1], property.pos[2],
                   property.dir[0], property.dir[1], property.dir[2]);
-   }
+//   }
   sprintf(str,"%s/zanti%s.txt",
                  property.outputdir, symmetrystr);
 
@@ -510,7 +510,7 @@ void svSymmetry::ComputeSymmetry(SymmetryProperty &property)
          count[i] = -1;
 //   cerr<<property.inputfile<<n<<endl;
    for(int i=0;i<n;i++)
-   {cerr<<"="<<" "; 
+   {cerr<<i<<" "; 
       for(int j=0;j<pos[i].size();j++)
       {
         int symmetryindex[2*SYMMETRY_TYPE];
@@ -594,20 +594,26 @@ void svSymmetry::ComputeSymmetry(SymmetryProperty &property)
             int value = -1;
             int index1=  symmetryindex[t*2];
             int index2=  symmetryindex[t*2+1];
-            if(index1<0 || index2<0)continue;
+       //     if(index1<0 || index2<0)continue;
 
-            if(index[t][index1][index2]!=-1)
+            if(index1>=0 && index2>=0)
             {
-                  value = index[t][index1][index2];
+              if(index[t][index1][index2]!=-1)
+              {
+                   value = index[t][index1][index2];
+              }
+              index[t][i][j] = value;
             }
-            index[t][i][j] = value;
+
             if(index[t][i][j] == -1)
             {
                  count[t]++;
                  index[t][i][j] = count[t];
             }
             bool flag = false;
-           
+
+            if(index1>=0&&index2>=0)
+           {           
             index[t][index1][index2] = index[t][i][j];
             for(int m=0;m<symmetry[t*2][index[t][i][j]].size();m++)
             {
@@ -624,7 +630,8 @@ void svSymmetry::ComputeSymmetry(SymmetryProperty &property)
                symmetry[t*2][index[t][i][j]].push_back(index1);
                symmetry[t*2+1][index[t][i][j]].push_back(index2);
            //    cerr<<index1<<" "<<index2<<endl;
-            } 
+            }
+           } 
 //cerr<<"flag1========================================================="<<endl;
 
             flag = false;
@@ -683,13 +690,17 @@ void svSymmetry::ComputeSymmetry(SymmetryProperty &property)
      {
           list[0][i].resize(pos[i].size());
           list[1][i].resize(pos[i].size());
-
+//cerr<<"===================="<<pos[i].size()<<endl;
           for(int j=0;j<pos[i].size();j++)
-          {
+          {//cerr<<j<<endl;
               list[0][i][j].push_back(i);
               list[1][i][j].push_back(j);
+//cerr<<tt*2<<endl;
+//cerr<<tt<<" "<<i<<" "<<j<<endl;
+//cerr<<index[tt][i][j]<<endl;
+//cerr<<symmetry[tt*2][index[tt][i][j]].size()<<endl;
               for(int t=0;t<symmetry[tt*2][index[tt][i][j]].size();t++)
-              {
+              {//cerr<<t<<" ";
                      if(i == symmetry[tt*2][index[tt][i][j]][t]
                       && j == symmetry[tt*2+1][index[tt][i][j]][t])
                      {
@@ -705,6 +716,7 @@ void svSymmetry::ComputeSymmetry(SymmetryProperty &property)
 
           }
      }
+//cerr<<"================"<<endl;
      for(int i=0;i<n;i++)
      {
         for(int j=0;j<pos[i].size();j++)

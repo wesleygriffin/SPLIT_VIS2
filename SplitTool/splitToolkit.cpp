@@ -180,6 +180,8 @@ svScalar directradius;
 svScalar summaryradius;
 int regioncount = 0;
 
+
+ViewProperty viewproperty;
 struct ConfigProperty{
 	
 	char *rawDir;
@@ -568,7 +570,7 @@ void accDisplay(void)
                      j8[jitter].x, j8[jitter].y, 0, 0, 50.0);
 
         glPushMatrix();
-        glMultMatrixf(m);
+      //  glMultMatrixf(m);
         RenderDualPeeling();
        // splitglyph->RenderVBO();
         //summaryglyph->Render();
@@ -584,8 +586,11 @@ void accDisplay(void)
 
 
 //================2D Visualization======================================================
-        ViewProperty viewproperty;
         glDisable(GL_CULL_FACE);
+
+        //viewproperty.tm = m;
+
+        for(int i=0;i<16;i++)viewproperty.tm[i]=m[i];
 
         glGetDoublev (GL_MODELVIEW_MATRIX, viewproperty.mvmatrix);
         glGetDoublev (GL_PROJECTION_MATRIX, viewproperty.projmatrix);
@@ -788,7 +793,7 @@ void UpdateVisible()
      directglyph->SetSampling(frequency);
    else
      directglyph->SetSampling(symmetrytype, frequency);
-   directglyph->SetSymmetryVisible(symmetrytype);
+//   directglyph->SetSymmetryVisible(symmetrytype);
    directglyph->SetVisible(contourindex);
    directglyph->SetVisible(zmin, zmax);
    directglyph->UpdateIndex();
@@ -800,7 +805,7 @@ void UpdateVisible()
     splitglyph->SetSampling(frequency);
    else
     splitglyph->SetSampling(symmetrytype, frequency);
-   splitglyph->SetSymmetryVisible(symmetrytype);
+//   splitglyph->SetSymmetryVisible(symmetrytype);
    splitglyph->SetVisible(contourindex);
    splitglyph->SetVisible(zmin, zmax);
    splitglyph->UpdateIndex();
@@ -821,7 +826,7 @@ void UpdateVisible()
      summaryglyph->SetSampling(frequency);
    else
       summaryglyph->SetSampling(symmetrytype, frequency);
-   summaryglyph->SetSymmetryVisible(symmetrytype);
+//   summaryglyph->SetSymmetryVisible(symmetrytype);
    summaryglyph->SetVisible(contourindex);
    summaryglyph->SetVisible(zmin, zmax);
    summaryglyph->Generate(alpha);
@@ -855,7 +860,7 @@ void control_cb(int control)
      {
           if(encode_type == LINEAR)
           {
-               length_scale = (glui_length_scale * LINEAR_SCALE)*10;   
+               length_scale = (glui_length_scale * LINEAR_SCALE)*5;   
                directglyph->SetScale(length_scale);
                arrow_scale = (glui_arrow_scale * ARROW_SCALE)*2.;
                directglyph->SetRadius(arrow_scale);
@@ -902,11 +907,11 @@ void control_cb(int control)
           mesh_vis=list_mesh_vis->get_int_val();
           if(mesh_vis == 0)
           {
-                mesh->GenerateWireframe(unique_region[1]);
+                mesh->GenerateWireframe();//unique_region[1]);
           }
           else
           {
-                mesh->GenerateSurface(unique_region[1]);
+                mesh->GenerateSurface();//unique_region[1]);
           }
      }
      else if(control == ALPHA_ID)
@@ -932,6 +937,10 @@ void key(unsigned char key, int x, int y)
         case 'Q':
                 exit(0);
                 break;
+        case 'h':
+        case 'H':
+               trackball.reset();
+               break;
         case  'l':
                {cout<<"Please input the index of the min layer"<<endl;
                cin>>zmin;
@@ -1353,15 +1362,16 @@ void Config(char *configfname, ConfigProperty &property)
         //property.symmetryproperty.outputfile = new char[200];
         //for(int i=0;i<(int)store;i++)
         //{
-            infile>>pp[0]>>pp[1]>>pp[2];
-            infile>>dd[0]>>dd[1]>>dd[2];
+
+         infile>>tmp;            infile>>pp[0]>>pp[1]>>pp[2];
+         infile>>tmp;            infile>>dd[0]>>dd[1]>>dd[2];
             dd.normalize();
             property.symmetryproperty.pos=pp;
             property.symmetryproperty.dir=dd;
-            infile>>dd[0]>>dd[1]>>dd[2];
+        infile>>tmp;    infile>>dd[0]>>dd[1]>>dd[2];
             dd.normalize();
             property.symmetryproperty.x=dd;
-            infile>>dd[0]>>dd[1]>>dd[2];
+        infile>>tmp;    infile>>dd[0]>>dd[1]>>dd[2];
             dd.normalize();
             property.symmetryproperty.y=dd;
         //}
@@ -1688,8 +1698,8 @@ void RenderDualPeeling()
 
         g_shaderDualInit.bind();
        // splitglyph->Render();
-     //   glPushMatrix();
-     //   glMultMatrixf(m);
+        glPushMatrix();
+        glMultMatrixf(m);
         glEnable(GL_LIGHTING);
         if(encode_type == LINEAR)
         {
@@ -1708,9 +1718,10 @@ void RenderDualPeeling()
         if(summaryVisible)summaryglyph->Render();
         if(mesh_enable) mesh->Render();
         glDisable(GL_LIGHTING);
-        outline->DrawXYZ(splitglyph->GetLb(), splitglyph->GetRb());
+        outline->DrawXYZ(splitglyph->GetLb(), splitglyph->GetRb(), viewproperty);
         outline->DrawAxis(splitglyph->GetLb(), splitglyph->GetRb());
-     //   glPopMatrix();
+        glPopMatrix();
+        outline->DrawXYZFont(splitglyph->GetLb(), splitglyph->GetRb(), viewproperty);
        // display();
         g_numGeoPasses++;
         g_shaderDualInit.unbind();
@@ -1751,8 +1762,8 @@ void RenderDualPeeling()
                }
 */
                 //splitglyph->Render();
-        //        glPushMatrix();
-          //      glMultMatrixf(m);
+                glPushMatrix();
+                glMultMatrixf(m);
                  glEnable(GL_LIGHTING);
                 g_shaderDualPeel.setUniform("Alpha", (float*)&(alpha),1);
                 if(encode_type == LINEAR)
@@ -1773,8 +1784,11 @@ void RenderDualPeeling()
                  if(summaryVisible)summaryglyph->Render();
                  if(mesh_enable)mesh->Render();
                  glDisable(GL_LIGHTING);
-                 outline->DrawXYZ(splitglyph->GetLb(), splitglyph->GetRb());
+                 outline->DrawXYZ(splitglyph->GetLb(), splitglyph->GetRb(),viewproperty);
                  outline->DrawAxis(splitglyph->GetLb(), splitglyph->GetRb());
+                 glPopMatrix();
+        outline->DrawXYZFont(splitglyph->GetLb(), splitglyph->GetRb(), viewproperty);
+
                  glEnable(GL_LIGHTING);
             //    glPopMatrix();
         //        display();
@@ -2006,7 +2020,6 @@ void Update()
    UpdateColor();cerr<<"UpdateColor()"<<endl;
    UpdateRender();cerr<<"UpdateRender()"<<endl;
 
-
    mesh->SetDisplayList(mesh_solid_list);
    mesh->New(unique_region);
    for(int i=0;i<unique_region.size();i++)
@@ -2017,7 +2030,8 @@ void Update()
                unique_region[i]);
         mesh->SetData(str, i); 
    }
-   mesh->GenerateSurface(unique_region[1]);
+   //cerr<<"region "<<unique_region[1]<<endl;
+   mesh->GenerateSurface();//unique_region[1]);
    delete [] str;
 
   svVector3 center = flow_field->GetCenter();//cerr<<"done"<<endl;
@@ -2029,6 +2043,10 @@ void Update()
   view_info.eye[0] = 0;//x/2.0;
   view_info.eye[1] = 0;// y/2.0;
   view_info.eye[2] = z*2.0;
+
+  viewproperty.eye[0] = view_info.eye[0];
+  viewproperty.eye[1] = view_info.eye[1];
+  viewproperty.eye[2] = view_info.eye[2];
 
   trackball.setEye(view_info.eye);
   trackball.setFocus(center);

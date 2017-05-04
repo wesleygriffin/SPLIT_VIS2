@@ -193,7 +193,7 @@ CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
 //ADVANCED property for variable: CGAL_Boost_USE_STATIC_LIBS
 CGAL_Boost_USE_STATIC_LIBS-ADVANCED:INTERNAL=1
-CGAL_EXECUTABLE_TARGETS:INTERNAL=ex_alpha_shapes_3;ex_alpha_shapes_3
+CGAL_EXECUTABLE_TARGETS:INTERNAL=ex_alpha_shapes_3;ex_alpha_shapes_3;ex_alpha_shapes_3
 //ADVANCED property for variable: CMAKE_AR
 CMAKE_AR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_BUILD_TOOL

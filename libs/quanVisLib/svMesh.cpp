@@ -89,6 +89,34 @@ void svMesh::GenerateWireframe(int region)
    glEndList();
 }
 
+void svMesh::GenerateWireframe()
+{
+    if(glIsList(display_list))
+                glDeleteLists(display_list, 1);
+    glNewList(display_list, GL_COMPILE);
+
+   glDisable(GL_LIGHTING);
+   glColor3f(166./255., 206./255., 227./255.);
+
+   for(int j=0;j< meshregion.size()-1;j++)
+   {
+   for(int i=0;i<mesh[j].size()-2;)
+   {
+      int index = j;
+      glBegin(GL_LINE_LOOP);
+      glVertex3f( mesh[index][i][0],mesh[index][i][1],mesh[index][i][2]);
+      glVertex3f( mesh[index][i+1][0],mesh[index][i+1][1],mesh[index][i+1][2]);
+      glVertex3f( mesh[index][i+2][0],mesh[index][i+2][1],mesh[index][i+2][2]);
+      glEnd();
+      i+=3;
+   }
+   }
+   glEnable(GL_LIGHTING);
+
+   glEndList();
+}
+
+
 void svMesh::GenerateSurface(int region)
 {
     if(glIsList(display_list))
@@ -122,6 +150,35 @@ void svMesh::GenerateSurface(int region)
   
    glEndList();
 }
+
+void svMesh::GenerateSurface()
+{
+    if(glIsList(display_list))
+                glDeleteLists(display_list, 1);
+    glNewList(display_list, GL_COMPILE);
+
+   glColor3f(166./255., 206./255., 227./255.);
+
+      glBegin(GL_TRIANGLES);
+  for(int j=0;j<meshregion.size()-1;j++)
+  {
+   for(int i=0;i<mesh[j].size()-2;)
+   {
+     int index = j;
+      glNormal3f( dir[index][i][0],dir[index][i][1],dir[index][i][2]);
+      glVertex3f( mesh[index][i][0],mesh[index][i][1],mesh[index][i][2]);
+      glNormal3f( dir[index][i+1][0],dir[index][i+1][1],dir[index][i+1][2]);
+      glVertex3f( mesh[index][i+1][0],mesh[index][i+1][1],mesh[index][i+1][2]);
+      glNormal3f( dir[index][i+2][0],dir[index][i+2][1],dir[index][i+2][2]);
+      glVertex3f( mesh[index][i+2][0],mesh[index][i+2][1],mesh[index][i+2][2]);
+      i+=3;
+   }
+ }   
+   glEnd();
+
+   glEndList();
+}
+
 
 void svMesh::GenerateWireframe(char *file)
 {

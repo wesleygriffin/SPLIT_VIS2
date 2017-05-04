@@ -555,8 +555,41 @@ void svOutline::DrawAxis(svVector3 lbbox, svVector3 rbbox)
 	//glDisable(GL_DEPTH_TEST);
 	glLineWidth(1.);
 }
+void svOutline::DrawXYZFont(svVector3 lbbox, svVector3 rbbox, ViewProperty &property)
+{
+	glColor3f(227./255.,26./255.,28./255.);
 
-void svOutline::DrawXYZ(svVector3 lbbox, svVector3 rbbox)
+        svVector3 v1; v1[0]=rbbox[0]*1.5+2.;v1[1]=0;v1[2]=0;
+        svVector3 newv1 = GetNewVector(v1, property.tm);
+
+        glPushMatrix();
+        glTranslatef(newv1[0],newv1[1],newv1[2]);
+        glScalef(0.01,0.01,0.01);
+        glutStrokeCharacter(GLUT_STROKE_ROMAN,'x');
+        glPopMatrix();
+
+        glColor3f(35./255.,139./255.,69./255.); 
+
+        v1[0]=0;v1[1]=rbbox[1]*1.5+2.;v1[2]=0;
+        newv1 = GetNewVector(v1, property.tm);
+
+        glPushMatrix();
+        glTranslatef(newv1[0],newv1[1],newv1[2]);
+        glScalef(0.01,0.01,0.01);
+        glutStrokeCharacter(GLUT_STROKE_ROMAN,'y');
+        glPopMatrix();
+
+        v1[0]=0;v1[2]=rbbox[2]*1.5+2.;v1[1]=0;
+        newv1 = GetNewVector(v1, property.tm);
+
+        glColor3f(33./255.,113./255.,181./255.);
+        glPushMatrix();
+        glTranslatef(newv1[0],newv1[1],newv1[2]);
+        glScalef(0.01,0.01,0.01);
+        glutStrokeCharacter(GLUT_STROKE_ROMAN,'z');
+        glPopMatrix();
+}
+void svOutline::DrawXYZ(svVector3 lbbox, svVector3 rbbox, ViewProperty &property)
 {
 	//draw x,y,z
 	glColor3f(227./255.,26./255.,28./255.);
@@ -572,16 +605,27 @@ void svOutline::DrawXYZ(svVector3 lbbox, svVector3 rbbox)
 	glVertex3f(rbbox[0]*1.5-1,0,-0.5);
 	glVertex3f(rbbox[0]*1.5-1,0.5,0);
 	glEnd();
-                  glPushMatrix();
-                  glTranslatef(rbbox[0]*1.5+2.,0,0);
-                  glScalef(0.005,0.005,0.005);
-                  glutStrokeCharacter(GLUT_STROKE_ROMAN,'x');
-                  glPopMatrix();
 
+        /*svVector3 v1; v1[0]=rbbox[0]*1.5+2.;v1[1]=0;v1[2]=0;
+        svVector3 v2; v2[0]=rbbox[0]*1.5+2.;v2[1]=0;v2[2]=1;
+        svVector3 newv1 = GetNewVector(v1, property.tm);
+        svVector3 newv2 = GetNewVector(v2, property.tm);
+        svVector3 v = normalize(newv2 - newv1);
+        double angle_z;
+        double  angle_x;
+        GetRotateAngle(v, angle_x, angle_z); 
+        glPushMatrix();
+        glTranslatef(rbbox[0]*1.5+2.,0,0);
+        glRotatef(-angle_x/PI * 180.,0,0,1);
+        glRotatef(-angle_z/PI * 180.,1,0,0);
+        cerr<<angle_x/PI * 180.<<" "<<angle_z/PI * 180.<<endl;
+        glScalef(0.025,0.025,0.025);
+        glutStrokeCharacter(GLUT_STROKE_ROMAN,'x');
+        glPopMatrix();
+*/
   	//glColor3f(1., 1, 1);
 //  	glRasterPos3f(rbbox[0]*1.5+2.,0,0);
 //  	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'x');
-
         glColor3f(35./255.,139./255.,69./255.); 
         glBegin(GL_LINES);
         glVertex3f(0,rbbox[1]*1.5,0);
@@ -598,14 +642,17 @@ void svOutline::DrawXYZ(svVector3 lbbox, svVector3 rbbox)
   	//glColor3f(1., 1, 1);
   //	glRasterPos3f(0.,rbbox[1]*1.5+2.,0);
  // 	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'y');
-
+/*
                   glPushMatrix();
                   glTranslatef(0.,rbbox[1]*1.5+2.,0);
+        glRotatef(angle_x/3.1415926 * 180.,1,0,0);
+        glRotatef(angle_z/3.1415926 * 180.,0,0,1);
+        glRotatef(-90,1,0,0);
                   glScalef(0.005,0.005,0.005);
                   glutStrokeCharacter(GLUT_STROKE_ROMAN,'y');
                   glPopMatrix();
 
-
+*/
         glColor3f(33./255.,113./255.,181./255.);
         glBegin(GL_LINES);
         glVertex3f(0,0,rbbox[2]*1.5);
@@ -622,12 +669,15 @@ void svOutline::DrawXYZ(svVector3 lbbox, svVector3 rbbox)
   	//glColor3f(1., 1, 1);
   //	glRasterPos3f(0.,0.,rbbox[2]*1.5+2.);
   //	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'z');
-                  glPushMatrix();
+        /*          glPushMatrix();
                   glTranslatef(0.,0.,rbbox[2]*1.5+2.);
+        glRotatef(angle_x/3.1415926 * 180.,1,0,0);
+        glRotatef(angle_z/3.1415926 * 180.,0,0,1);
+        glRotatef(-90,1,0,0);
                   glScalef(0.005,0.005,0.005);
                   glutStrokeCharacter(GLUT_STROKE_ROMAN,'z');
                   glPopMatrix();
-
+*/
 }
 
 

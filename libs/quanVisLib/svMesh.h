@@ -29,6 +29,9 @@ class svMesh {
     virtual void GenerateWireframe(int region);
     virtual void GenerateSurface(int region);
 
+    virtual void GenerateWireframe();
+    virtual void GenerateSurface();
+
     virtual void Render();
 
     

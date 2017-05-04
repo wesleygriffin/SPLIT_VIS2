@@ -74,7 +74,7 @@ class svGlyph : public svPrimitive
   virtual void ResetVisible();
   virtual void SetVisible(int contour);
   virtual void SetVisible(int contour, svScalar z1, svScalar z2, int frequency);
-  virtual void SetSymmetryVisible(vector<int> type);
+  virtual void SetSymmetryVisible(vector<int> type); //"OR" function instead of "AND"
   virtual void SetVisible(svScalar z1, svScalar z2);
   
   virtual void SetContourLabel();

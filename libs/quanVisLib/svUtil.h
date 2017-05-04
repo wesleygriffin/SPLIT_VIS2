@@ -26,6 +26,7 @@ typedef struct ViewProperty{
    GLdouble mvmatrix[16];
    GLdouble projmatrix[16];
    GLfloat tm[16];
+   GLfloat rotatetm[16];
    svVector3 eye;
 }ViewProperty;
 	
@@ -74,6 +75,12 @@ void GetCone(svVector3 glyph, svVector3 dir,
                 svScalar radius, svScalar height,
                 int segment,
               svVector3 *cone_seg_norm, svVector3 *cone_seg_pos);
+void GetRotateFont(svVector3 dir, double &angle_x,  double &angle_z,
+                   ViewProperty &property);
+svVector3 GetNewVector(svVector3 v, GLfloat *m);
+void GetRotateAngleX(svVector3 dir, double &angle_x,  double &angle_z);
+void GetRotateAngle(svVector3 dir, double &angle_x,  double &angle_z);
+svVector3 GetRotateVector(svVector3 v, GLfloat *m);
 //===========Rendering==================
 void RenderCone(svVector3 glyph, svVector3 dir,
                 svScalar radius, svScalar height,

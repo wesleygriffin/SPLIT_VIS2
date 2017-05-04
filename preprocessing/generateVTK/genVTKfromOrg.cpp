@@ -151,6 +151,7 @@ int genVTKfromOrg::CheckFormat(char *file)
 	|| str[i] > '9')
 	&& str[i] != '-'
 	&& str[i] !='.'
+        && str[i] !='e'
 	&& flag == true)
 	{
 		count++;
@@ -159,7 +160,8 @@ int genVTKfromOrg::CheckFormat(char *file)
 	else if((str[i] >= '0' 
 	&& str[i] <= '9')
 	|| str[i] == '-'
-	|| str[i] =='.')
+	|| str[i] =='.'
+        || str[i] == 'e')
 	{
 	//cerr<<str[i]<<endl;
 		flag = true;
@@ -223,11 +225,11 @@ void genVTKfromOrg::ReadRawData(char *file, int DEN_SCALAR)
   int data_type; 
   int count = CheckFormat(filename);
   //cerr<<count<<endl;
-  if(count == 8)
+  if(count == 9)
   {
 	data_type = 1;//new
   }
-  else if(count == 9)
+  else if(count == 10)
   {
 	data_type = 2;//old
   }
@@ -256,9 +258,10 @@ void genVTKfromOrg::ReadRawData(char *file, int DEN_SCALAR)
   max_den = -1;  
   //cerr<<data_type<<endl;
 
+   double tmpr;
   if(data_type == 2)
   {
-	  while(infile>>pos[0] >> pos[1] >> pos[2] >> r >> a >> vel[0] >> vel[1] >> vel[2] >> den)
+	  while(infile>>pos[0] >> pos[1] >> pos[2] >> tmpr >> a >> vel[0] >> vel[1] >> vel[2] >> den>>r)
 	  {
 	
 	    //vel*=VEL_SCALAR;
@@ -307,7 +310,7 @@ void genVTKfromOrg::ReadRawData(char *file, int DEN_SCALAR)
   else if(data_type == 1)
  {
 	//cerr<<data_type<<endl;
-	  while(infile>>pos[0] >> pos[1] >> pos[2] >> r >> a>> vel[0] >> vel[1] >> vel[2])
+	  while(infile>>pos[0] >> pos[1] >> pos[2] >> tmpr >> a>> vel[0] >> vel[1] >> vel[2] >> r)
 	  {
 	    //vel*=VEL_SCALAR;
 	
@@ -775,13 +778,13 @@ void genVTKfromOrg::SaveRegiontoFile(char *file)
 	ofstream outfile(str);
 
 	   // outfile<<i<<endl; 
-
+//cerr<<unique_region[i]<<endl;
 	    outfile<<region_count[i]<<endl;  
 		
 		int count = 0;
 	  for(int j=0;j<dataSize;j++)
 	  {
-		if(data[j].region == i+min_region)
+		if(data[j].region == unique_region[i])//i+min_region)
 	      	{
 			outfile<<data[j].px<<" "<<data[j].py<<" "<<data[j].pz<<endl;
 

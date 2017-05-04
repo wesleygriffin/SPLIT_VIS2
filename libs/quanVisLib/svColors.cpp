@@ -306,7 +306,7 @@ for(int i=0;i<59;i++)
                 color[0] = r;
                 color[1] = g;
                 color[2] = b;
-
+//if(i<10)cerr<<r*255<<" "<<g*255<<" "<<b*255<<endl;
 			colorModel[0].add(color);
 	}
 	
