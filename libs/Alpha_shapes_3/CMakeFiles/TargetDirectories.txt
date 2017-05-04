@@ -1,1 +1,0 @@
-/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/ex_alpha_shapes_3.dir
