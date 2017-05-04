@@ -10,7 +10,6 @@ tmp
 #ifcontour
 0
 #contours:
-1
 G R 0.5
 #clusters:
 #step1:
