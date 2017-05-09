@@ -72,6 +72,7 @@ class svGlyph : public svPrimitive
   //void SetKmeansProperty(KmeansProperty & property);
 
   virtual void ResetVisible();
+  virtual void SetVisible(svIntArray layer);
   virtual void SetVisible(int contour);
   virtual void SetVisible(int contour, svScalar z1, svScalar z2, int frequency);
   virtual void SetSymmetryVisible(vector<int> type); //"OR" function instead of "AND"

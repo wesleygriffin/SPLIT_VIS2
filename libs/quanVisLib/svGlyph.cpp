@@ -809,13 +809,13 @@ void svGlyph::GenerateSymmetry(SymmetryProperty &property)
 
           char *symmetrystr = new char[200];
           for(int j=0;j<200;j++) symmetrystr[j] = '\0';
-          for(int j=0;j<property.dir.size();j++)
-          {
+         // for(int j=0;j<property.dir.size();j++)
+         // {
             sprintf(symmetrystr, "%s(%0.2f%0.2f%0.2f%0.2f%0.2f%0.2f)", symmetrystr,
                   property.pos[0], property.pos[1], property.pos[2],
                   property.dir[0], property.dir[1], property.dir[2]);
 
-           }
+          // }
 
            char *str = new char[400];
            switch(i)
@@ -925,7 +925,24 @@ void svGlyph::SetVisible(int contour)
           }
     }
 }
+void svGlyph::SetVisible(svIntArray layer)
+{
+        for(int i =0;i<seed_num;i++)
+        {
+                for(int j=0;j<glyph[i].size();j++)
+                {
+                        if(visibleLabel[i][j] && layer[i]) 
+                        {
+                                visibleLabel[i][j] = true;
+                        }
+                        else
+                        {
+                                visibleLabel[i][j] = false;
+                        }
+                }
+        }
 
+}
 void svGlyph::SetVisible(svScalar z1, svScalar z2)
 {
         for(int i =0;i<seed_num;i++)

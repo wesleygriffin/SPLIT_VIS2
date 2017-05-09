@@ -82,6 +82,7 @@ void GetRotateAngleX(svVector3 dir, double &angle_x,  double &angle_z);
 void GetRotateAngle(svVector3 dir, double &angle_x,  double &angle_z);
 svVector3 GetRotateVector(svVector3 v, GLfloat *m);
 //===========Rendering==================
+void RenderSpring(svVector3 glyph, svScalar den, svScalar height, svScalar increment);
 void RenderCone(svVector3 glyph, svVector3 dir,
                 svScalar radius, svScalar height,
                 int segment);

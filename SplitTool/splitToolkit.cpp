@@ -31,6 +31,7 @@
 #include "svOutline.h"
 #include "svMesh.h"
 #include "svConfig.h"
+#include "svWidget.h"
 #include <string.h>
 
 #include <GL/glui.h>
@@ -70,6 +71,9 @@
 #define UPDATE_ID 14
 #define ENCODE_ID 13
 #define ALPHA_ID 15
+#define LAYER_REPEAT_ID 16
+
+
 using namespace __svl_lib;
 
 void reshape(int w, int h);
@@ -88,6 +92,7 @@ int mouse_state;
 GLUI *glui;
 GLUI_Checkbox *symmetrybox;
 GLUI_Checkbox *box_encode;
+GLUI_Checkbox *box_layer;
 GLUI_Scrollbar *sb_line;
 GLUI_Scrollbar *sb_arrow;
 GLUI_Scrollbar *sb_tube;
@@ -112,6 +117,7 @@ svSplitArrow *splitglyph;
 svSummaryGlyph *summaryglyph;
 svOutline *outline;
 svMesh *mesh;
+svWidget *widget;
 
 char *configFile;
 
@@ -128,10 +134,12 @@ int textureinit;
 vector<int> symmetrytype;
 int symmetry_enable;
 
-
+int layerVisible = 0;
+int layer_repeat = 0;
 //===============
 float summary_arrow_scale;
 float summary_tube_scale;
+
 float length_scale;
 float arrow_scale;
 float tube_scale;
@@ -162,6 +170,10 @@ svScalar mag_max=1e-4;
 svScalar mag_min=1e-16;
 float glui_mag_show=0.5;
 
+svScalar widget_tranx;
+svScalar widget_trany;
+svScalar widget_scalex;
+svScalar widget_scaley;
 int znum;
 int layer_min=0;
 int layer_max=108;
@@ -617,9 +629,17 @@ void accDisplay(void)
                 DrawSymmetryButtons();
         else if(encode_visible)
                 DrawVisibleButtons();
+        else if(layerVisible)
+       {
         //glDisable(GL_TEXTURE_2D);
        // glEnable(GL_LIGHTING);
 
+        glPushMatrix();
+        glTranslatef(widget_tranx, widget_trany,0);
+        glScalef(widget_scalex,widget_scaley,1);
+        widget->Render();
+        glPopMatrix();
+        }
         glMatrixMode(GL_PROJECTION);
         glLoadMatrixd(viewproperty.projmatrix);
         glMatrixMode(GL_MODELVIEW);
@@ -631,6 +651,7 @@ void accDisplay(void)
 
 void Reshape(int w, int h)
 {
+
    g_imageWidth=w;g_imageHeight=h;
 
    glClearColor(0., 0., 0., 1);
@@ -642,6 +663,11 @@ void Reshape(int w, int h)
 
    image_width = w;
    image_height = h;
+
+  widget_tranx=325;
+  widget_trany=image_height-50;
+  widget_scalex=5;
+  widget_scaley=10.;
 
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
@@ -756,6 +782,7 @@ void UpdateRender()
     summaryglyph->SetTubeRadius(summary_tube_scale);
     summaryglyph->Generate(alpha);
 //cerr<<"done"<<endl;
+
 }
 void UpdateVBOData()
 {
@@ -796,6 +823,7 @@ void UpdateVisible()
 //   directglyph->SetSymmetryVisible(symmetrytype);
    directglyph->SetVisible(contourindex);
    directglyph->SetVisible(zmin, zmax);
+   directglyph->SetVisible(widget->GetVisible());
    directglyph->UpdateIndex();
    directglyph->GenerateIndex();
    directglyph->SetSampleData(samplesize);
@@ -808,6 +836,7 @@ void UpdateVisible()
 //   splitglyph->SetSymmetryVisible(symmetrytype);
    splitglyph->SetVisible(contourindex);
    splitglyph->SetVisible(zmin, zmax);
+   splitglyph->SetVisible(widget->GetVisible());
    splitglyph->UpdateIndex();
    splitglyph->GenerateIndex();
    splitglyph->SetSampleData(samplesize);
@@ -829,6 +858,7 @@ void UpdateVisible()
 //   summaryglyph->SetSymmetryVisible(symmetrytype);
    summaryglyph->SetVisible(contourindex);
    summaryglyph->SetVisible(zmin, zmax);
+   summaryglyph->SetVisible(widget->GetVisible());
    summaryglyph->Generate(alpha);
 }
 
@@ -841,6 +871,8 @@ void control_cb(int control)
            {
           //:w
                    encode_visible = 0;
+                   layerVisible = 0;
+                   box_layer->set_int_val(layerVisible);
                    box_encode->set_int_val(encode_visible);
            }  
           // UpdateVisible();     
@@ -853,8 +885,35 @@ void control_cb(int control)
      {
         if(encode_visible)
         {
+              layerVisible = 0;
+              box_layer->set_int_val(layerVisible);
              symmetry_enable = 0; symmetrybox->set_int_val(symmetry_enable);
          }
+     }
+     else if(control == LAYER_ID)
+     {
+        if(layerVisible)
+        {
+                 encode_visible = 0;
+                 box_encode->set_int_val(encode_visible);
+                 symmetry_enable = 0; symmetrybox->set_int_val(symmetry_enable);
+        }
+     }
+     else if(control == LAYER_REPEAT_ID)
+     {
+        
+         widget->Repeat(layer_repeat);
+        if(layerVisible)
+        {     svVector3 value[3];
+             svInt *index=new svInt[3];  widget->GetIndex(index);
+             for(int i=0;i<3;i++)
+             {
+               value[i]  = flow_field->GetPlanePosition(index[i]);
+             }
+             widget->SetValues(value);
+
+         UpdateVisible();
+        }
      }
      else if(control == LENGTH_ID || control == ARROW_ID || control == TUBE_ID)
      {
@@ -941,7 +1000,7 @@ void key(unsigned char key, int x, int y)
         case 'H':
                trackball.reset();
                break;
-        case  'l':
+      /*  case  'l':
                {cout<<"Please input the index of the min layer"<<endl;
                cin>>zmin;
                cout<<"Please input the index of the  max layer"<<endl;
@@ -971,6 +1030,7 @@ void key(unsigned char key, int x, int y)
                p = flow_field->GetPlanePosition(zmax);
                cout<<"max plane: "<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
                } break;
+*/
         }
  glutPostRedisplay();
 
@@ -1062,6 +1122,22 @@ void mouse(int button, int state, int x, int y)
          //      summaryglyph->Generate(1);
          }//cerr<<"!!!"<<endl;
       }
+        else if(layerVisible && button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+        {
+         //   int x1 = (x-widget_tranx)/widget_scalex;
+         //   int y1 = (image_height-y-widget_trany)/widget_scaley;
+            widget->Mouse(widget_tranx, widget_trany,
+                          widget_scalex, widget_scaley,
+                          x,image_height-y);
+            
+        }
+
+        if(button == GLUT_LEFT_BUTTON && state == GLUT_UP && widget->isSelect())
+        {
+           UpdateVisible();
+           
+           widget->Reset();
+        }
 
         if (s & Trackball::BUTTON_DOWN){
           trackball.mouseDown(s, x, y);
@@ -1080,6 +1156,22 @@ void mouse(int button, int state, int x, int y)
 
 void motion(int x, int y)
 {
+        int x1 = (x-widget_tranx)/widget_scalex;
+        int y1 = (image_height-y-widget_trany)/widget_scaley;
+
+       if(layerVisible)
+       {
+             svVector3 value[3];
+             widget->Move(x1, y1);
+             svInt *index=new svInt[3];  widget->GetIndex(index);
+             for(int i=0;i<3;i++)
+             {
+               value[i]  = flow_field->GetPlanePosition(index[i]);
+             }
+             widget->SetValues(value);
+       }
+
+       if(!widget->isSelect())
         trackball.mouseMotion(x, y);
         glutPostRedisplay();
 }
@@ -1180,8 +1272,8 @@ void Config(char *configfname, ConfigProperty &property)
 	double store;
 	infile>>property.isContour;
 	infile>>tmp; //cerr<<tmp<<endl;
-	int num;
-	infile>>num;
+	int num = 1;
+	//infile>>num;
         property.contourproperty.seed_num = flow_field->GetPlaneNum();
         property.contourproperty.contourValues = new svScalarArray[flow_field->GetPlaneNum()];
         property.contourproperty.isUpdate.free();
@@ -1681,8 +1773,9 @@ void RenderDualPeeling()
    glEnable(GL_COLOR_MATERIAL);
    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
    glDisable(GL_LIGHTING);
-*/ 
-       glDisable(GL_DEPTH_TEST);
+*/
+ 
+        glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
  //===================================
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, g_dualPeelingSingleFboId);
@@ -1711,8 +1804,8 @@ void RenderDualPeeling()
             if(arrow_scale_up) splitglyph->RenderSample();
             else
             {
-               splitglyph->RenderVBO();
-              splitglyph->RenderLegend();
+                   splitglyph->RenderVBO();
+                   splitglyph->RenderLegend();
             }
         }
         if(summaryVisible)summaryglyph->Render();
@@ -1729,6 +1822,7 @@ void RenderDualPeeling()
         glEnable(GL_LIGHTING);
 
         CHECK_GL_ERRORS;
+
 //=======================================
 
         glDrawBuffer(g_drawBuffers[6]);
@@ -1778,7 +1872,7 @@ void RenderDualPeeling()
                        else 
                        {
                                 splitglyph->RenderVBO();
-                            splitglyph->RenderLegend();
+                                splitglyph->RenderLegend();
                        }
                  }
                  if(summaryVisible)summaryglyph->Render();
@@ -1900,6 +1994,7 @@ void init(char *configfname)//rbfname, char *cpname)
   mesh = new svMesh();
   outline = new svOutline();
   flow_field = new svQDOT();
+  widget = new svWidget();
 
   configFile = strdup(configfname);
   configproperty.symmetryproperty.outputdir = new char[200];
@@ -1916,6 +2011,11 @@ void init(char *configfname)//rbfname, char *cpname)
   summaryVisible = 0; 
   symmetry_enable = 0;
   textureinit = 0;
+
+  widget_tranx=275;
+  widget_trany=image_height-125;
+  widget_scalex=5;
+  widget_scaley=10.;
 
   ComputeGLUIFactor();
 
@@ -1952,6 +2052,18 @@ void Update()
   }
   list_mesh_type->set_int_val(mesh_type);
 */
+
+  widget->SetLevel(flow_field->GetPlaneNum());
+  widget->Init();
+//  widget->Repeat(true); 
+  svVector3 value[3];
+  svInt *index=new svInt[3];  widget->GetIndex(index);
+  for(int i=0;i<3;i++)
+  {
+         value[i]  = flow_field->GetPlanePosition(index[i]);
+  }
+   widget->SetValues(value);
+
   summaryglyph->New(flow_field, flow_field->GetPlaneNum());
   directglyph->New(flow_field, flow_field->GetPlaneNum());
   splitglyph->New(flow_field, flow_field->GetPlaneNum());
@@ -2051,7 +2163,6 @@ void Update()
   trackball.setEye(view_info.eye);
   trackball.setFocus(center);
   trackball.setWindowSize(image_width, image_height);
-  
 }
 
 //**********************
@@ -2066,6 +2177,11 @@ void glui_display()
   
  symmetrybox = glui->add_checkbox( "Symmetry", &symmetry_enable, SYMMETRY_ID, control_cb);
   box_encode = glui->add_checkbox("Visual mapping", &encode_visible, ENCODE_ID, control_cb);
+  GLUI_Panel *panel_layer= glui->add_panel("");
+  panel_layer->set_alignment(GLUI_ALIGN_LEFT);
+  box_layer = glui->add_checkbox_to_panel(panel_layer,"Layers", &layerVisible, LAYER_ID, control_cb);
+  glui->add_column_to_panel(panel_layer, true);
+  new GLUI_Checkbox(panel_layer, "Repeat", &layer_repeat, LAYER_REPEAT_ID, control_cb);
   new GLUI_Checkbox(glui, "Summary glyph", &summaryVisible, OVERVIEW_ID, control_cb);
 //  (glui, "Visual mapping", &encode_visible, ENCODE_ID, control_cb);
   /// Mesh

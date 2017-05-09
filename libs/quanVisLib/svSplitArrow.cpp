@@ -485,6 +485,53 @@ void svSplitArrow::RenderVBO()
 
 }
 */
+
+void svSplitArrow::GenerateSpring()
+{
+  display_mode = SV_DISPLAYLIST;
+  svGlyph::STILL_UPDATE = false;
+
+	if(glIsList(display_list))
+		glDeleteLists(display_list, 1); 
+    glNewList(display_list, GL_COMPILE);
+    
+    for(int i =0;i<seed_num;i++)
+    {		
+		for(int j=0;j<glyph[i].size();j++)
+		{
+			if(visibleLabel[i][j])
+			{
+   			   glColor4f(glyphColors[i][j][0],
+                                     glyphColors[i][j][1],
+                                     glyphColors[i][j][2],alpha);
+			   double radius = glyphRadius;
+
+			   svVector3 end1, end2;
+                           svScalar scale1 = coe[i][j]*glyphScale;
+			   end1[0] = glyph[i][j][0]+scale1*dir[i][j][0];
+			   end1[1] = glyph[i][j][1]+scale1*dir[i][j][1];
+			   end1[2] = glyph[i][j][2]+scale1*dir[i][j][2];
+                           RenderCone(end1, dir[i][j], radius, 
+                                     radius*3, ARROWSLICE);
+
+                           double angle_x, angle_z;
+                           GetRotateAngle(dir[i][j], angle_x, angle_z);
+
+                           glPushMatrix();
+                           glRotatef(angle_z,0,0,1);
+                           glRotatef(angle_x,1,0,0);
+                           glScalef(radius, radius, 1);
+                           RenderSpring(glyph[i][j], 
+                                        exp[i][j]+scaling, 
+                                        scale1,glyphScale/10.);
+                           glPopMatrix();
+			}
+		}	
+	}	
+
+	
+	glEndList();
+}
 void svSplitArrow::Generate() // this read specific data format
 {
  // svGlyph::STILL_UPDATE = true;

@@ -42,6 +42,8 @@ class svSplitArrow : public svArrowGlyph {
     virtual void RenderLegend();
     virtual void RenderSample();
 
+    virtual void GenerateSpring();
+
     virtual void Generate();
     virtual void GenerateTexture();
     virtual void GenerateSample(int frequency);

@@ -171,6 +171,7 @@ set(svl_SOURCES
     libs/quanVisLib/dual_depth_peeling.cpp
     libs/quanVisLib/svList.cpp
     libs/quanVisLib/svMagnitude.cpp
+    libs/quanVisLib/svWidget.cpp
     libs/quanVisLib/svUtil.h
     libs/quanVisLib/svLut.h
     libs/quanVisLib/svParticle.h
@@ -203,7 +204,8 @@ set(svl_SOURCES
     libs/quanVisLib/GLSLProgramObject.h
     libs/quanVisLib/dual_depth_peeling.h
     libs/quanVisLib/svList.h
-    libs/quanVisLib/svMagnitude.h)
+    libs/quanVisLib/svMagnitude.h
+    libs/quanVisLib/svWidget.h)
 
 configure_file(libs/quanVisLib/svConfig.h.in
     ${CMAKE_CURRENT_BINARY_DIR}/svConfig.h)

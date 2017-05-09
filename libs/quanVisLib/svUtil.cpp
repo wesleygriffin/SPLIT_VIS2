@@ -1212,12 +1212,51 @@ void GetCone(svVector3 glyph, svVector3 dir,
           }
         }
 }
+void RenderSpring(svVector3 glyph, svScalar den, svScalar height, svScalar increment)
+{
+	GLfloat dir[3] = {1,0,0}; 
+//	GLint height = 100;
+//	GLfloat glyph[3] = {-100,0,0};
+	double radius_spr[13]={1,2,3,4,5,6,7,8,9,10,11,12, 13};
+	double density_list[13]={0.05,0.06,0.075,0.095,0.12,0.15,0.185,0.225,0.27,0.32,0.375,0.435,0.5};
+	int mag = (int)den;//
+ 
+        for(int i=0;i<13;i++)
+        {
+          radius_spr[i] = radius_spr[i]/13.;
+        }        
+ 
 
+	GLfloat x,y,z;
+	z = glyph[2];
+	float len = 0;
+//	float increment = 0.2;
+	double r = radius_spr[mag];
+	double density = density_list[mag];
+	glBegin(GL_LINE_STRIP);
+//	glColor3f(0,1,0);
+	glVertex3f(glyph[0],glyph[1],glyph[2]);
+//	svVector3 norm;
+	while(1){
+
+		z += increment;
+		x = r*cos(density*increment);
+		y = r*sin(density*increment);
+//		norm = normalize(glyph);//x,y,z);
+		glVertex3f(x,y,z);
+		if(len >= height){
+			break;
+		}
+		else{
+			len += increment;
+		}
+	}
+	glEnd();
+}
 void RenderCone(svVector3 glyph, svVector3 dir,
                 svScalar radius, svScalar height,
                 int segment)
 {
-
     svVector3 cone_seg_norm[segment+1];
     svVector3 cone_seg_pos[segment];
     cone_seg_norm[0]= normalize(dir);
