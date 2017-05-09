@@ -1272,7 +1272,11 @@ void Config(char *configfname, ConfigProperty &property)
 	double store;
 	infile>>property.isContour;
 	infile>>tmp; //cerr<<tmp<<endl;
+<<<<<<< HEAD
 	int num = 1;
+=======
+	int num=1;
+>>>>>>> 9d1de209fc97e7c65f1e53dc5b6311459efdf908
 	//infile>>num;
         property.contourproperty.seed_num = flow_field->GetPlaneNum();
         property.contourproperty.contourValues = new svScalarArray[flow_field->GetPlaneNum()];

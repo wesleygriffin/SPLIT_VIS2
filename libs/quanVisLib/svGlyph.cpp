@@ -809,8 +809,13 @@ void svGlyph::GenerateSymmetry(SymmetryProperty &property)
 
           char *symmetrystr = new char[200];
           for(int j=0;j<200;j++) symmetrystr[j] = '\0';
+<<<<<<< HEAD
          // for(int j=0;j<property.dir.size();j++)
          // {
+=======
+          //for(int j=0;j<property.dir.size();j++)
+          //{
+>>>>>>> 9d1de209fc97e7c65f1e53dc5b6311459efdf908
             sprintf(symmetrystr, "%s(%0.2f%0.2f%0.2f%0.2f%0.2f%0.2f)", symmetrystr,
                   property.pos[0], property.pos[1], property.pos[2],
                   property.dir[0], property.dir[1], property.dir[2]);
