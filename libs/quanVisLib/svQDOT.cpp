@@ -73,7 +73,7 @@ void svQDOT::SetVTK(svChar *rawdir, svChar *rawfile, svChar *dir,
                             svChar *sortFile, svChar *formatFile,
                             svChar *densityFile,
                             svVector3 ppos,
-                                        svVector3 pdir, svScalar pdis)
+                           svVector3 pdir, svScalar pdis, int format)
 {
   //generate sorted file and vtk file	  
   char *folderstr = new char[200];
@@ -99,13 +99,14 @@ void svQDOT::SetVTK(svChar *rawdir, svChar *rawfile, svChar *dir,
   if(!infile.is_open())
   {
     char *str = new char[2048];
-    sprintf(str, "%s/genVTK %s/%s %s/%s/%s %s/%s/ %s/%s/%s %s/%s/%s %s/preprocessing/generateVTK/input", 
+    sprintf(str, "%s/genVTK %s/%s %s/%s/%s %s/%s/ %s/%s/%s %s/%s/%s %s/preprocessing/generateVTK/input %d", 
 		  BIN_DIR, rawdir, rawfile, 
                   dir, rawfile, sortFile,
                   dir, rawfile, 
                   dir, rawfile, formatFile,
                   dir, rawfile, densityFile,
-		SRC_DIR); 
+		SRC_DIR, 
+                format); 
 	cerr<<"======> " << str<<endl;
     system(str);
     delete [] str;

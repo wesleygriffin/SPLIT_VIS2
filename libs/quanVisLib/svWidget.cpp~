@@ -318,7 +318,7 @@ void svWidget::Render()
      if( (showbox &&i==2) || i<2)
      {
      sprintf(str, "(%0.2f, %0.2f, %0.2f)", values[i][0],values[i][1],values[i][2]);
-     glRasterPos2f(x[i],box[i][1]-boxside*1.5);
+     glRasterPos2f(x[i],box[i][1]-boxside*1.2);
      for(int j=0;j<strlen(str);j++)
             glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, str[j]); 
      
@@ -326,45 +326,36 @@ void svWidget::Render()
     {
      glBegin(GL_LINES);
      glVertex2f(box[i][0], box[i][1]);
-     glVertex2f(x[i], box[i][1]-boxside*1.5);
+     glVertex2f(x[i], box[i][1]-boxside*1.2);
      glEnd();
     }
    }
   }
-
-  for(int i=0;i<level;i=i+10)
-  {
-     sprintf(str, "%d", i);
-     glRasterPos2f(line[0][0]+boxside + boxside*(float)i,box[i][1]+boxside*1.2);
-     for(int j=0;j<strlen(str);j++)
-            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, str[j]);
-     glBegin(GL_LINES);
-     glVertex2f(line[0][0]+boxside + boxside*(float)i,box[i][1]+boxside*1.2);
-     glVertex2f(line[0][0]+boxside + boxside*(float)i,line[0][1]);
-     glEnd();
-  }  
+  
+  
+  
 }
 
 void svWidget::SetIndex( int zmin, int zmax, int notshowz)
 {
      if(notshowz >= 0) showbox =true;
      else showbox= false;
-//cerr<<zmin<<" "<<zmax<<endl;
+
+
    if(showbox)
    {
-   box[0][0]= line[0][0] + 0.5 * boxside+zmin*boxside; box[0][1] = 0;
-   box[1][0]= line[0][0] + 0.5 * boxside+(zmax+1)*boxside; box[1][1] = 0;
-   svScalar b2 = line[0][0] + 0.5 * boxside+(notshowz+1)*boxside;
-   if(b2<line[1][0])
-        box[2][0]= b2; 
+   //box[0][0]= line[0][0] + 0.5 * boxside; box[0][1] = 0;
+   //box[1][0]= line[0][0] + 1.5 * boxside; box[1][1] = 0;
+   if((box[1][0]+boxside)<line[1][0])
+        box[2][0]= box[1][0] + boxside; 
    else
-        box[2][0] = line[1][0]-0.5*boxside;
+        box[2][0] = line[1][0];
    box[2][1] = 0;
    }
    else
    {
-   box[0][0]= line[0][0] + 0.5 * boxside+zmin*boxside; box[0][1] = 0;
-   box[1][0]= line[0][0] + 0.5 * boxside+(zmax+1)*boxside; box[1][1] = 0;
+   //box[0][0]= line[0][0] + 0.5 * boxside; box[0][1] = 0;
+   //box[1][0]= line[1][0] - 0.5 * boxside; box[1][1] = 0;
    box[2][0]= box[1][0]; box[2][1] = 0;
    }
 
@@ -419,7 +410,7 @@ void svWidget::Repeat(bool showbox)
    if((box[1][0]+boxside)<line[1][0])
         box[2][0]= box[1][0] + boxside; 
    else
-        box[2][0] = line[1][0]-0.5*boxside;
+        box[2][0] = line[1][0];
    box[2][1] = 0;
    }
    else

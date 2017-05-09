@@ -39,7 +39,7 @@ class genVTKfromOrg
     void SplitData(); // only split by z layer; not used anymore
     void SplitData(double pos_x, double pos_y, double pos_z,
 			double dir_x, double dir_y, double dir_z,double distance);
-    
+    void SetFormat(int f){format = f;} 
     void SortedData(char *file);
     void SavetoVTK(char *file);
     void SaveSplitData(char *file);
@@ -67,6 +67,7 @@ class genVTKfromOrg
     vector<int> unique_region;
     vector<int> region_count;
 
+    int format;
 
 	vector<double> plane_min;
 	vector<double> plane_dir;

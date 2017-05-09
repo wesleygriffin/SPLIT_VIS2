@@ -214,7 +214,8 @@ struct ConfigProperty{
 	ContourProperty contourproperty;
 	
 	svScalarArray *magrange;
-	
+
+        int format;	
 } configproperty;
 
 int contourindex = 0;
@@ -234,8 +235,9 @@ GLint nx, ny, nz;
 Trackball trackball;
 GLfloat m[16];
 
-double zmin;
-double zmax;
+int  zmin;
+int  zmax;
+int  nonz;
 double zshuffle;
 
 //=========================Depth Peeling============
@@ -822,7 +824,7 @@ void UpdateVisible()
      directglyph->SetSampling(symmetrytype, frequency);
 //   directglyph->SetSymmetryVisible(symmetrytype);
    directglyph->SetVisible(contourindex);
-   directglyph->SetVisible(zmin, zmax);
+//   directglyph->SetVisible(zmin, zmax);
    directglyph->SetVisible(widget->GetVisible());
    directglyph->UpdateIndex();
    directglyph->GenerateIndex();
@@ -835,7 +837,7 @@ void UpdateVisible()
     splitglyph->SetSampling(symmetrytype, frequency);
 //   splitglyph->SetSymmetryVisible(symmetrytype);
    splitglyph->SetVisible(contourindex);
-   splitglyph->SetVisible(zmin, zmax);
+//   splitglyph->SetVisible(zmin, zmax);
    splitglyph->SetVisible(widget->GetVisible());
    splitglyph->UpdateIndex();
    splitglyph->GenerateIndex();
@@ -857,7 +859,7 @@ void UpdateVisible()
       summaryglyph->SetSampling(symmetrytype, frequency);
 //   summaryglyph->SetSymmetryVisible(symmetrytype);
    summaryglyph->SetVisible(contourindex);
-   summaryglyph->SetVisible(zmin, zmax);
+//   summaryglyph->SetVisible(zmin, zmax);
    summaryglyph->SetVisible(widget->GetVisible());
    summaryglyph->Generate(alpha);
 }
@@ -1240,6 +1242,8 @@ void Config(char *configfname, ConfigProperty &property)
 	infile>>property.rawFile;
 	infile>>tmp;
 	infile>>property.storeDir;
+        infile>>tmp;
+        infile>>property.format;//cerr<<property.format<<endl;
 //cerr<<tmp<<endl;
 	mkdir(property.storeDir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);  
 
@@ -1249,6 +1253,7 @@ void Config(char *configfname, ConfigProperty &property)
 	infile>>property.plane_vector[0]>>property.plane_vector[1]>>property.plane_vector[2];
 	infile>>tmp;
 	infile>>property.plane_distance;
+        
 	
 /*--------------initialization of QDOT field------------*/
 	char *qdot_format = new char[400];
@@ -1259,7 +1264,8 @@ void Config(char *configfname, ConfigProperty &property)
 					   "sort.txt", "format.txt", "density.txt",
 					   property.plane_center,
 					   property.plane_vector,
-					   property.plane_distance);
+					   property.plane_distance,
+                                           property.format);
         flow_field->New(qdot_format);	
         char *str = new char[200];
 
@@ -1471,10 +1477,16 @@ void Config(char *configfname, ConfigProperty &property)
         property.symmetryproperty.planedir = flow_field->GetPlaneDir();
         property.symmetryproperty.planedistance = property.plane_distance;
         delete [] str;	
-	infile.close();
-
+/*--------------------------ROI----------------------------------------*/
+        infile>>tmp;
+        infile>>num;
+        infile>>zmin;
+        infile>>zmax; //cerr<<tmp<<" "<<num<<" "<<zmin<<" "<<zmax<<endl;
+        if(num == 3) {infile>>nonz;layer_repeat = true;}
+        else nonz = -1;
+     //   widget->SetIndex(zmin, zmax);
 /*-------------------------end----------------------------------------*/
-
+        infile.close();
        symmetrytype.clear();
 //       symmetrytype.push_back(0);
 //       symmetrytype.push_back(1);
@@ -2001,8 +2013,8 @@ void init(char *configfname)//rbfname, char *cpname)
   configproperty.symmetryproperty.inputfile = new char[200];
   Config(configfname, configproperty);
 
-  zmin=0;
-  zmax = flow_field->GetPlaneNum()-1;
+  //zmin=0;
+  //zmax = flow_field->GetPlaneNum()-1;
 
   directglyph = new svDirectArrow(flow_field);
   summaryglyph = new svSummaryGlyph(flow_field);
@@ -2055,6 +2067,7 @@ void Update()
 
   widget->SetLevel(flow_field->GetPlaneNum());
   widget->Init();
+  widget->SetIndex(zmin, zmax, nonz);
 //  widget->Repeat(true); 
   svVector3 value[3];
   svInt *index=new svInt[3];  widget->GetIndex(index);

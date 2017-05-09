@@ -26,7 +26,8 @@ public:
 	svOutline(){}
 	~svOutline(){}	
 
-	void DrawAxis(svVector3 lbbox, svVector3 rbbox);
+        void DrawLayers(svIntArray index, svVector3 pos, svVector3 dir, svScalar distance);
+  	void DrawAxis(svVector3 lbbox, svVector3 rbbox);
 	void DrawXYZ(svVector3 lbbox, svVector3 rbbox,ViewProperty &property);
 	void DrawAxis_scale(svVector3 lbbox, svVector3 rbbox, int width);
         void DrawXYZFont(svVector3 lbbox, svVector3 rbbox, ViewProperty &property);

@@ -28,6 +28,7 @@ int main(int argc, char *argv[])
     char *format_fname = strdup(argv[4]);
     char *density_fname = strdup(argv[5]);
     char *input_fname = strdup(argv[6]);
+    int format = atoi(argv[7]);
     
     mkdir(vtk_fname, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);  
 
@@ -46,7 +47,8 @@ int main(int argc, char *argv[])
    // sprintf(format_fname, "%s/%s_format", out_dir, in_fname);
     
     genVTKfromOrg *qdotData = new genVTKfromOrg();
-    
+
+    qdotData->SetFormat(format);    
     qdotData->ReadRawData(raw_fname, scalar);//cerr<<"read"<<endl;
     qdotData->SortedData(sort_fname);//cerr<<"read"<<endl;
     qdotData->SplitData(pos_x, pos_y, pos_z, dir_x, dir_y, dir_z, distance);

@@ -225,7 +225,7 @@ void genVTKfromOrg::ReadRawData(char *file, int DEN_SCALAR)
   int data_type; 
   int count = format;//CheckFormat(filename);
   //cerr<<count<<endl;
-/*  if(count == 9)
+  if(count == 9)
   {
 	data_type = 1;//new
   }
@@ -240,8 +240,6 @@ void genVTKfromOrg::ReadRawData(char *file, int DEN_SCALAR)
 	cerr << "Load QDOT data failed. Wrong format. Prog exit\n" <<endl;
 	exit(-1);
   }
-*/
-  data_type = format;
 
   ifstream infile(filename);
   
@@ -357,7 +355,7 @@ void genVTKfromOrg::ReadRawData(char *file, int DEN_SCALAR)
   }
   else if(data_type == 2)
   {
-	  while(infile>>pos[0] >> pos[1] >> pos[2] >> r >> a >> vel[0] >> vel[1] >> vel[2] >> den)
+	  while(infile>>pos[0] >> pos[1] >> pos[2] >> tmpr >> a >> vel[0] >> vel[1] >> vel[2] >> den>>r)
 	  {
 	
 	    //vel*=VEL_SCALAR;
@@ -406,7 +404,7 @@ void genVTKfromOrg::ReadRawData(char *file, int DEN_SCALAR)
   else if(data_type == 1)
  {
 	//cerr<<data_type<<endl;
-	  while(infile>>pos[0] >> pos[1] >> pos[2] >> r >> a>> vel[0] >> vel[1] >> vel[2])
+	  while(infile>>pos[0] >> pos[1] >> pos[2] >> tmpr >> a>> vel[0] >> vel[1] >> vel[2] >> r)
 	  {
 	    //vel*=VEL_SCALAR;
 	

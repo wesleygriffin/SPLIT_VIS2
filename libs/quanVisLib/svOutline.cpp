@@ -9,7 +9,10 @@ using namespace std;
 
 namespace __svl_lib
 {
-
+void svOutline::DrawLayers(svIntArray index, svVector3 pos, svVector3 dir, svScalar distance)
+{
+  
+}
 void svOutline::DrawAxis_scale(svVector3 lbbox, svVector3 rbbox, int width)
 { 
 

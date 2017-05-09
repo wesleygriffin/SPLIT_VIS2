@@ -42,7 +42,8 @@ class svQDOT : public svVectorField
                             svChar *sortFile, svChar *formatFile,
                             svChar *densityFile,
                             svVector3 ppos,
-					svVector3 pdir, svScalar pdis);
+					svVector3 pdir, svScalar pdis,
+                                    int format);
 	virtual void New(char *formatfName);
 	virtual void NewMesh(char *dir);
 	int GetPlaneIndex(svVector3 p);

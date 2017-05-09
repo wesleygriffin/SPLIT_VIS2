@@ -39,7 +39,7 @@ class svWidget {
     void SetValues(svVector3 *value){for(int i=0;i<3;i++)values[i]=value[i];}
     void SetVisible();
     svIntArray GetVisible(){return layer;}
-
+    void SetIndex(int zmin, int zmax, int notshowz);
     void GetIndex(svInt *index){for(int i=0;i<3;i++)index[i]= layerindex[i];}
     void Reset();
     bool isSelect();
