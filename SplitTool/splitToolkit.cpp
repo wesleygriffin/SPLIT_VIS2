@@ -33,8 +33,6 @@
 #include "svConfig.h"
 #include "svWidget.h"
 #include <string.h>
-#include "libconfig.h++"
-#include "libconfig.h"
 
 #include <GL/glui.h>
 
