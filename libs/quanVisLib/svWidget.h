@@ -33,6 +33,10 @@ class svWidget {
                   int x, int y);
     //void Movement(int x, int y);
     void Move(int x, int y); 
+   
+    void MoveLeft();
+    void MoveRight();
+
 
     virtual void Render();
 

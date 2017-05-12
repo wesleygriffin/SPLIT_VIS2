@@ -33,6 +33,8 @@
 #include "svConfig.h"
 #include "svWidget.h"
 #include <string.h>
+#include "libconfig.h++"
+#include "libconfig.h"
 
 #include <GL/glui.h>
 
@@ -73,15 +75,15 @@
 #define ALPHA_ID 15
 #define LAYER_REPEAT_ID 16
 
-
+using namespace libconfig;
 using namespace __svl_lib;
 
 void reshape(int w, int h);
 void display(void);
 void key(unsigned char key, int x, int y);
 
-#define IMAGE_WIDTH 1920
-#define IMAGE_HEIGHT 1080
+#define IMAGE_WIDTH 1900
+#define IMAGE_HEIGHT 1000
 
 int window;
 int mouse_button;
@@ -219,7 +221,7 @@ struct ConfigProperty{
 } configproperty;
 
 int contourindex = 0;
-void Config(char *configfname, ConfigProperty &property);
+void ReadConfig(char *configfname, ConfigProperty &property);
 void Update();
 void LocateTexture();
 void LoadTexture();
@@ -1012,30 +1014,35 @@ void key(unsigned char key, int x, int y)
                cout<<"min plane: "<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
                p = flow_field->GetPlanePosition(zmax);
                cout<<"max plane: "<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
-                }break;  
-        case 't':if(zmin>0)
-                {zmin = zmin - 1;
-                zmax = zmax - 1;
-               UpdateVisible();
-               svVector3 p = flow_field->GetPlanePosition(zmin);
-               cout<<"min plane: "<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
-               p = flow_field->GetPlanePosition(zmax);
-               cout<<"max plane: "<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
                 }break;
-         case 'T':if(zmax <flow_field->GetPlaneNum()-1)
+*/  
+        case 't':
+                {
+                   svVector3 value[3];
+                   widget->MoveRight();
+                   svInt *index=new svInt[3];  widget->GetIndex(index);
+                   for(int i=0;i<3;i++)
+                   {
+                     value[i]  = flow_field->GetPlanePosition(index[i]);
+                   }
+                   widget->SetValues(value);                   
+                   UpdateVisible();
+                } break;
+         case 'T':
               {
-                zmin = zmin + 1;
-                zmax = zmax + 1;
-               UpdateVisible();
-               svVector3 p = flow_field->GetPlanePosition(zmin);
-               cout<<"min plane: "<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
-               p = flow_field->GetPlanePosition(zmax);
-               cout<<"max plane: "<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
+                  svVector3 value[3];
+                  widget->MoveLeft();
+                  svInt *index=new svInt[3];  widget->GetIndex(index);
+                  for(int i=0;i<3;i++)
+                  {
+                      value[i]  = flow_field->GetPlanePosition(index[i]);
+                  }
+                  widget->SetValues(value);
+                  UpdateVisible();
                } break;
-*/
         }
- glutPostRedisplay();
-
+ 
+        glutPostRedisplay();
 }
 void mouse(int button, int state, int x, int y)
 {
@@ -1226,11 +1233,604 @@ void movement(int x, int y)
        }
        glutPostRedisplay();
 }
+void InitField()
+{
+	char *qdot_format = new char[400];
+	sprintf(qdot_format,"%s/%s/format.txt", configproperty.storeDir, 
+	            configproperty.rawFile);
+        flow_field->SetVTK(configproperty.rawDir, configproperty.rawFile,
+	                   configproperty.storeDir,
+					   "sort.txt", "format.txt", "density.txt",
+					   configproperty.plane_center,
+					   configproperty.plane_vector,
+					   configproperty.plane_distance,
+                                           configproperty.format);
+        flow_field->New(qdot_format);	
+        char *str = new char[200];
+
+        sprintf(str, "%s/%s/", configproperty.storeDir,  configproperty.rawFile);				
+        flow_field->NewMesh(str);
+	delete [] qdot_format;
+}
+/*void InitContour()
+{
+       delete [] property.contourproperty.contourValues;
+
+        property.contourproperty.seed_num = flow_field->GetPlaneNum();
+        property.contourproperty.contourValues = new svScalarArray[flow_field->GetPlaneNum()];
+        property.contourproperty.isUpdate.free()
+        for(int i=0;i<flow_field->GetPlaneNum();i++)
+                property.contourproperty.isUpdate.add(0);
+       property.contourname.clear();
+}
+*/
 //******************************************
 // initialization code for GL and NV_EXT
 //******************************************
+/*void LibConfig(char *configfname, ConfigProperty &property)
+{
+   Config cfg;
+   try
+   {
+      cfg.readFile(configfname);
+   }
+   catch (const FileIOException &fioex)
+   {
+      std::cerr << "I/O error while reading file." << std::endl;
+             //return(EXIT_FAILURE);
+   }
+  catch(const ParseException &pex)
+  {
+    std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine()
+              << " - " << pex.getError() << std::endl;
+ //    return(EXIT_FAILURE);
+  }
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++
+//datainput
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  const Setting &root = cfg.getRoot();
+  try
+  {
+       string rawDir,  rawFile;
+       int format;
+       const Setting &datainput = root["config"]["datainput"];
+       datainput.lookupValue("directory", rawDir);
+       datainput.lookupValue("type", format);
+       datainput.lookupValue("name", rawFile);
+       cerr<<rawDir<<" "<<format<<" "<<rawFile<<endl;
+       sprintf(property.rawDir, "%s", rawDir);
+       sprintf(property.rawFile, "%s", rawFile);
+       property.format = format;
+  }
+  catch(const SettingNotFoundException &nfex)
+  {
 
-void Config(char *configfname, ConfigProperty &property)
+  }
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++
+//dataprocessing
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  try
+  {
+      string storeDir;
+      const Setting &dataprocessing = root["config"]["dataprocessing"];
+      dataprocessing.lookupValue("foldertostorefiles", storeDir);
+      cerr<<storeDir<<endl;
+      sprintf(property.storeDir, "%s",storeDir);
+  }
+  catch(const SettingNotFoundException &nfex)
+  {
+  }
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++
+//cutting planes
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  try
+  {
+      const Setting &center = root["config"]["cuttingplane"]["center"];
+ 
+      int count = center.getLength();
+      double cc[count];
+
+      for(int i=0;i<count;i++)
+      {
+          double dc;
+          int ic;
+          if(center[i].getType()==center.TypeInt
+         || center[i].getType()==center.TypeInt64)
+          {
+                ic = center[i]; cc[i] = (double)ic;
+          }
+          else if(center[i].getType()==center.TypeFloat)
+          {
+                dc = center[i];  cc[i] = dc;
+          }
+      };
+      cerr<<cc[0]<<" "<<cc[1]<<" "<<cc[2]<<endl;
+      for(int i=0;i<3;i++)
+           property.plane_center[i] = cc[i];
+  }
+  catch(const SettingNotFoundException &nfex)
+  {
+  }
+  try
+  {
+      const Setting &direction = root["config"]["cuttingplane"]["direction"];
+
+      int count = direction.getLength();
+      double dir[count];
+      for(int i=0;i<count;i++)
+      {
+          double dc;
+          int ic;
+          if(direction[i].getType()==direction.TypeInt
+         || direction[i].getType()==direction.TypeInt64)
+          {
+                ic = direction[i]; dir[i] = (double)ic;
+          }
+          else if(direction[i].getType()==direction.TypeFloat)
+          {
+                dc = direction[i];  dir[i] = dc;
+          }
+      };
+
+      cerr<<dir[0]<<" "<<dir[1]<<" "<<dir[2]<<endl;
+      for(int i=0;i<3;i++)
+           property.plane_vector[i] = dir[i];
+      property.plane_vector.normalize();
+  }
+  catch(const SettingNotFoundException &nfex)
+  {
+  }
+  try
+  {
+
+      const Setting &cuttingplane = root["config"]["cuttingplane"];
+
+      double distance;
+      int id;
+
+      if(cuttingplane["distance"].getType() == cuttingplane.TypeInt
+      || cuttingplane["distance"].getType() == cuttingplane.TypeInt64)
+      {
+           cuttingplane.lookupValue("distance", id);
+           distance = id;
+      }
+      else
+             cuttingplane.lookupValue("distance", distance); 
+      cerr<<distance<<endl;
+      property.plane_distance = distance;
+  }
+  catch(const SettingNotFoundException &nfex)
+  {
+  }
+  InitField();
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++
+//display
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  try
+  {
+      bool isContour;
+      const Setting &display = root["config"]["display"];
+      display.lookupValue("ifcontour", isContour);
+      cerr<<isContour<<endl;
+      property.isContour = isContour;
+  }
+  catch(const SettingNotFoundException &nfex)
+  {
+  }
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++
+//contour
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  try
+  {
+      const Setting &contours = root["config"]["contour"];
+      int count ;
+ 
+      contours.lookupValue("number", count);
+      cerr<<count<<endl;
+
+      for(int i=0;i<count;i++)
+      {
+          char str[10];
+          sprintf(str,"contour%d", i+1);
+          const Setting &contour = root["config"]["contour"][str];
+
+          string contourtype;
+          double contourvalue;
+          int cv;
+
+          contour.lookupValue("type",contourtype);
+          if(contour["value"].getType() == contour.TypeInt
+          || contour["value"].getType() == contour.TypeInt64)
+          {
+              contour.lookupValue("value", cv);
+              contourvalue = cv;
+          }
+          else
+               contour.lookupValue("value", contourvalue);
+
+          if(!strcmp(contourtype, "Ratio") || !strcmp(contourtype, "ratio") )  
+          {
+                
+          }    
+
+          cerr<<contourtype<<" "<<contourvalue<<endl;
+      } 
+  }
+  catch(const SettingNotFoundException &nfex)
+  {
+      
+  }
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++
+//cluster step1 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++
+  try
+  {
+      double weight[7];
+
+      const Setting &clusterweights = root["config"]["cluster"]["step1"]["weights"];
+
+      int count = clusterweights.getLength();
+      for(int i=0;i<count;i++)
+      {
+         double dw; int iw;
+         if(clusterweights[i].getType() == clusterweights.TypeInt
+        || clusterweights[i].getType() == clusterweights.TypeInt64)
+         {
+               iw =  clusterweights[i];
+               weight[i] = iw;
+         }  
+         else
+         {
+               dw =  clusterweights[i];
+               weight[i] = dw;
+         } 
+      }
+    
+      cerr<<weight[0]<<" "<<weight[1]<<" "<<weight[2]<<" "
+          <<weight[3]<<" "<<weight[4]<<" "<<weight[5]<<" "
+          <<weight[6]<<endl;
+  }
+  catch(const SettingNotFoundException &nfex)
+  {
+  
+  }
+
+  try
+  {
+      int plane[2];
+
+      const Setting &clusterplane = root["config"]["cluster"]["step1"]["cuttingplane"];
+
+      int count = clusterplane.getLength();
+      for(int i=0;i<count;i++)
+      {
+         double dw; int iw;
+         if(clusterplane[i].getType() == clusterplane.TypeInt
+        || clusterplane[i].getType() == clusterplane.TypeInt64)
+         {
+               iw =  clusterplane[i];
+               plane[i] = iw;
+         } 
+         else
+         {
+               dw =  clusterplane[i];
+               plane[i] = dw;
+         } 
+      } 
+
+      cerr<<plane[0]<<" "<<plane[1]<<endl;
+  }
+  catch(const SettingNotFoundException &nfex)
+  {
+  
+  }
+  try
+  {
+      double magnitude[2];
+
+      const Setting &clustermag = root["config"]["cluster"]["step1"]["magnitude"];
+
+      int count = clustermag.getLength();
+      for(int i=0;i<count;i++)
+      {
+         double dw; int iw;
+         if(clustermag[i].getType() == clustermag.TypeInt
+        || clustermag[i].getType() == clustermag.TypeInt64)
+         {
+               iw =  clustermag[i];
+               magnitude[i] = iw;
+         } 
+         else
+         {
+               dw =  clustermag[i];
+               magnitude[i] = dw;
+         }
+      }
+
+      cerr<<magnitude[0]<<" "<<magnitude[1]<<endl;
+  }
+  catch(const SettingNotFoundException &nfex)
+  {
+  
+  }
+  try
+  {
+      const Setting &clusters = root["config"]["cluster"]["step1"];
+
+      bool whole;
+      int num;
+
+      clusters.lookupValue("wholedata", whole);
+      clusters.lookupValue("number",num);
+
+      cerr<<whole <<" "<<num<<endl;
+  }
+  catch(const SettingNotFoundException &nfex)
+  {
+  
+  }
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++
+//cluster step2
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++
+  try
+  {
+      double weight[7];
+
+      const Setting &clusterweights = root["config"]["cluster"]["step2"]["weights"];
+
+      int count = clusterweights.getLength();
+      for(int i=0;i<count;i++)
+      {
+         double dw; int iw;
+         if(clusterweights[i].getType() == clusterweights.TypeInt
+        || clusterweights[i].getType() == clusterweights.TypeInt64)
+         {
+               iw =  clusterweights[i];
+               weight[i] = iw;
+         }  
+         else
+         {
+               dw =  clusterweights[i];
+               weight[i] = dw;
+         } 
+      }
+    
+      cerr<<weight[0]<<" "<<weight[1]<<" "<<weight[2]<<" "
+          <<weight[3]<<" "<<weight[4]<<" "<<weight[5]<<" "
+          <<weight[6]<<endl;
+  }
+  catch(const SettingNotFoundException &nfex)
+  {
+  
+  }
+
+  try
+  {
+      int plane[2];
+
+      const Setting &clusterplane = root["config"]["cluster"]["step2"]["cuttingplane"];
+
+      int count = clusterplane.getLength();
+      for(int i=0;i<count;i++)
+      {
+         double dw; int iw;
+         if(clusterplane[i].getType() == clusterplane.TypeInt
+        || clusterplane[i].getType() == clusterplane.TypeInt64)
+         {
+               iw =  clusterplane[i];
+               plane[i] = iw;
+         } 
+         else
+         {
+               dw =  clusterplane[i];
+               plane[i] = dw;
+         } 
+      } 
+
+      cerr<<plane[0]<<" "<<plane[1]<<endl;
+  }
+  catch(const SettingNotFoundException &nfex)
+  {
+  
+  }
+  try
+  {
+      double magnitude[2];
+
+      const Setting &clustermag = root["config"]["cluster"]["step2"]["magnitude"];
+
+      int count = clustermag.getLength();
+      for(int i=0;i<count;i++)
+      {
+         double dw; int iw;
+         if(clustermag[i].getType() == clustermag.TypeInt
+        || clustermag[i].getType() == clustermag.TypeInt64)
+         {
+               iw =  clustermag[i];
+               magnitude[i] = iw;
+         } 
+         else
+         {
+               dw =  clustermag[i];
+               magnitude[i] = dw;
+         }
+      }
+
+      cerr<<magnitude[0]<<" "<<magnitude[1]<<endl;
+  }
+  catch(const SettingNotFoundException &nfex)
+  {
+  
+  }
+  try
+  {
+      const Setting &clusters = root["config"]["cluster"]["step2"];
+
+      bool whole;
+      int num;
+
+      clusters.lookupValue("wholedata", whole);
+      clusters.lookupValue("number",num);
+
+      cerr<<whole <<" "<<num<<endl;
+  }
+  catch(const SettingNotFoundException &nfex)
+  {
+  
+  }
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++
+//symmetry
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++
+  try
+  {
+      const Setting &direction = root["config"]["symmetry"]["planedirection"];
+
+      double d[3];
+
+      int count = direction.getLength();
+      for(int i=0;i<count;i++)
+      {
+          if(direction[i].getType() == direction.TypeInt
+          || direction[i].getType() == direction.TypeInt64)
+          {
+             int ic = direction[i];
+             d[i] = ic;
+          } 
+          else
+          {
+               d[i] = direction[i];
+          }
+      }
+      
+      cerr<<d[0]<<" "<<d[1]<<" "<<d[2]<<endl;
+  }
+  catch(const SettingNotFoundException &nfex)
+  {
+
+  }
+  try
+  {
+      const Setting &center = root["config"]["symmetry"]["planecenter"];
+
+      double c[3];
+
+      int count = center.getLength();
+      for(int i=0;i<count;i++)
+      {
+          if(center[i].getType() == center.TypeInt
+          || center[i].getType() == center.TypeInt64)
+          {
+             int ic = center[i];
+             c[i] = ic;
+          } 
+          else
+          {
+               c[i] = center[i];
+          }
+      }
+      cerr<<c[0]<<" "<<c[1]<<" "<<c[2]<<endl;
+
+  }
+  catch(const SettingNotFoundException &nfex)
+  {
+
+  }
+  try
+  {
+      const Setting &planex = root["config"]["symmetry"]["planex"];
+
+      double x[3];
+
+      int count = planex.getLength();
+      for(int i=0;i<count;i++)
+      {
+          if(planex[i].getType() == planex.TypeInt
+          || planex[i].getType() == planex.TypeInt64)
+          {
+             int ic = planex[i];
+             x[i] = ic;
+          }
+          else
+          {
+               x[i] = planex[i];
+          }
+      }
+    
+      cerr<<x[0]<<" "<<x[1]<<" "<<x[2]<<endl;
+  }
+  catch(const SettingNotFoundException &nfex)
+  {
+
+  }
+  try
+  {
+      const Setting &planey = root["config"]["symmetry"]["planey"];
+
+      double y[3];
+
+      int count = planey.getLength();
+      for(int i=0;i<count;i++)
+      {
+          if(planey[i].getType() == planey.TypeInt
+          || planey[i].getType() == planey.TypeInt64)
+          {
+             int ic = planey[i];
+             y[i] = ic;
+          }
+          else
+          {
+               y[i] = planey[i];
+          }
+      }
+
+      cerr<<y[0]<<" "<<y[1]<<" "<<y[2]<<endl;
+  }
+  catch(const SettingNotFoundException &nfex)
+  {
+
+  }
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++
+//roi
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  try
+  {
+      const Setting &roi = root["config"]["roi"];
+      bool repeat;
+      roi.lookupValue("repeat", repeat);
+      cerr<<repeat<<endl;
+  }
+  catch(const SettingNotFoundException &nfex)
+  {
+
+  }
+  try
+  {
+      const Setting &plane = root["config"]["roi"]["plane"];
+      int count = plane.getLength();
+      int p[3];
+      for(int i=0;i<count;i++)
+      {
+           
+           if(plane[i].getType() == plane.TypeInt
+           || plane[i].getType() == plane.TypeInt64)
+           {
+                 p[i] = plane[i];
+           }
+           else 
+           {
+                double dp = plane[i];
+                p[i] = dp;
+           }
+      }
+      cerr<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
+  }
+  catch(const SettingNotFoundException &nfex)
+  {
+
+  }
+}
+*/
+void ReadConfig(char *configfname, ConfigProperty &property)
 {
 	ifstream infile(configfname);
 	
@@ -1253,7 +1853,6 @@ void Config(char *configfname, ConfigProperty &property)
 	infile>>property.plane_vector[0]>>property.plane_vector[1]>>property.plane_vector[2];
 	infile>>tmp;
 	infile>>property.plane_distance;
-        
 	
 /*--------------initialization of QDOT field------------*/
 	char *qdot_format = new char[400];
@@ -1978,6 +2577,8 @@ void InitGL(string shader)
 
 void init(char *configfname)//rbfname, char *cpname)
 {
+  //LibConfig("/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/SplitTool/default.cfg", configproperty);
+
   if(encode_type == LINEAR)
     length_scale = LINEAR_SCALE;
   else
@@ -2011,7 +2612,7 @@ void init(char *configfname)//rbfname, char *cpname)
   configFile = strdup(configfname);
   configproperty.symmetryproperty.outputdir = new char[200];
   configproperty.symmetryproperty.inputfile = new char[200];
-  Config(configfname, configproperty);
+  ReadConfig(configfname, configproperty);
 
   //zmin=0;
   //zmax = flow_field->GetPlaneNum()-1;
@@ -2308,9 +2909,9 @@ int main(int argc, char** argv)
                           | GLUT_DEPTH | GLUT_ACCUM);
 
         glutInitWindowSize(image_width, image_height);
+           glutInitWindowPosition(0, 0);
         window = glutCreateWindow("QDOT");
-        glutInitWindowPosition(0, 0);
-    
+ 
         if (glewInit() != GLEW_OK)
         {
                 printf("glewInit failed. Exiting...\n");

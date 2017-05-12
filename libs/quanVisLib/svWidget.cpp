@@ -114,8 +114,53 @@ void svWidget::Mouse(svScalar tranx, svScalar trany,
      }
      }
 }
+void svWidget::MoveRight()
+{
+   svScalar movement;
+    
+    int start = (box[0][0] - line[0][0] - boxside)/boxside;
+    if(start <0) start = 0;
+    else if(start < (box[0][0] - line[0][0] - boxside)/boxside) start = start + 1;
 
+   movement = (line[0][0] + 0.5 * boxside + (start-1) * boxside) - box[0][0];
 
+  if((box[1][0] + movement)> line[0][0] + 1.*boxside
+   && (box[0][0]+movement)>line[0][0]
+   && (box[2][0]+movement)<line[1][0])
+  {
+   for(int i=0;i<3;i++)
+   {
+         box[i][0] = box[i][0] + movement;
+         for(int j=0;j<3;j++)
+              triangle[i][j][0] =triangle[i][j][0]+movement;
+   }
+  }
+  SetVisible();
+}
+
+void svWidget::MoveLeft()
+{
+   svScalar movement;
+
+    int start = (box[0][0] - line[0][0] - boxside)/boxside;
+    if(start <0) start = 0;
+    else if(start < (box[0][0] - line[0][0] - boxside)/boxside) start = start + 1;
+
+   movement = line[0][0] + 0.5 * boxside + (start+1) * boxside - box[0][0];    
+
+  if((box[1][0] + movement)> line[0][0] + 1.*boxside
+   && (box[0][0]+movement)>line[0][0]
+   && (box[2][0]+movement)<line[1][0])
+  {
+   for(int i=0;i<3;i++)
+   {
+         box[i][0] = box[i][0] + movement;
+         for(int j=0;j<3;j++)
+              triangle[i][j][0] =triangle[i][j][0]+movement;
+   }
+  }
+  SetVisible();
+}
 void svWidget::Move(int x, int y)
 {
    svScalar movement;

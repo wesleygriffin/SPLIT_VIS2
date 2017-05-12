@@ -42,10 +42,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/hnz8/Documents/SPLIT_VIS2-master/libs/Alpha_shapes_3
+CMAKE_SOURCE_DIR = /home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/hnz8/Documents/SPLIT_VIS2-master/libs/Alpha_shapes_3
+CMAKE_BINARY_DIR = /home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -72,9 +72,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/hnz8/Documents/SPLIT_VIS2-master/libs/Alpha_shapes_3/CMakeFiles /home/hnz8/Documents/SPLIT_VIS2-master/libs/Alpha_shapes_3/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles /home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/hnz8/Documents/SPLIT_VIS2-master/libs/Alpha_shapes_3/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/libs/Alpha_shapes_3/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
