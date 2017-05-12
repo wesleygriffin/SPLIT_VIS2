@@ -73,7 +73,6 @@
 #define ALPHA_ID 15
 #define LAYER_REPEAT_ID 16
 
-using namespace libconfig;
 using namespace __svl_lib;
 
 void reshape(int w, int h);
