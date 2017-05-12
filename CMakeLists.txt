@@ -54,18 +54,6 @@ add_executable(Contour ${Contour_SOURCES})
 target_link_libraries(Contour ${VTK_LIBRARIES})
 install(TARGETS Contour RUNTIME DESTINATION bin)
 
-ExternalProject_Add(config
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/libconfig-1.5
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ./configure
---prefix=${CMAKE_CURRENT_SOURCE_DIR}/libs/libconfig-1.5/build && make && make
-install
-    BUILD_IN_SOURCE 1
-    INSTALL_COMMAND "")
-ExternalProject_Get_Property(config SOURCE_DIR)
-set(CONFIG_LIBRARIES ${SOURCE_DIR}/build/lib/libconfig++.a CACHE STRING "" FORCE)
-set(CONFIG_INCLUDE_DIR ${SOURCE_DIR}/build/include CACHE STRING "" FORCE)
-
 ExternalProject_Add(glui
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/glui-2.35
     CONFIGURE_COMMAND ""
@@ -229,12 +217,10 @@ target_link_libraries(svl PUBLIC ${SOIL_LIBRARIES} ${GLEW_LIBRARIES})
 set(SVL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/quanVisLib CACHE STRING "" FORCE)
 
 add_executable(splitToolkit SplitTool/splitToolkit.cpp)
-target_link_libraries(splitToolkit svl ${SOIL_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES}
-${CONFIG_LIBRARIES} ${GLUI_LIBRARIES} ${GLEW_LIBRARIES}
+target_link_libraries(splitToolkit svl ${SOIL_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUI_LIBRARIES} ${GLEW_LIBRARIES}
 )
 target_include_directories(splitToolkit PRIVATE ${SVL_INCLUDE_DIR}
 ${SOIL_INCLUDE_DIR}  } ${JCUTIL_INCLUDE_DIR} ${GLUI_INCLUDE_DIR}
-${CONFIG_INCLUDE_DIR}
 ${PEELING_COMMON_INCLUDE_DIR}${PEELING_NVMODEL_INCLUDE_DIR} ${GLEW_INCLUDE_DIR})
 install(TARGETS splitToolkit RUNTIME DESTINATION bin)
 
