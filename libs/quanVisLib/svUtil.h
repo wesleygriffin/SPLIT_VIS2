@@ -44,6 +44,9 @@ svVector3 svAverage(const svVector3& v1, const svVector3& v2);
 
 //---------the following by Henan----------------
 
+void ProgressBar(int percentage);
+
+
 svVector3 GetVertical(svVector3 pos, svVector3 dir,  ViewProperty &property);
 svVector3 GetVerticalByeye(svVector3 pos, svVector3 v, ViewProperty &property);
 bool rayPlaneIntersect(svVector3 rPos, svVector3 rDir,
@@ -108,7 +111,7 @@ void SOILTexture(const char *filename, GLuint &texture);
 //=======================================
 svInt  getNumOfIntegerDigits(svScalar num);
 GLboolean invert_matrix( const GLfloat *m, GLfloat *out );
-
+svScalar GetEntropy(svVector3Array vec);
 }
 
 

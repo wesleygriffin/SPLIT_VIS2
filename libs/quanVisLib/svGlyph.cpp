@@ -8,7 +8,7 @@
 #include <string.h>
 #include "svException.h"
 #include "svUtil.h"
-
+#include "svCCL.h"
 // TODO: add renderproperty
 
 using namespace std;
@@ -60,7 +60,10 @@ svGlyph::svGlyph()
       exp = NULL;
       coe = NULL;
 
-     glyphFormat = NULL;
+     stype = NULL;
+     glyphFormat[0] = NULL;
+     glyphFormat[1] = NULL;
+     glyphFormat[2] = NULL;
 
       contourLabel = NULL;
       clusterLabel = NULL;
@@ -72,12 +75,8 @@ svGlyph::svGlyph()
 
       glyphSize = 0;
  
-      symmetrylist[0] = new svList(); 
-      symmetrylist[1] = new svList();
-      symmetrylist[2] = new svList();
-      symmetrylist[3] = new svList();
-      symmetrylist[4] = new svList();
-      symmetrylist[5] = new svList();
+     for(int i=0;i<SYMMETRY_TYPE;i++)
+      symmetrylist[i] = new svList(); 
   // peeling = new svPeeling();
 
 }
@@ -229,8 +228,14 @@ void svGlyph::New(svVectorField* f, int numPlane)
      exp = new svScalarArray[seed_num]; 
      coe = new svScalarArray[seed_num];
 
+     stype = new svIntArray[seed_num];
 
-     glyphFormat = new svIntArray[seed_num];
+     for(int i=0;i<seed_num;i++)
+         entropy.add(0);
+
+     glyphFormat[0] = new svIntArray[seed_num];
+     glyphFormat[1] = new svIntArray[seed_num];
+     glyphFormat[2] = new svIntArray[seed_num];
 
      contourLabel = new svIntArray[seed_num]; 
      clusterLabel = new svIntArray[seed_num];
@@ -292,11 +297,17 @@ void svGlyph::SetData(char *infName, int seed)
                 tmpcoe = den/pow(10.,tmpexp);
                 exp[layer].add(tmpexp);
                 coe[layer].add(tmpcoe);
+               
+                glyphFormat[0][layer].add(0);
+                glyphFormat[1][layer].add(0);
+                glyphFormat[2][layer].add(0);
+  
+                stype[layer].add(-1);
 
                 clusterLabel[layer].add(-1);
                 roiLabel[layer].add(true);
-                visibleLabel[layer].add(true);
-
+               if(den>0) visibleLabel[layer].add(true);
+               else visibleLabel[layer].add(false);
                svVector4 color;
                color[0]=1;color[1]=1;color[2]=1;color[3]=1;
                glyphColors[layer].add(color);
@@ -334,10 +345,48 @@ void svGlyph::SetFormat(char *infname, int seed)
      {
            int a,b;
            infile>>a>>b;
-           glyphFormat[seed].add(a);
-           glyphFormat[seed].add(b);
+           //glyphFormat[seed].add(a);
+           //glyphFormat[seed].add(b);
      }
 
+     infile.close();
+}
+
+void svGlyph::SetFormat(char *format_fname, char *index_fname)
+{
+     ifstream infile(format_fname);
+     ifstream infile2(index_fname);
+
+     int n;
+     infile>>n;
+     int m;
+     infile2>>m;
+
+     vector< vector<int> > in;
+     in.resize(m);
+     for(int i=0;i<m;i++)
+     {
+       in[i].resize(2);
+       infile2>>in[i][0]>>in[i][1];
+     }
+    
+     for(int i=0;i<n;i++)
+     {
+        int index1 = in[i][0];
+        int index2 = in[i][1];
+        int fx,fy,fz;
+        infile>>fx>>fy>>fz;
+
+        glyphFormat[0][index1][index2] = fx;
+        glyphFormat[1][index1][index2] = fy;
+        glyphFormat[2][index1][index2] = fz;
+     }
+
+     for(int i=0;i<m;i++)
+           in[i].clear();
+     in.clear();
+ 
+     infile2.close();
      infile.close();
 }
 
@@ -475,7 +524,19 @@ void svGlyph::GenerateContours(ContourProperty &property) //const
          }
         }
      }
-                                  
+     
+     ofstream outfile(property.wholefile);
+     outfile<<dataSize<<endl;         
+     for(int i=0;i<seed_num;i++)
+     {
+        for(int j=0;j<glyph[i].size();j++)
+        {
+            outfile<<glyph[i][j][0]<<" "<<glyph[i][j][1]<<" "<<glyph[i][j][2];
+            outfile<<" "<<dir[i][j][0]<<" "<<dir[i][j][1]<<" "<<dir[i][j][2];
+            outfile<<" "<<mag[i][j]<<endl;
+        }
+     }
+     outfile.close(); 
 }
 
 /*
@@ -597,7 +658,7 @@ void svGlyph::GenerateClusters(KmeansProperty & property)// const
               }
          }
       }*/
-cerr<<maxClusterLabel<<endl;
+//cerr<<maxClusterLabel<<endl;
 }
 void svGlyph::GenerateClustersBySymmetry(KmeansProperty & property, 
                       SymmetryProperty & sproperty,
@@ -610,8 +671,8 @@ void svGlyph::GenerateClustersBySymmetry(KmeansProperty & property,
                      max = property.clusterLayer[i];
       }
 
-   if(symmetrytype.size()>0)
-   {
+//   if(symmetrytype.size()>0)
+//   {
     int count = 0;
     for(int i=0;i<seed_num;i++)
     {
@@ -625,6 +686,7 @@ void svGlyph::GenerateClustersBySymmetry(KmeansProperty & property,
               else flag = false;
               for(int t=0;t<symmetrytype.size();t++)
               {
+                   if(symmetrytype[t]<0) continue;
                    int size = symmetrylist[symmetrytype[t]]->getSize(count);
                    if(size == 1) continue;
                    else
@@ -642,8 +704,8 @@ void svGlyph::GenerateClustersBySymmetry(KmeansProperty & property,
              }
             count++;
          }
-    }cerr<<"symmetrytype"<<endl;
-   }
+    }//cerr<<"symmetrytype"<<endl;
+//   }
 
       for(int i=0;i<=max;i++)
       {
@@ -656,6 +718,154 @@ void svGlyph::GenerateClustersBySymmetry(KmeansProperty & property,
                                                  property.numCluster);
          SetClusterLabelBySymmetry(property.file1, property.clusterLayer,i,symmetrytype);
       }
+}
+
+void svGlyph::SetNeighborLabel(vector<int> symmetrytype,SymmetryProperty &property, svChar *outputdir)
+{
+    char *symmetrystr = new char[200];
+    for(int j=0;j<200;j++) symmetrystr[j] = '\0';
+    sprintf(symmetrystr, "%s%0.2f%0.2f%0.2f%0.2f%0.2f%0.2f", symmetrystr,
+                  property.pos[0], property.pos[1], property.pos[2],
+                  property.dir[0], property.dir[1], property.dir[2]);
+    sort(symmetrytype.begin(), symmetrytype.end());
+    for(int i=0;i<symmetrytype.size();i++)
+        sprintf(symmetrystr, "%s%d", symmetrystr, symmetrytype[i]);
+
+    char *str = new char[400];
+    sprintf(str,"%s/neighbor%s",outputdir, symmetrystr);
+    cerr<<str<<endl;
+
+    ifstream test(str);
+    if(test.is_open())
+    {
+         test.close();
+    }
+    else
+    {
+      if(symmetrytype.size()>0)
+      {
+         vector<bool> label;
+         label.resize(dataSize);
+
+         int count = 0;
+         for(int i=0;i<seed_num;i++)
+         {
+             for(int j=0;j<glyph[i].size();j++)
+             {
+                  bool flag = false;
+                  for(int t=0;t<symmetrytype.size();t++)
+                  {
+                   int size = symmetrylist[symmetrytype[t]]->getSize(count);
+                    if((t==0&&size>1)||(flag&&size>1))
+                        flag = true;
+                    else
+                        flag = false;
+                   }
+                   if(flag)
+                   {
+                        label[count] = true;
+                   }
+                   else 
+                        label[count] = false;
+                count++;
+             }
+          }
+ 
+        svConnect *ccl = new svConnect();
+        char *inputfile = new char[400];
+        sprintf(inputfile, "%s/neighbors.txt", outputdir);
+        ifstream infile(inputfile);
+        ofstream outfile(str);
+        int n;
+        infile>>n;
+        outfile<<n<<endl;
+        for(int i=0;i<n;i++)
+        {
+            int m;
+            infile>>m;
+            vector<int> index;
+            for(int j=0;j<m;j++)
+            {
+                int ii;
+                infile>>ii;
+                if(label[ii]) index.push_back(ii);
+            }
+
+            if(!label[i])
+            {
+               outfile<<-1<<endl;
+            }
+            else
+            {
+                outfile<<index.size()<<" ";
+                for(int j=0;j<index.size();j++)
+                    outfile<<index[j]<<" ";
+                outfile<<endl;
+            }
+        }
+        infile.close();
+        outfile.close();
+//---------------------------------------------
+        char *outputfile = new char[400];
+        sprintf(outputfile,"%s/point%s", outputdir, symmetrystr);
+        cerr<<outputfile<<endl;
+        vector<int> unique_label = ccl->TwoPass(str, outputfile);
+//-------------------------------------------------
+        int label_size = unique_label.size();
+        if(unique_label[0]<0) label_size  = label_size - 1;
+
+        svVector3Array *labels = new svVector3Array[label_size];
+
+        sprintf(str,"%s/meshsize%s",outputdir, symmetrystr);
+        ofstream unique(str);
+        unique<<unique_label.size()<<endl;
+        for(int i=0;i<unique_label.size();i++)
+        {
+           unique<<unique_label[i]<<endl;
+        }
+        unique.close();        
+
+        int shift;
+        if(unique_label[0]<0) shift = 1;
+        else shift = 0;
+
+        infile.open(outputfile);
+        infile>>n;
+        for(int i=0;i<seed_num;i++)
+        {
+          for(int j=0;j<glyph[i].size();j++)
+          {
+             int ii;
+             infile>>ii;
+             if(ii>=0)
+               labels[ii-shift].add(glyph[i][j]);
+          }
+        }
+        infile.close();
+
+        for(int i=0;i<label_size;i++)
+        {
+           ofstream outlabel;
+           sprintf(str, "%s/region%s%d",outputdir, symmetrystr,
+                              unique_label[i+shift]);
+           outlabel.open(str);
+           outlabel<<labels[i].size()<<endl;
+           for(int j=0;j<labels[i].size();j++)
+                 outlabel<<labels[i][j][0]<<" " 
+                         <<labels[i][j][1]<<" "
+                         <<labels[i][j][2]<<endl;
+           outlabel.close();
+           labels[i].free();
+        }
+        
+        delete [] labels;
+        delete [] outputfile;
+        delete [] inputfile;
+        delete ccl;
+      }
+    }
+    delete [] str;
+    delete [] symmetrystr;
 }
 void svGlyph::SetSampling(svInt frequency)
 {
@@ -676,7 +886,50 @@ void svGlyph::SetSampling(svInt frequency)
        }
    }
 }
+void svGlyph::SaveSymmetry(int symmetrytype,
+                           char *str1, char *str2,
+                           SymmetryProperty &property)
+{
+    ifstream infile(str1);
+    if(infile.is_open())
+       infile.close();
+    else
+    {
 
+    ofstream outfile1(str1);
+    ofstream outfile2(str2);
+    svVector3Array p1, p2;
+    for(int i=0;i<seed_num;i++)
+    {
+         for(int j=0;j<glyph[i].size();j++)
+         {
+              if(stype[i][j] == symmetrytype)
+              {              
+                 double dd = dot(glyph[i][j]-property.pos, property.dir);
+                 if(dd>0)
+                 {
+                   p1.add(glyph[i][j]);
+                 }
+                 else if(dd<0)
+                 {
+                   p2.add(glyph[i][j]);
+                 }
+              }
+         }
+       }
+    outfile1<<p1.size()<<endl;
+    outfile2<<p2.size()<<endl;
+    for(int i=0;i<p1.size();i++)
+        outfile1<<p1[i][0]<<" "<<p1[i][1]<<" "<<p1[i][2]<<endl;
+    for(int i=0;i<p2.size();i++)
+        outfile2<<p2[i][0]<<" "<<p2[i][1]<<" "<<p2[i][2]<<endl;
+    outfile1.close();
+    outfile2.close();
+    p1.free();
+    p2.free();
+
+    }
+}
 void svGlyph::SetSampling(vector<int> symmetrytype, svInt frequency)
 {
     for(int i=0;i<seed_num;i++)
@@ -687,20 +940,21 @@ void svGlyph::SetSampling(vector<int> symmetrytype, svInt frequency)
     {
          for(int j=0;j<glyph[i].size();j++)
          {
-                   int x = glyphFormat[i][j*2];
-                   int y = glyphFormat[i][j*2+1];
-                   if(x%frequency ==0 && y%frequency ==0 && i%frequency==0)
+                   int x = glyphFormat[0][i][j];
+                   int y = glyphFormat[1][i][j];
+                   int z = glyphFormat[2][i][j];
+                   if(mag[i][j]>0&&x%frequency ==0 && y%frequency ==0 && z%frequency==0)
                    {
                        visibleLabel[i][j] = true;
                    }
          }
     }
-
-   if(symmetrytype.size()>0)
-   {
+//   if(symmetrytype.size()>0)
+//   {
     int count = 0;
+    int cc = 0;
     for(int i=0;i<seed_num;i++)
-    {
+    {//cerr<<i<<endl;
          for(int j=0;j<glyph[i].size();j++)
          {
             if(visibleLabel[i][j] == true)
@@ -708,162 +962,182 @@ void svGlyph::SetSampling(vector<int> symmetrytype, svInt frequency)
               bool flag = false;
               for(int t=0;t<symmetrytype.size();t++)
               {
-                   int size = symmetrylist[symmetrytype[t]]->getSize(count);
-                    if((t==0&&size>1)||(flag&&size>1))
-                        flag = true;
-                    else
-                        flag = false;
+                if(symmetrytype[t] >= 0)
+                {
+                    int size = symmetrylist[symmetrytype[t]]->getSize(count);
+                    if(size>1)//(t==0&&size>1)||(flag&&size>1))
+                    {
+                          flag = true;
+                          break;
+                    }
+                }
+                else
+                {
+                    if(stype[i][j] == symmetrytype[t])
+                    {
+                           flag = true;
+                           break;
+                    } 
+                }
               }
-              if(flag)
+              if(flag) 
               {
+               if(stype[i][j]>=0)
+               {
                 for(int t=0;t<symmetrytype.size();t++)
                 {
+                  if(symmetrytype[t]>=0)
+                  {
                    int size = symmetrylist[symmetrytype[t]]->getSize(count);
                    int data1[size], data2[size];
                    symmetrylist[symmetrytype[t]]->getData(count, data1, data2);
                     for(int m=0;m<size;m++)
                     {
                           visibleLabel[data1[m]][data2[m]] = true;
-                    }         
+                          cc++;
+                    }
+                  }         
                 }
+               }
             }
             else
             {
+                //cerr<<i<<" "<<j<<endl;
                 visibleLabel[i][j] = false;
             }
-            count++;
          }
+          count++;
        }
+//    }
+/*
+    ofstream outfile("test");
+    outfile<<cc<<endl;
+    for(int i=0;i<seed_num;i++)
+    {
+        for(int j=0;j<glyph[i].size();j++)
+        {
+         if(visibleLabel[i][j] == true)
+            {
+              outfile<<glyph[i][j][0]<<" "<<glyph[i][j][1]<<" "<<glyph[i][j][2]<<endl;
+           }
+        }
     }
+    outfile.close();
+
+*/
    }
+}
+void svGlyph::GenerateNeighbors(NeighborProperty &property)
+{
+    svNeighbor *neighbor = new svNeighbor(field);
+
+    neighbor->ComputeNeighbors(property);
+
+    delete neighbor;
+}
+void svGlyph::GenerateEntropy()
+{
+   // svScalar max = -1;
+   // svScalar min = 9e+9;
+    for(int i=0;i<seed_num;i++)
+    {
+       entropy[i] = GetEntropy(dir[i]);
+   //    if(entropy[i] > max) max = entropy[i];
+   //    if(entropy[i] < min) min = entropy[i];
+       //cerr<<entropy[i]<<endl;
+    }
+//cerr<<min<<" "<<max<<endl;
+   // for(int i=0;i<seed_num;i++)
+   // {
+ //       svScalar e = (entropy[i] - min) / (max - min);
+     //   entropy[i] = entropy[i] - min;
+//        cerr<<entropy[i]<<endl;
+   // }
 }
 
 void svGlyph::GenerateSymmetry(SymmetryProperty &property)
 {
+//   for(int i=0;i<seed_num;i++)
+//     stype[i].free();
+       
    svSymmetry *symmetry = new svSymmetry(field);
 
-//   for(int i=0;i<4;i++)
-//   {
- /*       cerr<<i<<"symmetry"<<endl;
-        char *symmetrystr = new char[200];
-        for(int j=0;j<200;j++) symmetrystr[j] = '\0';
-        for(int j=0;j<property.dir.size();j++)
-        {
-            sprintf(symmetrystr, "%s(%0.2f%0.2f%0.2f%0.2f%0.2f%0.2f)", symmetrystr,
-                  property.pos[j][0], property.pos[j][1], property.pos[j][2],
-                  property.dir[j][0], property.dir[j][1], property.dir[j][2]);
-        }
-        switch(i)
-        {
-          case 0:  sprintf(property.outputfile,"%s/antisymmetry%s.txt", 
-                   property.datafile, symmetrystr);
-                   break;
-          case 1:  sprintf(property.outputfile,"%s/positivesymmetry%s.txt",
-                   property.datafile, symmetrystr);
-                   break;
-          case 2:  sprintf(property.outputfile,"%s/negativenearsymmetry%s.txt",
-                   property.datafile, symmetrystr);
-                   break;
-          case 3:  sprintf(property.outputfile,"%s/negativefarsymmetry%s.txt",
-                   property.datafile, symmetrystr);
-                   break;
-          //cerr<<property.outputfile<<endl;
-        }
-        delete [] symmetrystr;
-*/
         sprintf(property.outputdir, "%s", property.datafile);
-/*
-        ifstream infile(property.outputfile);
-        if(!infile.is_open())
-        {
-               infile.close();
-              char *str = new char[200];
-               sprintf(property.inputfile, "%s/layerall.txt",property.datafile);
-              // porropertt.inputfile = strdup(str);
-             delete [] str;
 
-             switch(i)
-             {
-               case 0:
-                      symmetry->ComputeAntiSymmetry(property);break;
-               case 1:
-                      symmetry->ComputePositiveSymmetry(property);break;
-               case 2:
-                      symmetry->ComputeNegativeNearSymmetry(property);break;
-               case 3:
-                      symmetry->ComputeNegativeFarSymmetry(property);break;
-             }
-        }
-        else 
-           infile.close();
-*/
-         sprintf(property.inputfile, "%s/layerall.txt",property.datafile);
-        symmetry->ComputeSymmetry(property);
-//=================save to list=======================
-
+//         sprintf(property.inputfile, "%s/layerall.txt",property.datafile);
+         symmetry->ComputeSymmetry(property);
   
+        symmetrytopcount = 0;
+        int sum = 0;
         for(int i=0;i<SYMMETRY_TYPE;i++)
         {
+          symmetrycount[i] = 0;
           symmetrylist[i]->destroy();
           symmetrylist[i]->new_list(dataSize);
 
-          char *symmetrystr = new char[200];
-          for(int j=0;j<200;j++) symmetrystr[j] = '\0';
-         // for(int j=0;j<property.dir.size();j++)
-         // {
-          //for(int j=0;j<property.dir.size();j++)
-          //{
-            sprintf(symmetrystr, "%s(%0.2f%0.2f%0.2f%0.2f%0.2f%0.2f)", symmetrystr,
-                  property.pos[0], property.pos[1], property.pos[2],
-                  property.dir[0], property.dir[1], property.dir[2]);
+//          char *symmetrystr = new char[200];
+//          for(int j=0;j<200;j++) symmetrystr[j] = '\0';
+//            sprintf(symmetrystr, "%s(%0.2f%0.2f%0.2f%0.2f%0.2f%0.2f)", symmetrystr,
+//                  property.pos[0], property.pos[1], property.pos[2],
+//                  property.dir[0], property.dir[1], property.dir[2]);
 
-          // }
+//           char *str = new char[400];
+//           switch(i)
+//           {
+//                 case 0:  sprintf(str,"%s/xsyszs%s.txt",
+//                     property.outputdir, symmetrystr);break;
+//                 case 1:  sprintf(str,"%s/xsysza%s.txt",
+//                     property.outputdir, symmetrystr);break;
+//                 case 2:  sprintf(str,"%s/xsyazs%s.txt",
+//                     property.outputdir, symmetrystr);break;
+//                 case 3:  sprintf(str,"%s/xsyaza%s.txt",
+//                     property.outputdir, symmetrystr);break;
+//                 case 4:  sprintf(str,"%s/xayszs%s.txt",
+//                     property.outputdir, symmetrystr);break;
+//                 case 5:  sprintf(str,"%s/xaysza%s.txt",
+//                     property.outputdir, symmetrystr);break;
+//                 case 6:  sprintf(str,"%s/xayazs%s.txt",
+//                     property.outputdir, symmetrystr);break;
+//                 case 7:  sprintf(str,"%s/xayaza%s.txt",
+//                     property.outputdir, symmetrystr);break;
+//            }
 
-           char *str = new char[400];
-           switch(i)
-           {
-               case 0:  sprintf(str,"%s/xsym%s.txt",
-                     property.outputdir, symmetrystr);break;
-               case 1:  sprintf(str,"%s/xanti%s.txt",
-                     property.outputdir, symmetrystr);break;
-               case 2:  sprintf(str,"%s/ysym%s.txt",
-                     property.outputdir, symmetrystr);break;
-               case 3:  sprintf(str,"%s/yanti%s.txt",
-                     property.outputdir, symmetrystr);break;
-               case 4:  sprintf(str,"%s/zsym%s.txt",
-                     property.outputdir, symmetrystr);break;
-               case 5:  sprintf(str,"%s/zanti%s.txt",
-                     property.outputdir, symmetrystr);break;
-            }
-
-            ifstream infile(str);
+            ifstream infile(property.outputfile[i]);
             int n;
             infile>>n;
-        
              int count = 0;
              for(int ii=0;ii<seed_num;ii++)
              {
                  for(int j=0;j<glyph[ii].size();j++)
                 {
-                int m;
+                 int m;
                  infile>>m;
                  vector<int> value; value.resize(m*2);
                  for(int t=0;t<m*2;t++)
                  {
                     infile>>value[t];
+                    
                  }     
-             
+                 if(m > 1)
+                 {
+                     stype[ii][j] = i;   
+                     symmetrycount[i]++;    
+                    sum++;           
+                 } 
                  symmetrylist[i]->add_next(count, value);
                  count++;
                  }   
              }
              infile.close();
-             delete [] symmetrystr;
-             delete [] str;
+            // delete [] symmetrystr;
+            // delete [] str;
+           if(symmetrycount[i] > symmetrytopcount)
+                 symmetrytopcount = symmetrycount[i];
        }
-//        symmetrylist[i]->display_list();
-  // }
-
+   symmetrycount[SYMMETRY_TYPE] = dataSize - sum;
+   if(symmetrytopcount <  symmetrycount[SYMMETRY_TYPE])
+        symmetrytopcount =  symmetrycount[SYMMETRY_TYPE];  
+   //cerr<<symmetrytopcount<<endl;
    delete symmetry;
 }
 
@@ -873,7 +1147,10 @@ void svGlyph::ResetVisible()
     {
           for(int j=0;j<glyph[i].size();j++)
           {
+              if(mag[i][j]>0)
                  visibleLabel[i][j] = true;
+              else
+                 visibleLabel[i][j] = false;
           }
     }
 }
@@ -1079,6 +1356,8 @@ void svGlyph::clean()
 {
   glyphSize = 0;
 
+  entropy.free();
+
   if (glyph != NULL) {
     for (int i=0; i<seed_num; i++)  
 	glyph[i].free();
@@ -1109,11 +1388,23 @@ void svGlyph::clean()
     delete [] exp;
     exp=NULL;
   };
-  if (glyphFormat!=NULL) {
+  if (glyphFormat[0]!=NULL) {
     for(int i=0; i<seed_num; i++)
-      glyphFormat[i].free();
-    delete [] glyphFormat;
-    glyphFormat=NULL;
+      glyphFormat[0][i].free();
+    delete [] glyphFormat[0];
+    glyphFormat[0]=NULL;
+  };
+  if (glyphFormat[1]!=NULL) {
+    for(int i=0; i<seed_num; i++)
+      glyphFormat[1][i].free();
+    delete [] glyphFormat[1];
+    glyphFormat[1]=NULL;
+  };
+  if (glyphFormat[2]!=NULL) {
+    for(int i=0; i<seed_num; i++)
+      glyphFormat[2][i].free();
+    delete [] glyphFormat[2];
+    glyphFormat[2]=NULL;
   };
   if (clusterLabel!=NULL) {
     for(int i=0; i<seed_num; i++)
@@ -1145,6 +1436,12 @@ void svGlyph::clean()
     visibleLabel=NULL;
   };
 
+  if(stype != NULL) {
+      for(int i=0;i<seed_num;i++)
+         stype[i].free();
+      delete [] stype;
+      stype = NULL;
+   }
 
        sampleLabel.free();
   
@@ -1301,6 +1598,19 @@ void svGlyph::SetColorByCluster(svIntArray index, svVector4 c)
               }             
             if(flag)
                glyphColors[i][j] = color->GetDiscreteColors(c);
+         }
+     }
+     delete color;
+}
+void svGlyph::SetColorBySymmetryType()
+{
+     svColors *color = new svColors();
+     for(int i=0;i<seed_num;i++)
+     {
+          for(int j=0;j<glyph[i].size();j++)
+         {
+             int c = stype[i][j];
+             glyphColors[i][j] = color->Get8Colors(c);
          }
      }
      delete color;
@@ -1772,6 +2082,7 @@ void svGlyph::SetClusterLabelBySymmetry(char *clusterfile, svIntArray clusterLay
          {
               for(int t=0;t<symmetrytype.size();t++)
               {
+                      if(symmetrytype[t]<0)  continue;
                       int size = symmetrylist[symmetrytype[t]]->getSize(count);
                       if(size == 1) continue;
 
@@ -1811,6 +2122,121 @@ svVector3 svGlyph::GetCenter(int index)
    c[2] = c[2]/glyph[index].size();
 
    return c;
+}
+
+svScalarArray *svGlyph::GetSymmetryMagProb(int & topvalue)
+{
+   svScalar level;
+   svScalar max= -9e+9;
+   for(int i=0;i<seed_num;i++)
+   {
+     for(int j=0;j<glyph[i].size();j++)
+     {
+        if(exp[i][j] > max && coe[i][j]>0)
+           max = exp[i][j];
+     }
+   } 
+
+   level = max - 4;
+   svScalarArray *prob = new svScalarArray[4];
+   for(int i=0;i<SYMMETRY_TYPE+1;i++)
+   {
+     prob[0].add(0);
+     prob[1].add(0);
+     prob[2].add(0);
+     prob[3].add(0);
+   }
+
+   for(int i=0;i<seed_num;i++)
+   {
+      for(int j=0;j<glyph[i].size();j++)
+      {
+         if(exp[i][j] > level&&coe[i][j]>0)
+         {
+            int ii;
+            if(stype[i][j]>=0)ii = stype[i][j];
+            else ii = SYMMETRY_TYPE;
+
+            if(ii== SYMMETRY_TYPE && fabs(exp[i][j]-level-4)<1e-3)
+
+            if(fabs(exp[i][j]-level-1)<1e-3)
+                 prob[3][ii] = prob[3][ii]+1;
+            if(fabs(exp[i][j]-level-2)<1e-3)
+                 prob[2][ii] = prob[2][ii]+1;
+            if(fabs(exp[i][j]-level-3)<1e-3)
+                 prob[1][ii] = prob[1][ii]+1;
+            if(fabs(exp[i][j]-level-4)<1e-3)
+                 prob[0][ii] = prob[0][ii]+1;
+         }
+      }
+    }
+
+   topvalue = 0;
+   for(int i=0;i<=SYMMETRY_TYPE;i++)
+   {
+     svScalar sum = prob[0][i] + prob[1][i] + prob[2][i] + prob[3][i];
+//     cerr<<prob[0][i]<<" "<<prob[1][i]<<" "<<prob[2][i]<<" "<<prob[3][i]<<endl;
+     prob[0][i] = prob[0][i]/sum;
+     prob[1][i] = prob[1][i]/sum;
+     prob[2][i] = prob[2][i]/sum;
+     prob[3][i] = prob[3][i]/sum;
+     //if(topvalue < sum)
+       // topvalue = sum;
+   }
+
+   topvalue = 1;
+
+   return prob;
+}
+svScalarArray *svGlyph::GetMagProb(svScalar &level)
+{
+   //svScalar level;
+   svScalar max= -9e+9;
+   for(int i=0;i<seed_num;i++)
+   {
+     for(int j=0;j<glyph[i].size();j++)
+     {
+        if(exp[i][j] > max && coe[i][j]>0)
+           max = exp[i][j];
+     }
+   } 
+   level = max - 4;
+   int count[seed_num];
+   for(int i=0;i<seed_num;i++)
+   {
+     count[i] = 0;
+     for(int j=0;j<glyph[i].size();j++)
+     {
+           count[i]++;
+     }
+   }   
+//   cerr<<max<<" "<<level<<" "<<count<<endl;
+   svScalarArray *prob = new svScalarArray[4];
+   for(int i=0;i<seed_num;i++)
+   {
+      prob[0].add(0);
+      prob[1].add(0);
+      prob[2].add(0);
+      prob[3].add(0);
+      for(int j=0;j<glyph[i].size();j++)
+      {
+         if(exp[i][j] > level&&coe[i][j]>0)
+         {
+            if(fabs(exp[i][j]-level-1)<1e-3)
+                 prob[3][i] = prob[3][i]+1;
+            if(fabs(exp[i][j]-level-2)<1e-3)
+                 prob[2][i] = prob[2][i]+1;
+            if(fabs(exp[i][j]-level-3)<1e-3)
+                 prob[1][i] = prob[1][i]+1;
+            if(fabs(exp[i][j]-level-4)<1e-3)
+                 prob[0][i] = prob[0][i]+1;
+         }
+      }
+      //prob[i] = prob[i]/ (svScalar)count[i];//cerr<<prob[i]<<endl;
+   }//cerr<<c<<endl;
+
+   level = level+1;
+   return prob;
 }
 
 void svGlyph::GetBoundary(int index, svVector3 &l, svVector3 &r)

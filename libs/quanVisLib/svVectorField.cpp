@@ -297,12 +297,410 @@ void svKmeans::ComputeClusters(char *datafName, char *clusterfName,
 
 /*KMeans end*/
 
+/*Neighbors*/
+svNeighbor::svNeighbor(svVectorField *inputfield)
+{
+    field = inputfield;
+}
+
+void svNeighbor::ComputeNeighbors(NeighborProperty &property)
+{
+   cout<<"Neighbor processing ..."<<endl;
+
+  ifstream test(property.outputfile);
+//cerr<<property.outputdir<<" "<<str<<endl;
+  if(!test.is_open())
+  {
+   svVector3Array *pos;
+   svIntArray *label;
+   svIntArray *index;
+
+   ifstream infile(property.inputfile);
+   int n;
+   infile>>n;
+   pos = new svVector3Array[n];
+   index=  new svIntArray[n];
+   int N = 0;
+   for(int i=0;i<n;i++)
+   {
+       int m;
+       infile>>m;
+       for(int j=0;j<m;j++)
+       {
+         svVector3 p,d;
+         svScalar m;
+         infile>>p[0]>>p[1]>>p[2]
+             >>d[0]>>d[1]>>d[2]>>m;
+         pos[i].add(p);
+         index[i].add(N);
+         N++;
+       }
+   }
+   label = new svIntArray[N];
+
+//cerr<<"========================================================="<<endl;
+   infile.close();
+  
+   int size = property.svectors.size();
+   int count = 0;
+
+   for(int i=0;i<n;i++)
+   {
+ //     int percentage = i*100/n;
+//      ProgressBar(percentage);
+
+      for(int j=0;j<pos[i].size();j++)
+      {
+        vector<svVector3> pair;
+        pair.resize(size);
+        vector<int> planeindex;
+        planeindex.resize(size);
+
+        for(int t=0;t<size;t++)
+        {
+            pair[t] = pos[i][j] + property.svectors[t];
+           
+            svScalar distance = dot(pair[t] - property.planepos, 
+                                    property.planedir);
+            planeindex[t] = distance/property.planedistance;
+
+            int layer = planeindex[t];
+            
+            if(layer >=0 && layer<n)
+            {
+                 for(int tt=0;tt<pos[layer].size();tt++)
+                 {
+                      if(fabs(pos[layer][tt][0] - pair[t][0])<1e-3
+                      && fabs(pos[layer][tt][1] - pair[t][1])<1e-3
+                      && fabs(pos[layer][tt][2] - pair[t][2])<1e-3
+                      &&count>index[layer][tt])
+                   {
+                       label[count].add(index[layer][tt]);break;
+                   }
+                 }
+            }
+        }
+        
+        int ii;
+        svScalar zz;
+        zz = pos[i][j][2] - (int)pos[i][j][2];
+        if(zz<0) zz = zz + 1.;
+
+        for(int t=0;t<property.zvalues.size();t++)
+        {
+              if(fabs(zz - property.zvalues[t])<1e-3) 
+              {
+                 ii = t;break;
+              } 
+        }  
+        size = property.dvectors[ii].size();
+
+        pair.resize(size);
+        planeindex.resize(size);
+
+        for(int t=0;t<size;t++)
+        {
+            pair[t] = pos[i][j] + property.dvectors[ii][t];
+            svScalar distance = dot(pair[t] - property.planepos,
+                                    property.planedir);
+            planeindex[t] = distance/property.planedistance;
+
+            int layer = planeindex[t];
+
+            if(layer >=0 && layer<n)
+            {
+                 for(int tt=0;tt<pos[layer].size();tt++)
+                 {
+                      if(fabs(pos[layer][tt][0] - pair[t][0])<1e-3
+                      && fabs(pos[layer][tt][1] - pair[t][1])<1e-3
+                      && fabs(pos[layer][tt][2] - pair[t][2])<1e-3
+                     && count>index[layer][tt])
+                   {
+                       label[count].add(index[layer][tt]);break;
+                   }
+                 }
+            }
+        }
+
+        pair.clear();
+        planeindex.clear();
+        count++;
+      }
+   }
+//-----------savetofile-----------------
+
+   ofstream outfile(property.outputfile);
+   outfile<<N<<endl;
+   for(int i=0;i<N;i++)
+   {
+      outfile<<label[i].size()<<" ";
+      for(int j=0;j<label[i].size();j++)
+      {
+          outfile<<label[i][j]<<" ";
+      } outfile<<endl;
+   }
+   outfile<<endl;
+
+   outfile.close();
+
+   for(int i=0;i<n;i++)
+   {
+       pos[i].free();
+       index[i].free();
+   }
+   delete [] pos;
+   delete [] index;
+   for(int i=0;i<N;i++)
+          label[i].free();
+   delete [] label;
+  }
+  else 
+    test.close();   
+}
+/*=============Neighbors End==================================*/
+
 /*Symmetry*/
 svSymmetry::svSymmetry(svVectorField *inputfield)
 {
     field = inputfield;
 }
-void svSymmetry::SymmetryPair(SymmetryProperty &property, svVector3 pos, svVector3 dir,
+int svSymmetry::GetType(svVector3 pos1, svVector3 end1, svScalar mag1,
+                         svVector3 pos2, svVector3 end2, svScalar mag2,
+                         svScalar angle_uncertain, svScalar mag_uncertain)
+{
+    bool f = false;
+
+//    if(fabs(pos1[0]-7.77817)<1e-3
+//     && fabs(pos1[1]-0)<1e-3
+//     && fabs(pos1[2]+9.8995)<1e-3
+//     && fabs(pos2[0]-7.77817)<1e-3
+//     && fabs(pos2[1]-0)<1e-3
+//     && fabs(pos2[2]-9.8995)<1e-3)
+//      f = true;
+//if(f)cerr<<mag1<<" "<<mag2<<" "<<mag_uncertain<<endl;
+    if(fabs(mag1-mag2) > mag_uncertain)
+           return -1;
+//     if(f)cerr<<"i===test========"<<endl;
+
+    if(fabs(mag1)<1e-10) return -1;
+//     if(f)cerr<<"test"<<endl;
+
+    if(fabs(mag2)<1e-10) return -1; 
+//     if(f)cerr<<"test"<<endl;
+
+  
+    if(fabs(pos1[0] - pos2[0])<1e-3
+     && fabs(pos1[1] - pos2[1])<1e-3
+     && fabs(pos1[2] - pos2[2])<1e-3)
+            return -1;
+//     if(f)cerr<<"test"<<endl;
+
+    if(fabs(pos1[0] - pos2[0])>1e-3)
+           return -1;
+//     if(f)cerr<<"test"<<endl;
+
+    if(fabs(pos1[1] - pos2[1])>1e-3)
+           return -1;
+//     if(f)cerr<<"test"<<endl;
+
+    if(fabs(pos1[2] + pos2[2])>1e-3)
+           return -1;
+//        if(f)cerr<<"======test======="<<endl;
+
+    
+
+    svVector3 end;
+    double distance = (-pos1[2] + end1[2])*2.;
+
+    int type = -1;
+    double aa = 9e+9;
+
+    end[0] = end1[0];
+    end[1] = end1[1];
+    end[2] = -end1[2];
+    double d = dot(normalize(end-pos2), normalize(end2-pos2));
+    if(d>1) d = 1.;
+    double angle = fabs(acos(d));
+    if(angle<angle_uncertain)
+    {
+         if(angle < aa)
+         {
+              type = _XSYSZS;
+              aa = angle;
+         }
+    }
+
+    end[0] = end1[0];
+    end[1] = end1[1];
+    end[2] = -end1[2]+distance;
+    d = dot(normalize(end-pos2), normalize(end2-pos2));
+    if(d>1) d = 1.;
+    angle = fabs(acos(d));
+    if(angle<angle_uncertain)
+    {
+         if(angle < aa)
+         {  
+              type = _XSYSZA;
+              aa = angle;
+         }
+    }
+
+    end[0] = end1[0];
+    end[1] = -end1[1];
+    end[2] = -end1[2];
+    d = dot(normalize(end-pos2), normalize(end2-pos2));
+    if(d>1) d = 1.;
+    angle = fabs(acos(d));
+    if(angle<angle_uncertain)
+    {
+         if(angle < aa)
+         {  
+              type = _XSYAZS;
+              aa = angle;
+         }
+    }
+
+
+    end[0] = end1[0];
+    end[1] = -end1[1];
+    end[2] = -end1[2]+distance;
+    d = dot(normalize(end-pos2), normalize(end2-pos2));
+    if(d>1) d = 1.;
+    angle = fabs(acos(d));
+    if(angle<angle_uncertain)
+    {
+         if(angle < aa)
+         {  
+              type = _XSYAZA;
+              aa = angle;
+         }
+    }
+
+
+    end[0] = -end1[0];
+    end[1] = end1[1];
+    end[2] = -end1[2];
+    d = dot(normalize(end-pos2), normalize(end2-pos2));
+    if(d>1) d = 1.;
+    angle = fabs(acos(d));
+    if(angle<angle_uncertain)
+    {
+         if(angle < aa)
+         {  
+              type = _XAYSZS;
+              aa = angle;
+         }
+    }
+
+
+    end[0] = -end1[0];
+    end[1] = end1[1];
+    end[2] = -end1[2]+distance;
+    d = dot(normalize(end-pos2), normalize(end2-pos2));
+    if(d>1) d = 1.;
+    angle = fabs(acos(d));
+    if(angle<angle_uncertain)
+    {
+         if(angle < aa)
+         {  
+              type = _XAYSZA;
+              aa = angle;
+         }
+    }
+
+
+    end[0] = -end1[0];
+    end[1] = -end1[1];
+    end[2] = -end1[2];
+    d = dot(normalize(end-pos2), normalize(end2-pos2));
+    if(d>1) d = 1.;
+    angle = fabs(acos(d));
+    if(angle<angle_uncertain)
+    {
+         if(angle < aa)
+         {  
+              type = _XAYAZS;
+              aa = angle;
+         }
+    }
+
+
+    end[0] = -end1[0];
+    end[1] = -end1[1];
+    end[2] = -end1[2]+distance;
+    d = dot(normalize(end-pos2), normalize(end2-pos2));
+    if(d>1) d = 1.;
+    angle = fabs(acos(d));
+//cerr<<d<<" "<<angle<<endl;
+    if(angle<angle_uncertain)
+    {
+         if(angle < aa)
+         {  
+              type = _XAYAZA;
+              aa = angle;
+         }
+    }
+    
+    return type;
+}
+void svSymmetry::SymmetryPair(svVector3 pos, svVector3 end, 
+                    svVector3 &pair, svVector3 &pairend,
+                    SYMMETRYTYPE type)
+{
+    double distance = -pos[2] + end[2];
+    pair = pos;
+    pair[2] = -pos[2];
+
+    if(type == _XSYSZS)
+    {
+      pairend[0] = end[0];
+      pairend[1] = end[1];
+      pairend[2] = -end[2];
+    }
+    else if(type == _XSYSZA)
+    {
+       pairend[0] = end[0];
+       pairend[1] = end[1];
+       pairend[2] = -end[2]+distance*2.;
+    }
+    else if(type == _XSYAZS)
+    {
+       pairend[0] = end[0];
+       pairend[1] = -end[1];
+       pairend[2] = -end[2];
+    }
+    else if(type == _XSYAZA)
+    {
+      pairend[0] = end[0];
+      pairend[1] = -end[1];
+      pairend[2] = -end[2]+distance*2.;
+    }
+    else if(type == _XAYSZS)
+    {
+      pairend[0] = -end[0];
+      pairend[1] = end[1];
+      pairend[2] = -end[2];
+    }
+    else if(type == _XAYSZA)
+    {
+      pairend[0] = -end[0];
+      pairend[1] = end[1];
+      pairend[2] = -end[2] + distance*2.;
+    }
+    else if(type == _XAYAZS)
+    {
+      pairend[0] = -end[0];
+      pairend[1] = -end[1];
+      pairend[2] = -end[2];
+    }
+    else if(type == _XAYAZA)
+    {
+       pairend[0] = -end[0];
+       pairend[1] = -end[1];
+       pairend[2] = -end[2] + distance*2.;
+    }
+}
+/*void svSymmetry::SymmetryPair(SymmetryProperty &property, svVector3 pos, svVector3 dir,
                     svVector3 &pair, svVector3 &pairdir,
                     SYMMETRYTYPE type)
 {
@@ -342,6 +740,7 @@ void svSymmetry::SymmetryPair(SymmetryProperty &property, svVector3 pos, svVecto
                   } 
                }
 }
+*/
 /*:
 int svSymmetry::SymmetryPair(SymmetryProperty &property, svVector3 pos, svVector3 dir,
                     svVector3 *pair, svVector3 *pairdir,
@@ -426,43 +825,40 @@ void svSymmetry::ComputeNegativeFarSymmetry(SymmetryProperty &property)
       ComputeSymmetry(property, _NEGATIVEFAR);
 }
 */
-void svSymmetry::ComputeSymmetry(SymmetryProperty &property)
+void svSymmetry::ComputeSymmetry(SymmetryProperty &property) //deposite in small programs!!!
 {
+//   property.angle_uncertain = 0.1;
+//   property.mag_uncertain = 1e-10;
+
    cout<<"Symmetry processing ..."<<endl;
    char *str = new char[400];
 
    char *symmetrystr = new char[200];
    for(int j=0;j<200;j++) symmetrystr[j] = '\0';
-//   for(int j=0;j<property.dir.size();j++)
-//   {
-            sprintf(symmetrystr, "%s(%0.2f%0.2f%0.2f%0.2f%0.2f%0.2f)", symmetrystr,
+   sprintf(symmetrystr, "%s(%0.2f%0.2f%0.2f%0.2f%0.2f%0.2f)", symmetrystr,
                   property.pos[0], property.pos[1], property.pos[2],
                   property.dir[0], property.dir[1], property.dir[2]);
-//   }
-  sprintf(str,"%s/zanti%s.txt",
-                 property.outputdir, symmetrystr);
+   sprintf(str,"%s", property.outputfile[0]);
+///xsyszs%s.txt",
+ //                property.outputdir, symmetrystr);
 
   ifstream test(str);
-//cerr<<property.outputdir<<" "<<str<<endl;
   if(!test.is_open())
   {
-   svIntArray * index[SYMMETRY_TYPE];
    svVector3Array *pos;
-   svVector3Array *dir;
+   svVector3Array *end;
    svScalarArray *mag;
-   svVector3Array *projectdir[3]; 
 
    ifstream infile(property.inputfile);
    int n;
    infile>>n;
    pos = new svVector3Array[n];
-   dir = new svVector3Array[n];
+   end = new svVector3Array[n];
    mag = new svScalarArray[n];
-   for(int i=0;i<SYMMETRY_TYPE;i++)
-         index[i] = new svIntArray[n];
-   projectdir[0] = new svVector3Array[n];//x
-   projectdir[1] = new svVector3Array[n];//y
-   projectdir[2] = new svVector3Array[n];//z
+   vector< vector< vector<int> > > symmetry;   
+   symmetry.resize(n);
+//cerr<<"========================================================="<<endl;
+
    int N = 0;
    for(int i=0;i<n;i++)
    {
@@ -474,43 +870,270 @@ void svSymmetry::ComputeSymmetry(SymmetryProperty &property)
          svScalar m;
          infile>>p[0]>>p[1]>>p[2]
              >>d[0]>>d[1]>>d[2]>>m;
-         pos[i].add(p);
-         dir[i].add(d);
-         mag[i].add(m*1e+17);
 
-         svVector3 tmpdir = dir[i][j] * mag[i][j];
-         svScalar value[3];
-         value[0] = dot(tmpdir, property.x);
-         value[1] = dot(tmpdir, property.y);
-         value[2] = dot(tmpdir, property.dir);
+        
+         
+         svVector3 newp = CoordinateMatrix(p,
+                             property.pos,
+                             property.x,
+                             property.y,
+                             property.dir);
+         svVector3 p2 = p + (m * (svScalar)(1e+20))* d; 
+//cerr<<p[0]<<" "<<p[1]<<"======= "<<p[2]<<" "<<p2[0]<<" "<<p2[1]<<" "<<p2[2]<<endl;
+         svVector3 newp2 = CoordinateMatrix(p2,
+                             property.pos,
+                             property.x,
+                             property.y,
+                             property.dir);
 
-//project on three dimensions
-         d = value[0] * property.x;
-         projectdir[0][i].add(d);
-         d = value[1] * property.y;
-         projectdir[1][i].add(d);
-         d = value[2] * property.dir;
-         projectdir[2][i].add(d);
+//         if(fabs(p[0]-1.5)<1e-3
+//     && fabs(p[1]-12.5)<1e-3
+//    && fabs(p[2]-0)<1e-3)
+//          cerr<<newp[0]<<" "<<newp[1]<<" "<<newp[2]<<" "
+//            <<newp2[0]<<" "<<newp2[1]<<" "<<newp2[2]<<endl;
+//         if(fabs(p[0]+12.5)<1e-3
+//     && fabs(p[1]+1.5)<1e-3
+//    && fabs(p[2]-0)<1e-3)
+//          cerr<<newp[0]<<" "<<newp[1]<<" "<<newp[2]<<" "
+//            <<newp2[0]<<" "<<newp2[1]<<" "<<newp2[2]<<endl;
+
+         pos[i].add(newp);
+         end[i].add(newp2);
+         mag[i].add(m* (svScalar)(1e+20));
+
+         N++;
+       }
+   }
+//cerr<<"========================================================="<<endl;
+
+   svVector3 newplanepos = CoordinateMatrix(property.planepos,
+                             property.pos,
+                             property.x,
+                             property.y,
+                             property.dir);
+   svVector3 tmpdir = property.planepos + property.planedir;
+   svVector3 newplanedir = CoordinateMatrix(property.planedir,
+                             property.pos,
+                             property.x,
+                             property.y,
+                             property.dir);
+   newplanedir = normalize(newplanedir - newplanepos);
+//cerr<<"========================================================="<<endl;
+
+   infile.close();
+   int count[SYMMETRY_TYPE];
+   for(int i=0;i<SYMMETRY_TYPE;i++)
+         count[i] = -1;
+   for(int i=0;i<n;i++)
+   {
+      cerr<<i<<" ";
+      symmetry[i].resize(pos[i].size()); 
+      #pragma omp parallel for
+      for(int j=0;j<pos[i].size();j++)
+      {
+        int symmetryindex[2*SYMMETRY_TYPE];
+
+        svVector3 tmppos;
+        tmppos[0]= pos[i][j][0];
+        tmppos[1]= pos[i][j][1];
+        tmppos[2]= -pos[i][j][2];
+        svScalar distance = dot(tmppos-newplanepos, newplanedir);
+        for(int t=0;t<SYMMETRY_TYPE;t++)
+        {
+             symmetryindex[t*2] = -1;
+             symmetryindex[t*2+1]=-1;
+        } 
+        int whole_count = 0;
+        int layer = distance/property.planedistance;
+
+    if(fabs(pos[i][j][0]-7.77817)<1e-3
+     && fabs(pos[i][j][1]-0)<1e-3
+     && fabs(pos[i][j][2]-9.8995)<1e-3)
+         cerr<<layer<<endl;
+        if(layer >=0 && layer<n)
+        {
+           for(int tt=0;tt<pos[layer].size();tt++)
+           {
+         //      if(whole_count == SYMMETRY_TYPE)break;
+               int type = GetType(pos[i][j], end[i][j], mag[i][j],
+                       pos[layer][tt], end[layer][tt], mag[layer][tt],
+                       property.angle_uncertain, property.mag_uncertain*1e+20);
+               if(type<0)
+               {
+                     continue;
+               }
+               symmetryindex[type*2]=layer;
+               symmetryindex[type*2+1]=tt;
+               count[type]++;
+               whole_count++;
+           }
+        }
+        for(int t=0;t<SYMMETRY_TYPE;t++)
+        {
+            symmetry[i][j].push_back(symmetryindex[t*2]);
+            symmetry[i][j].push_back(symmetryindex[t*2+1]);
+        }
+      }
+
+   }cerr<<endl;
+//-----------savetofile-----------------
+   for(int tt=0;tt<SYMMETRY_TYPE;tt++)
+   {
+     char *str2 = new char[400];
+//     switch(tt)
+//     {
+//        case 0:  sprintf(str2,"%s/xsyszs%s.txt",
+//                     property.outputdir, symmetrystr);break;
+//        case 1:  sprintf(str2,"%s/xsysza%s.txt",
+//                     property.outputdir, symmetrystr);break;
+//        case 2:  sprintf(str2,"%s/xsyazs%s.txt",
+//                     property.outputdir, symmetrystr);break;
+//        case 3:  sprintf(str2,"%s/xsyaza%s.txt",
+//                     property.outputdir, symmetrystr);break;
+//        case 4:  sprintf(str2,"%s/xayszs%s.txt",
+//                     property.outputdir, symmetrystr);break;
+//        case 5:  sprintf(str2,"%s/xaysza%s.txt",
+//                     property.outputdir, symmetrystr);break;
+//        case 6:  sprintf(str2,"%s/xayazs%s.txt",
+//                     property.outputdir, symmetrystr);break;
+//        case 7:  sprintf(str2,"%s/xayaza%s.txt",
+//                     property.outputdir, symmetrystr);break;
+//     }  
+     sprintf(str2, "%s", property.outputfile[tt]);
+    ofstream outfile(str2);
+     outfile<<count[tt]+1<<endl;
+     for(int i = 0;i<n;i++)
+     {
+         for(int j=0;j<pos[i].size();j++)
+         {
+             if(symmetry[i][j][tt*2]>=0)
+                outfile<<2<<" ";
+             else 
+                outfile<<1<<" ";
+             outfile<<i<<" "<<j;
+             if(symmetry[i][j][tt*2]>=0)
+                 outfile<<" "<<symmetry[i][j][tt*2]<<" "<<symmetry[i][j][tt*2+1];
+             outfile<<endl;
+         }
+     }
+     outfile.close();
+     delete [] str2;
+  }
+
+  for(int i=0;i<n;i++)
+  {
+    for(int j=0;j<pos[i].size();j++)
+    {
+          symmetry[i][j].clear();
+    }
+    symmetry[i].clear();
+  }   
+  symmetry.clear();
+
+  for(int i=0;i<n;i++)
+  {  pos[i].free();
+     end[i].free();
+     mag[i].free();
+   }
+
+   delete [] end;
+   delete [] pos;
+   delete [] mag;
+   delete [] str;
+
+cerr<<"========================================================="<<endl;
+
+  }
+  else 
+    test.close();
+
+}
+/*
+void svSymmetry::ComputeSymmetry(SymmetryProperty &property) //deposite in small programs!!!
+{
+   cout<<"Symmetry processing ..."<<endl;
+   char *str = new char[400];
+
+   char *symmetrystr = new char[200];
+   for(int j=0;j<200;j++) symmetrystr[j] = '\0';
+   sprintf(symmetrystr, "%s(%0.2f%0.2f%0.2f%0.2f%0.2f%0.2f)", symmetrystr,
+                  property.pos[0], property.pos[1], property.pos[2],
+                  property.dir[0], property.dir[1], property.dir[2]);
+   sprintf(str,"%s/zanti%s.txt",
+                 property.outputdir, symmetrystr);
+
+  ifstream test(str);
+  if(!test.is_open())
+  {
+   svIntArray * index[SYMMETRY_TYPE];
+   svVector3Array *pos;
+   svVector3Array *end;
+
+   ifstream infile(property.inputfile);
+   int n;
+   infile>>n;
+   pos = new svVector3Array[n];
+   end = new svVector3Array[n];
+   for(int i=0;i<SYMMETRY_TYPE;i++)
+         index[i] = new svIntArray[n];
+
+   int N = 0;
+   for(int i=0;i<n;i++)
+   {
+       int m;
+       infile>>m;
+       for(int j=0;j<m;j++)
+       {
+         svVector3 p,d;
+         svScalar m;
+         infile>>p[0]>>p[1]>>p[2]
+             >>d[0]>>d[1]>>d[2]>>m;
+         
+         svVector3 newp = CoordinateMatrix(p,
+                             property.pos,
+                             property.x,
+                             property.y,
+                             property.dir);
+         svVector3 p2 = p + m * d;
+         svVector3 newp2 = CoordinateMatrix(p2,
+                             property.pos,
+                             property.x,
+                             property.y,
+                             property.dir);
+
+         pos[i].add(newp);
+         end[i].add(newp2);
 
          for(int t=0;t<SYMMETRY_TYPE;t++)
                index[t][i].add(-1);
          N++;
        }
    }
+
+   svVector3 newplanepos = CoordinateMatrix(property.planepos,
+                             property.pos,
+                             property.x,
+                             property.y,
+                             property.dir);
+   svVector3 tmpdir = property.planepos + property.planedir;
+   svVector3 newplanedir = CoordinateMatrix(property.planedir,
+                             property.pos,
+                             property.x,
+                             property.y,
+                             property.dir);
+   newplanedir = normalize(newplanedir - newplanepos);
 //cerr<<"========================================================="<<endl;
    vector< vector<int> > symmetry[2*SYMMETRY_TYPE];
    for(int i=0;i<2*SYMMETRY_TYPE;i++)
           symmetry[i].resize(N);
-//   symmetry[0].resize(N);
-//   symmetry[1].resize(N);   
 
    infile.close();
    int count[SYMMETRY_TYPE];
    for(int i=0;i<SYMMETRY_TYPE;i++)
          count[i] = -1;
-//   cerr<<property.inputfile<<n<<endl;
    for(int i=0;i<n;i++)
-   {cerr<<i<<" "; 
+   {
+      cerr<<i<<" "; 
       for(int j=0;j<pos[i].size();j++)
       {
         int symmetryindex[2*SYMMETRY_TYPE];
@@ -521,66 +1144,116 @@ void svSymmetry::ComputeSymmetry(SymmetryProperty &property)
         pair.resize(SYMMETRY_TYPE);
         pairdir.resize(SYMMETRY_TYPE);
 
-        SymmetryPair(property, pos[i][j], projectdir[0][i][j],
-                    pair[0], pairdir[0],
-                    _XSYM);
-//cerr<<pos[i][j][0]<<" "<<pos[i][j][1]<<" "<<pos[i][j][2]<<" "<<dir[i][j][0]<<" "<<dir[i][j][1]<<" "<<dir[i][j][2]<<" "<<projectdir[0][i][j][0]<<" "<<projectdir[0][i][j][1]<<" "<<projectdir[0][i][j][2]<<" "<<pair[0][0]<<" "<<pair[0][1]<<" "<<pair[0][2]<<" "<<pairdir[0][0]<<" "<<pairdir[0][1]<<" "<<pairdir[0][2]<<endl;
-        SymmetryPair(property, pos[i][j], projectdir[0][i][j],
-                    pair[1], pairdir[1],
-                    _XANTI);
-        SymmetryPair(property, pos[i][j], projectdir[1][i][j],
-                    pair[2], pairdir[2],
-                    _YSYM);
-        SymmetryPair(property, pos[i][j], projectdir[1][i][j],
-                    pair[3], pairdir[3],
-                    _YANTI);
-        SymmetryPair(property, pos[i][j], projectdir[2][i][j],
-                    pair[4], pairdir[4],
-                    _ZSYM);
-        SymmetryPair(property, pos[i][j], projectdir[2][i][j],
-                    pair[5], pairdir[5],
-                    _ZANTI);
-//cerr<<"========================================================="<<endl;
+        SymmetryPair(pos[i][j], end[i][j],
+                     pair[0], pairdir[0],
+                     _XSYM);
+        SymmetryPair(pos[i][j], end[i][j],
+                     pair[1], pairdir[1],
+                     _XANTI);
+        SymmetryPair(pos[i][j], end[i][j],
+                     pair[2], pairdir[2],
+                     _YSYM);
+        SymmetryPair(pos[i][j], end[i][j],
+                     pair[3], pairdir[3],
+                     _YANTI);
+        SymmetryPair(pos[i][j], end[i][j],
+                     pair[4], pairdir[4],
+                     _ZSYM);
+        SymmetryPair(pos[i][j], end[i][j],
+                     pair[5], pairdir[5],
+                     _ZANTI);
 
+//plane pos must be the minimum one!!!!!!!!!!!!!!!!!!
         for(int t=0;t<SYMMETRY_TYPE;t++)
         {
-             svScalar distance = dot(pair[t] - property.planepos, property.planedir);
-             planeindex.push_back(distance/property.planedistance);
-//             cerr<<pos[i][j][0]<<" "<<pos[i][j][1]<<" "<<pos[i][j][2]<<" "<<pair[t][0]<<" "<<pair[t][1]<<" "<<pair[t][2]<<" "<<planeindex[t]<<endl;
+           svScalar distance = dot(pair[t]-newplanepos, newplanedir);
+           planeindex.push_back(distance/property.planedistance);
         }
 
         int layer = planeindex[0];
         for(int t=0;t<SYMMETRY_TYPE;t++)
         {
-                        symmetryindex[t*2]=-1;
-                        symmetryindex[t*2+1]=-1;
+                symmetryindex[t*2]=-1;
+                symmetryindex[t*2+1]=-1;
         }
         if(layer >=0 && layer<n)
         {
            for(int tt=0;tt<pos[layer].size();tt++)
            {
-           //   if(tt == j)
-           //       cerr<<pair.size()<<" "<<projectdir[0][layer][tt][0]<<" "<<projectdir[0][layer][tt][1]<<" "<<projectdir[0][layer][tt][2]<<endl; 
-             for(int t=0;t<pair.size();t++)
-              {
- //                 if(tt==j)cerr<<t/2<<endl;
-               // double sum = projectdir[t/2][layer][tt][0]*projectdir[t/2][layer][tt][0] + projectdir[t/2][layer][tt][1] * projectdir[t/2][layer][tt][1] + projectdir[t/2][layer][tt][2] * projectdir[t/2][layer][tt][2];
-                if(fabs(pos[layer][tt][0] - pair[t][0])<1e-3
-                  && fabs(pos[layer][tt][1] - pair[t][1])<1e-3
-                  && fabs(pos[layer][tt][2] - pair[t][2])<1e-3
-                  && fabs(projectdir[t/2][layer][tt][0] - pairdir[t][0])<1e-3
-                  && fabs(projectdir[t/2][layer][tt][1] - pairdir[t][1])<1e-3
-                  && fabs(projectdir[t/2][layer][tt][2] - pairdir[t][2])<1e-3
-                  && !(fabs(projectdir[t/2][layer][tt][0])<1e-3
-                   && fabs(projectdir[t/2][layer][tt][1])<1e-3
-                   && fabs(projectdir[t/2][layer][tt][2])<1e-3) 
-                  )
+
+             bool flag = false;
+             int tindex;
+
+             
+                if(fabs(pos[layer][tt][0]-pair[0][0])<1e-20
+                && fabs(pos[layer][tt][1]-pair[0][1])<1e-20
+                && fabs(pos[layer][tt][2]-pair[0][2])<1e-20
+                && !(layer==i&&tt==j))
                 {
-                        symmetryindex[t*2]=layer;
-                        symmetryindex[t*2+1]=tt;
-             //           cerr<<layer<<" "<<tt<<endl;
-                } 
-              }
+                    //tindex= t;
+                    flag = true;//break;
+                }
+             //}
+             if(flag)
+             {
+            //    cerr<<end[layer][tt][2]<<" "<<pairdir[4][2]<<endl; 
+             tindex=0;
+             //   {
+                   if(fabs(end[layer][tt][0]-pairdir[tindex][0])<1e-20)
+                   {
+                      symmetryindex[tindex*2] = layer;
+                      symmetryindex[tindex*2+1]=tt;
+                   }
+            //    }
+           tindex=1;
+           //     {
+                   if(fabs(pairdir[tindex][0])>0 
+                      &&fabs(end[layer][tt][0]-pairdir[tindex][0])<1e-20)
+                   {
+                      symmetryindex[tindex*2] = layer;
+                      symmetryindex[tindex*2+1]=tt;
+//cerr<<endl;
+//cerr<<end[i][j][0]<<" "<<end[i][j][1]<<" "<<end[i][j][2]<<" ";
+//                      cerr<<i<<" "<<j<<" "<<layer<<" "<<tt<<" "<<pos[layer][tt][0]<<" "<<pos[layer][tt][1]<<" "<<pos[layer][tt][2]<<" "<<end[layer][tt][0]<<" "<<end[layer][tt][1]<<" "<<end[layer][tt][2]<<" "<<pairdir[tindex][0]<<endl;
+                   }
+          //      }
+          tindex=2;
+          //      {
+                   if(fabs(end[layer][tt][1]-pairdir[tindex][1])<1e-20)
+                   {
+                      symmetryindex[tindex*2] = layer;
+                      symmetryindex[tindex*2+1]=tt;
+                   }
+          //      }
+          tindex=3;
+          //      {
+                   if(fabs(end[layer][tt][1]-pairdir[tindex][1])<1e-20
+                    &&fabs(pairdir[tindex][1])>0)
+                   {
+                      symmetryindex[tindex*2] = layer;
+                      symmetryindex[tindex*2+1]=tt;
+                   }
+          //      }
+          tindex=4;
+          //      {
+                   if(fabs(end[layer][tt][2]-pairdir[tindex][2])<1e-20)
+                   {
+                      symmetryindex[tindex*2] = layer;
+                      symmetryindex[tindex*2+1]=tt;
+                   }
+          //      }
+          tindex=5;
+          //     {
+                   if(fabs(end[layer][tt][2]-pairdir[tindex][2])<1e-20
+                    &&fabs(pairdir[tindex][2])>0)
+                   {
+                      symmetryindex[tindex*2] = layer;
+                      symmetryindex[tindex*2+1]=tt;
+                   }
+          //      }
+
+               break;
+             } 
            }
         }
         pair.clear();
@@ -759,18 +1432,12 @@ void svSymmetry::ComputeSymmetry(SymmetryProperty &property)
 
   for(int i=0;i<n;i++)
   {  pos[i].free();
-     projectdir[0][i].free();
-     projectdir[1][i].free();
-     projectdir[2][i].free();
-     dir[i].free();
+     end[i].free();
      for(int j=0;j<SYMMETRY_TYPE;j++)
         index[j][i].free();
    }
-  
-   delete [] projectdir[0];
-   delete [] projectdir[1]; 
-   delete [] projectdir[2];
-   delete [] dir;
+
+   delete [] end;
    delete [] pos;
    for(int j=0;j<SYMMETRY_TYPE;j++)
          delete [] index[j];
@@ -779,7 +1446,7 @@ void svSymmetry::ComputeSymmetry(SymmetryProperty &property)
   else 
     test.close();
 
-}
+}*/
 /*void svSymmetry::ComputeSymmetry(SymmetryProperty &property, SYMMETRYTYPE type)
 {
 
@@ -1065,6 +1732,32 @@ svVectorField & svVectorField::operator=(const svVectorField & vef)
 
     return *this;
 }
+svVector3 svSymmetry::CoordinateMatrix(svVector3 p,
+                             svVector3 origin,
+                             svVector3 x,
+                             svVector3 y,
+                             svVector3 z)
+{
+    svVector3 newp;
+    newp = p - origin;
+    
+    svVector3Array M;
+    M.add(x);
+    M.add(y);
+    M.add(z);
 
+    svVector3 tmp = newp;
+    newp[0] = tmp[0] * M[0][0]
+            + tmp[1] * M[0][1]
+            + tmp[2] * M[0][2];
+    newp[1] = tmp[0] * M[1][0]
+            + tmp[1] * M[1][1]
+            + tmp[2] * M[1][2];
+    newp[2] = tmp[0] * M[2][0]
+            + tmp[1] * M[2][1]
+            + tmp[2] * M[2][2];
 
+    return newp;
+
+}
 }

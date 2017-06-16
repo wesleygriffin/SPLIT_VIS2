@@ -1,0 +1,235 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{46341657-61FD-4EAD-BC0D-232C9E07875A}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>ContourTree</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Users\GuohaoZhang\Dropbox\Programs\MyContourTree\MyContourTree\Ric;$(IncludePath)</IncludePath>
+    <SourcePath>$(VC_SourcePath);C:\Users\GuohaoZhang\Dropbox\Programs\MyContourTree\MyContourTree\Ric</SourcePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Users\GuohaoZhang\Dropbox\Programs\MyContourTree\MyContourTree\Ric;$(IncludePath)</IncludePath>
+    <SourcePath>$(VC_SourcePath);C:\Users\GuohaoZhang\Dropbox\Programs\MyContourTree\MyContourTree\Ric</SourcePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\crc32.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\deflate.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\dtypes.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\inffast.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\inffixed.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\inflate.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\inftrees.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\nemardr.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\nifti1.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\nifti1_io.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\RicMatrix.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\RicMesh.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\RicMeshSet.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\RicPoint.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\RicTexture.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\RicTextureSet.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\RicUtil.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\RicVolume.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\RicVolumeSet.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\trees.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\zconf.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\zconf.in.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\zlib.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\znzlib.h" />
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\zutil.h" />
+    <ClInclude Include="Array3D.h" />
+    <ClInclude Include="Ball.h" />
+    <ClInclude Include="BallAux.h" />
+    <ClInclude Include="BallMath.h" />
+    <ClInclude Include="ColourSelectionPane.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="ContourTreePane.h" />
+    <ClInclude Include="FollowCubeTables.h" />
+    <ClInclude Include="GLUTArcBall.h" />
+    <ClInclude Include="GLUTCheckableBox.h" />
+    <ClInclude Include="GLUTCheckBox.h" />
+    <ClInclude Include="GLUTDebugGLCalls.h" />
+    <ClInclude Include="GLUTHorizPane.h" />
+    <ClInclude Include="GLUTHorizSlider.h" />
+    <ClInclude Include="GLUTLabelledRadioButton.h" />
+    <ClInclude Include="GLUTPane.h" />
+    <ClInclude Include="GLUTRadioButton.h" />
+    <ClInclude Include="GLUTRadioGroup.h" />
+    <ClInclude Include="GLUTStaticText.h" />
+    <ClInclude Include="GLUTString.h" />
+    <ClInclude Include="GLUTTextButton.h" />
+    <ClInclude Include="GLUTToolbox.h" />
+    <ClInclude Include="GLUTVertPane.h" />
+    <ClInclude Include="GLUTVertSlider.h" />
+    <ClInclude Include="GLUTWindow.h" />
+    <ClInclude Include="HeightField.h" />
+    <ClInclude Include="IsosurfacePane.h" />
+    <ClInclude Include="IsosurfaceWindow.h" />
+    <ClInclude Include="LogCollapsePane.h" />
+    <ClInclude Include="Malloc.h" />
+    <ClInclude Include="PriorityIndex.h" />
+    <ClInclude Include="sphere.h" />
+    <ClInclude Include="Superarc.h" />
+    <ClInclude Include="Supernode.h" />
+    <ClInclude Include="writetofile.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\adler32.c" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\compress.c" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\crc32.c" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\deflate.c" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\gzio.c" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\infback.c" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\inffast.c" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\inflate.c" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\inftrees.c" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\nemardr.cpp" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\nifti1_io.c" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\NiftiOrientConvert.cpp" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\RicMesh.cpp" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\RicMeshSet.cpp" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\RicTexture.cpp" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\RicTextureSet.cpp" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\RicUtil.cpp" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\RicVolume.cpp" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\RicVolumeSet.cpp" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\trees.c" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\uncompr.c" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\znzlib.c" />
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\zutil.c" />
+    <ClCompile Include="Ball.cpp" />
+    <ClCompile Include="BallAux.cpp" />
+    <ClCompile Include="BallMath.cpp" />
+    <ClCompile Include="ColourSelectionPane.cpp" />
+    <ClCompile Include="ContourTreePane.cpp" />
+    <ClCompile Include="FollowCubeTables.cpp" />
+    <ClCompile Include="GLUTArcBall.cpp" />
+    <ClCompile Include="GLUTCheckableBox.cpp" />
+    <ClCompile Include="GLUTCheckBox.cpp" />
+    <ClCompile Include="GLUTDebugGLCalls.cpp" />
+    <ClCompile Include="GLUTHorizPane.cpp" />
+    <ClCompile Include="GLUTHorizSlider.cpp" />
+    <ClCompile Include="GLUTLabelledRadioButton.cpp" />
+    <ClCompile Include="GLUTPane.cpp" />
+    <ClCompile Include="GLUTRadioButton.cpp" />
+    <ClCompile Include="GLUTRadioGroup.cpp" />
+    <ClCompile Include="GLUTStaticText.cpp" />
+    <ClCompile Include="GLUTString.cpp" />
+    <ClCompile Include="GLUTTextButton.cpp" />
+    <ClCompile Include="GLUTVertPane.cpp" />
+    <ClCompile Include="GLUTVertSlider.cpp" />
+    <ClCompile Include="GLUTWindow.cpp" />
+    <ClCompile Include="HeightField_Collapse.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="HeightField_Construction.cpp" />
+    <ClCompile Include="HeightField_Contour_Follow.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="HeightField_Debug.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="HeightField_Draw_Trees.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="HeightField_Flexible.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="HeightField_Layout.cpp" />
+    <ClCompile Include="HeightField_Marching_Cubes.cpp" />
+    <ClCompile Include="HeightField_Utilities.cpp" />
+    <ClCompile Include="IsosurfacePane.cpp" />
+    <ClCompile Include="IsosurfaceWindow.cpp" />
+    <ClCompile Include="LogCollapsePane.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Malloc.c" />
+    <ClCompile Include="spare_collapse.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="spare_flexible.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="sphere.cpp" />
+    <ClCompile Include="Superarc.cpp" />
+    <ClCompile Include="Supernode.cpp" />
+    <ClCompile Include="writetofile.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

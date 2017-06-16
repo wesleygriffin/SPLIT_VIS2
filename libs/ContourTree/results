@@ -1,0 +1,554 @@
+Input size (n): 3 x 101 x 51 = 15453
+Reading data took  0.00000 seconds
+Sorting data took  0.00000 seconds
+SampleSum:          0.1
+Join Tree has 126 supernodes, and took  0.00000 seconds to compute
+Split Tree has 3 supernodes, and took  0.00000 seconds to compute
+Augmentation took  0.00000 seconds to compute
+Starting to merge join and split trees now.
+Finished merging trees mow.
+Merging took  0.00000 seconds to compute: contour tree has 129 supernodes
+Before collapse: 128 arcs.
+Epsilon-collapsed tree to 28 arcs.
+Collapse took  0.00000 seconds
+Construction took  0.00000 seconds
+Contour tree has 128 superarcs
+Memory occupied by contour tree & related structures: 57864
+nSuperNodes: 129, nSuperArcs: 128, nextSuperarc: 178
+Supernodes:
+Vertex  0: ( 1, 74, 24):   0.00, Value: 4.499470e-04
+Up: -1, Down:  0, Updegree:  0, Downdegree:  1, Position: ( 0.64, 0.00)
+Vertex  1: ( 1, 68, 16):   0.00, Value: 3.149360e-05
+Up:  0, Down: 82, Updegree:  2, Downdegree:  1, Position: ( 0.55, 0.00)
+Vertex  2: ( 1, 52, 13):   0.00, Value: 4.499470e-04
+Up: -1, Down:  1, Updegree:  0, Downdegree:  1, Position: ( 0.43, 0.00)
+Vertex  3: ( 1, 52, 12):   0.00, Value: 3.986070e-04
+Up:  1, Down: 67, Updegree:  3, Downdegree:  1, Position: ( 0.42, 0.00)
+Vertex  4: ( 1, 48, 37):   0.00, Value: 4.499470e-04
+Up: -1, Down:  2, Updegree:  0, Downdegree:  1, Position: ( 0.55, 0.00)
+Vertex  5: ( 1, 46, 37):   0.00, Value: 3.833990e-04
+Up:  2, Down: 68, Updegree:  2, Downdegree:  1, Position: ( 0.54, 0.00)
+Vertex  6: ( 1, 26, 26):   0.00, Value: 4.499470e-04
+Up: -1, Down:  3, Updegree:  0, Downdegree:  1, Position: ( 0.34, 0.00)
+Vertex  7: ( 1, 25, 26):   0.00, Value: 4.163160e-04
+Up:  3, Down: 66, Updegree:  2, Downdegree:  1, Position: ( 0.34, 0.00)
+Vertex  8: ( 1, 51, 12):   0.00, Value: 4.238880e-04
+Up: -1, Down:  4, Updegree:  0, Downdegree:  1, Position: ( 0.41, 0.00)
+Vertex  9: ( 1, 25, 25):   0.00, Value: 4.238880e-04
+Up: -1, Down:  5, Updegree:  0, Downdegree:  1, Position: ( 0.33, 0.00)
+Vertex 10: ( 1, 53, 12):   0.00, Value: 4.163160e-04
+Up: -1, Down:  6, Updegree:  0, Downdegree:  1, Position: ( 0.43, 0.00)
+Vertex 11: ( 1, 50, 13):   0.00, Value: 3.888140e-04
+Up: -1, Down:  7, Updegree:  0, Downdegree:  1, Position: ( 0.41, 0.00)
+Vertex 12: ( 1, 50, 12):   0.00, Value: 3.599110e-04
+Up:  7, Down: 70, Updegree:  2, Downdegree:  1, Position: ( 0.41, 0.00)
+Vertex 13: ( 1, 46, 38):   0.00, Value: 3.843580e-04
+Up: -1, Down:  8, Updegree:  0, Downdegree:  1, Position: ( 0.55, 0.00)
+Vertex 14: ( 1, 56, 13):   0.00, Value: 3.546780e-04
+Up: -1, Down:  9, Updegree:  0, Downdegree:  1, Position: ( 0.45, 0.00)
+Vertex 15: ( 1, 55, 13):   0.00, Value: 3.455870e-04
+Up:  9, Down: 73, Updegree:  2, Downdegree:  1, Position: ( 0.45, 0.00)
+Vertex 16: ( 1, 43, 36):   0.00, Value: 3.254610e-04
+Up: -1, Down: 10, Updegree:  0, Downdegree:  1, Position: ( 0.52, 0.00)
+Vertex 17: ( 1, 43, 37):   0.00, Value: 3.030140e-04
+Up: 10, Down: 71, Updegree:  2, Downdegree:  1, Position: ( 0.52, 0.00)
+Vertex 18: ( 1, 48, 13):   0.00, Value: 3.026890e-04
+Up: -1, Down: 11, Updegree:  0, Downdegree:  1, Position: ( 0.40, 0.00)
+Vertex 19: ( 1, 48, 12):   0.00, Value: 2.663920e-04
+Up: 11, Down: 76, Updegree:  2, Downdegree:  1, Position: ( 0.39, 0.00)
+Vertex 20: ( 1, 46, 13):   0.00, Value: 2.032390e-04
+Up: -1, Down: 12, Updegree:  0, Downdegree:  1, Position: ( 0.39, 0.00)
+Vertex 21: ( 1, 47, 13):   0.00, Value: 2.027640e-04
+Up: 12, Down: 78, Updegree:  2, Downdegree:  1, Position: ( 0.39, 0.00)
+Vertex 22: ( 1, 42, 14):   0.00, Value: 5.135700e-05
+Up: -1, Down: 13, Updegree:  0, Downdegree:  1, Position: ( 0.37, 0.00)
+Vertex 23: ( 1, 42, 13):   0.00, Value: 5.087920e-05
+Up: 13, Down: 80, Updegree:  2, Downdegree:  1, Position: ( 0.36, 0.00)
+Vertex 24: ( 1, 39, 50):   0.00, Value: 3.051760e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.58, 0.00)
+Vertex 25: ( 1, 39, 49):   0.00, Value: 3.051760e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.57, 0.00)
+Vertex 26: ( 1, 41, 50):   0.00, Value: 3.027540e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.59, 0.00)
+Vertex 27: ( 1, 41, 49):   0.00, Value: 3.027540e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.59, 0.00)
+Vertex 28: ( 1, 37, 50):   0.00, Value: 2.944830e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.57, 0.00)
+Vertex 29: ( 1, 37, 49):   0.00, Value: 2.944830e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.56, 0.00)
+Vertex 30: ( 1, 43, 50):   0.00, Value: 2.880620e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.61, 0.00)
+Vertex 31: ( 1, 43, 49):   0.00, Value: 2.880620e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.60, 0.00)
+Vertex 32: ( 1, 35, 50):   0.00, Value: 2.713800e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.55, 0.00)
+Vertex 33: ( 1, 35, 49):   0.00, Value: 2.713800e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.55, 0.00)
+Vertex 34: ( 1, 45, 50):   0.00, Value: 2.631560e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.62, 0.00)
+Vertex 35: ( 1, 45, 49):   0.00, Value: 2.631560e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.61, 0.00)
+Vertex 36: ( 1, 33, 50):   0.00, Value: 2.382640e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.54, 0.00)
+Vertex 37: ( 1, 33, 49):   0.00, Value: 2.382640e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.54, 0.00)
+Vertex 38: ( 1, 47, 50):   0.00, Value: 2.309350e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.63, 0.00)
+Vertex 39: ( 1, 47, 49):   0.00, Value: 2.309350e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.63, 0.00)
+Vertex 40: ( 1, 31, 50):   0.00, Value: 1.989510e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.53, 0.00)
+Vertex 41: ( 1, 31, 49):   0.00, Value: 1.989510e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.52, 0.00)
+Vertex 42: ( 1, 49, 50):   0.00, Value: 1.948210e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.65, 0.00)
+Vertex 43: ( 1, 49, 49):   0.00, Value: 1.948210e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.64, 0.00)
+Vertex 44: ( 1, 51, 50):   0.00, Value: 1.584980e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.66, 0.00)
+Vertex 45: ( 1, 51, 49):   0.00, Value: 1.584980e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.65, 0.00)
+Vertex 46: ( 1, 29, 50):   0.00, Value: 1.579310e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.52, 0.00)
+Vertex 47: ( 1, 29, 49):   0.00, Value: 1.579310e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.51, 0.00)
+Vertex 48: ( 1, 53, 50):   0.00, Value: 1.256480e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.67, 0.00)
+Vertex 49: ( 1, 53, 49):   0.00, Value: 1.256480e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.66, 0.00)
+Vertex 50: ( 1, 27, 50):   0.00, Value: 1.193400e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.50, 0.00)
+Vertex 51: ( 1, 27, 49):   0.00, Value: 1.193400e-08
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.50, 0.00)
+Vertex 52: ( 1, 55, 50):   0.00, Value: 9.946590e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.68, 0.00)
+Vertex 53: ( 1, 55, 49):   0.00, Value: 9.946590e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.68, 0.00)
+Vertex 54: ( 1, 25, 50):   0.00, Value: 8.610610e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.49, 0.00)
+Vertex 55: ( 1, 25, 49):   0.00, Value: 8.610610e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.48, 0.00)
+Vertex 56: ( 1, 57, 50):   0.00, Value: 8.160350e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.70, 0.00)
+Vertex 57: ( 1, 57, 49):   0.00, Value: 8.160350e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.69, 0.00)
+Vertex 58: ( 1, 59, 50):   0.00, Value: 7.083550e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.71, 0.00)
+Vertex 59: ( 1, 59, 49):   0.00, Value: 7.083550e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.70, 0.00)
+Vertex 60: ( 1, 61, 50):   0.00, Value: 6.352020e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.72, 0.00)
+Vertex 61: ( 1, 61, 49):   0.00, Value: 6.352020e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.72, 0.00)
+Vertex 62: ( 1, 23, 50):   0.00, Value: 6.000000e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.48, 0.00)
+Vertex 63: ( 1, 23, 49):   0.00, Value: 6.000000e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.47, 0.00)
+Vertex 64: ( 1, 63, 50):   0.00, Value: 5.624740e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.74, 0.00)
+Vertex 65: ( 1, 63, 49):   0.00, Value: 5.624740e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.73, 0.00)
+Vertex 66: ( 1, 65, 50):   0.00, Value: 4.757330e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.75, 0.00)
+Vertex 67: ( 1, 65, 49):   0.00, Value: 4.757330e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.74, 0.00)
+Vertex 68: ( 1, 21, 50):   0.00, Value: 4.000000e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.46, 0.00)
+Vertex 69: ( 1, 21, 49):   0.00, Value: 4.000000e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.46, 0.00)
+Vertex 70: ( 1, 67, 50):   0.00, Value: 3.780420e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.76, 0.00)
+Vertex 71: ( 1, 67, 49):   0.00, Value: 3.780420e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.75, 0.00)
+Vertex 72: ( 1, 69, 50):   0.00, Value: 2.805680e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.77, 0.00)
+Vertex 73: ( 1, 69, 49):   0.00, Value: 2.805680e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.77, 0.00)
+Vertex 74: ( 1, 19, 50):   0.00, Value: 2.576730e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.45, 0.00)
+Vertex 75: ( 1, 19, 49):   0.00, Value: 2.576730e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.45, 0.00)
+Vertex 76: ( 1, 71, 50):   0.00, Value: 1.944250e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.79, 0.00)
+Vertex 77: ( 1, 71, 49):   0.00, Value: 1.944250e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.78, 0.00)
+Vertex 78: ( 1, 17, 50):   0.00, Value: 1.631120e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.44, 0.00)
+Vertex 79: ( 1, 17, 49):   0.00, Value: 1.631120e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.43, 0.00)
+Vertex 80: ( 1, 73, 50):   0.00, Value: 1.262240e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.80, 0.00)
+Vertex 81: ( 1, 73, 49):   0.00, Value: 1.262240e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.79, 0.00)
+Vertex 82: ( 1, 15, 50):   0.00, Value: 1.000000e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.43, 0.00)
+Vertex 83: ( 1, 15, 49):   0.00, Value: 1.000000e-09
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.42, 0.00)
+Vertex 84: ( 1, 75, 50):   0.00, Value: 7.725630e-10
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.81, 0.00)
+Vertex 85: ( 1, 75, 49):   0.00, Value: 7.725630e-10
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.81, 0.00)
+Vertex 86: ( 1, 13, 50):   0.00, Value: 6.265980e-10
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.41, 0.00)
+Vertex 87: ( 1, 13, 49):   0.00, Value: 6.265980e-10
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.41, 0.00)
+Vertex 88: ( 1, 77, 50):   0.00, Value: 4.499040e-10
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.83, 0.00)
+Vertex 89: ( 1, 77, 49):   0.00, Value: 4.499040e-10
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.82, 0.00)
+Vertex 90: ( 1, 11, 50):   0.00, Value: 3.847150e-10
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.40, 0.00)
+Vertex 91: ( 1, 11, 49):   0.00, Value: 3.847150e-10
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.39, 0.00)
+Vertex 92: ( 1, 79, 50):   0.00, Value: 2.523560e-10
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.84, 0.00)
+Vertex 93: ( 1, 79, 49):   0.00, Value: 2.523560e-10
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.83, 0.00)
+Vertex 94: ( 1,  9, 50):   0.00, Value: 2.358280e-10
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.39, 0.00)
+Vertex 95: ( 1,  9, 49):   0.00, Value: 2.358280e-10
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.38, 0.00)
+Vertex 96: ( 1,  7, 50):   0.00, Value: 1.442390e-10
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.37, 0.00)
+Vertex 97: ( 1,  7, 49):   0.00, Value: 1.442390e-10
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.37, 0.00)
+Vertex 98: ( 1, 81, 50):   0.00, Value: 1.384180e-10
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.85, 0.00)
+Vertex 99: ( 1, 81, 49):   0.00, Value: 1.384180e-10
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.85, 0.00)
+Vertex 100: ( 1,  5, 50):   0.00, Value: 8.737780e-11
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.36, 0.00)
+Vertex 101: ( 1,  5, 49):   0.00, Value: 8.737780e-11
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.35, 0.00)
+Vertex 102: ( 1, 83, 50):   0.00, Value: 7.548920e-11
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.86, 0.00)
+Vertex 103: ( 1, 83, 49):   0.00, Value: 7.548920e-11
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.86, 0.00)
+Vertex 104: ( 1,  3, 50):   0.00, Value: 5.101480e-11
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.35, 0.00)
+Vertex 105: ( 1,  3, 49):   0.00, Value: 5.101480e-11
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.34, 0.00)
+Vertex 106: ( 1, 85, 50):   0.00, Value: 4.153030e-11
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.88, 0.00)
+Vertex 107: ( 1, 85, 49):   0.00, Value: 4.153030e-11
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.87, 0.00)
+Vertex 108: ( 1,  1, 50):   0.00, Value: 2.373680e-11
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.34, 0.00)
+Vertex 109: ( 1,  1, 49):   0.00, Value: 2.373680e-11
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.33, 0.00)
+Vertex 110: ( 1, 87, 50):   0.00, Value: 2.321280e-11
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.89, 0.00)
+Vertex 111: ( 1, 87, 49):   0.00, Value: 2.321280e-11
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.88, 0.00)
+Vertex 112: ( 1, 89, 50):   0.00, Value: 1.315130e-11
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.90, 0.00)
+Vertex 113: ( 1, 89, 49):   0.00, Value: 1.315130e-11
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.90, 0.00)
+Vertex 114: ( 1, 91, 50):   0.00, Value: 7.507010e-12
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.92, 0.00)
+Vertex 115: ( 1, 91, 49):   0.00, Value: 7.507010e-12
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.91, 0.00)
+Vertex 116: ( 1, 93, 50):   0.00, Value: 4.335560e-12
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.93, 0.00)
+Vertex 117: ( 1, 93, 49):   0.00, Value: 4.335560e-12
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.92, 0.00)
+Vertex 118: ( 1, 95, 50):   0.00, Value: 2.606260e-12
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.94, 0.00)
+Vertex 119: ( 1, 95, 49):   0.00, Value: 2.606260e-12
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.94, 0.00)
+Vertex 120: ( 1, 97, 50):   0.00, Value: 1.657130e-12
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.95, 0.00)
+Vertex 121: ( 1, 97, 49):   0.00, Value: 1.657130e-12
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.95, 0.00)
+Vertex 122: ( 1, 99, 50):   0.00, Value: 8.936680e-13
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.97, 0.00)
+Vertex 123: ( 1, 99, 49):   0.00, Value: 8.936680e-13
+Up: -1, Down: -1, Updegree:  0, Downdegree:  0, Position: ( 0.96, 0.00)
+Vertex 124: ( 1,  0,  0):   0.00, Value: 2.997760e-13
+Up: 177, Down: 64, Updegree:  1, Downdegree:  2, Position: ( 0.01, 0.00)
+Vertex 125: ( 2,  0,  0):   0.00, Value: 0.000000e+00
+Up: 64, Down: -1, Updegree:  1, Downdegree:  0, Position: ( 0.01, 0.00)
+Vertex 126: ( 0,  0,  0):   0.00, Value: 0.000000e+00
+Up: 65, Down: -1, Updegree:  1, Downdegree:  0, Position: ( 0.00, 0.00)
+Vertex 127: ( 1, 33, 33):   0.00, Value: 3.182230e-05
+Up: 66, Down: 74, Updegree:  2, Downdegree:  1, Position: ( 0.43, 0.00)
+Vertex 128: ( 1, 50, 25):   0.00, Value: 7.976860e-06
+Up: 74, Down: 177, Updegree:  2, Downdegree:  1, Position: ( 0.49, 0.00)
+Superarcs:
+  0:   bottom:   1, top   :   0, ptrs: up:  80,  80, down:   0,   0
+ssTop:  0.11343, ssOn:  0.02351, ssBot:  0.02396
+  1:   bottom:   3, top   :   2, ptrs: up:   4,   6, down:   1,   1
+ssTop:  0.11343, ssOn:  0.00000, ssBot:  0.00045
+  2:   bottom:   5, top   :   4, ptrs: up:   8,   8, down:   2,   2
+ssTop:  0.11343, ssOn:  0.00163, ssBot:  0.00208
+  3:   bottom:   7, top   :   6, ptrs: up:   5,   5, down:   3,   3
+ssTop:  0.11343, ssOn:  0.00000, ssBot:  0.00045
+  4:   bottom:   3, top   :   8, ptrs: up:   6,   1, down:   4,   4
+ssTop:  0.11345, ssOn:  0.00000, ssBot:  0.00042
+  5:   bottom:   7, top   :   9, ptrs: up:   3,   3, down:   5,   5
+ssTop:  0.11345, ssOn:  0.00000, ssBot:  0.00042
+  6:   bottom:   3, top   :  10, ptrs: up:   1,   4, down:   6,   6
+ssTop:  0.11346, ssOn:  0.00000, ssBot:  0.00042
+  7:   bottom:  12, top   :  11, ptrs: up:  67,  67, down:   7,   7
+ssTop:  0.11349, ssOn:  0.00000, ssBot:  0.00039
+  8:   bottom:   5, top   :  13, ptrs: up:   2,   2, down:   8,   8
+ssTop:  0.11349, ssOn:  0.00000, ssBot:  0.00038
+  9:   bottom:  15, top   :  14, ptrs: up:  70,  70, down:   9,   9
+ssTop:  0.11352, ssOn:  0.00000, ssBot:  0.00035
+ 10:   bottom:  17, top   :  16, ptrs: up:  68,  68, down:  10,  10
+ssTop:  0.11355, ssOn:  0.00000, ssBot:  0.00033
+ 11:   bottom:  19, top   :  18, ptrs: up:  73,  73, down:  11,  11
+ssTop:  0.11357, ssOn:  0.00000, ssBot:  0.00030
+ 12:   bottom:  21, top   :  20, ptrs: up:  76,  76, down:  12,  12
+ssTop:  0.11367, ssOn:  0.00000, ssBot:  0.00020
+ 13:   bottom:  23, top   :  22, ptrs: up:  78,  78, down:  13,  13
+ssTop:  0.11383, ssOn:  0.00000, ssBot:  0.00005
+ 14: I bottom:  25, top   :  24, ptrs: up:  84,  84, down:  14,  14
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 15: I bottom:  27, top   :  26, ptrs: up: 128, 128, down:  15,  15
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 16: I bottom:  29, top   :  28, ptrs: up: 129, 129, down:  16,  16
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 17: I bottom:  31, top   :  30, ptrs: up: 130, 130, down:  17,  17
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 18: I bottom:  33, top   :  32, ptrs: up: 131, 131, down:  18,  18
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 19: I bottom:  35, top   :  34, ptrs: up: 132, 132, down:  19,  19
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 20: I bottom:  37, top   :  36, ptrs: up: 133, 133, down:  20,  20
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 21: I bottom:  39, top   :  38, ptrs: up: 134, 134, down:  21,  21
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 22: I bottom:  41, top   :  40, ptrs: up: 135, 135, down:  22,  22
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 23: I bottom:  43, top   :  42, ptrs: up: 136, 136, down:  23,  23
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 24: I bottom:  45, top   :  44, ptrs: up: 137, 137, down:  24,  24
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 25: I bottom:  47, top   :  46, ptrs: up: 138, 138, down:  25,  25
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 26: I bottom:  49, top   :  48, ptrs: up: 139, 139, down:  26,  26
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 27: I bottom:  51, top   :  50, ptrs: up: 140, 140, down:  27,  27
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 28: I bottom:  53, top   :  52, ptrs: up: 141, 141, down:  28,  28
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 29: I bottom:  55, top   :  54, ptrs: up: 142, 142, down:  29,  29
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 30: I bottom:  57, top   :  56, ptrs: up: 143, 143, down:  30,  30
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 31: I bottom:  59, top   :  58, ptrs: up: 144, 144, down:  31,  31
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 32: I bottom:  61, top   :  60, ptrs: up: 145, 145, down:  32,  32
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 33: I bottom:  63, top   :  62, ptrs: up: 146, 146, down:  33,  33
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 34: I bottom:  65, top   :  64, ptrs: up: 147, 147, down:  34,  34
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 35: I bottom:  67, top   :  66, ptrs: up: 148, 148, down:  35,  35
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 36: I bottom:  69, top   :  68, ptrs: up: 149, 149, down:  36,  36
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 37: I bottom:  71, top   :  70, ptrs: up: 150, 150, down:  37,  37
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 38: I bottom:  73, top   :  72, ptrs: up: 151, 151, down:  38,  38
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 39: I bottom:  75, top   :  74, ptrs: up: 152, 152, down:  39,  39
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 40: I bottom:  77, top   :  76, ptrs: up: 153, 153, down:  40,  40
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 41: I bottom:  79, top   :  78, ptrs: up: 154, 154, down:  41,  41
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 42: I bottom:  81, top   :  80, ptrs: up: 155, 155, down:  42,  42
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 43: I bottom:  83, top   :  82, ptrs: up: 156, 156, down:  43,  43
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 44: I bottom:  85, top   :  84, ptrs: up: 157, 157, down:  44,  44
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 45: I bottom:  87, top   :  86, ptrs: up: 158, 158, down:  45,  45
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 46: I bottom:  89, top   :  88, ptrs: up: 159, 159, down:  46,  46
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 47: I bottom:  91, top   :  90, ptrs: up: 160, 160, down:  47,  47
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 48: I bottom:  93, top   :  92, ptrs: up: 161, 161, down:  48,  48
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 49: I bottom:  95, top   :  94, ptrs: up: 162, 162, down:  49,  49
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 50: I bottom:  97, top   :  96, ptrs: up: 163, 163, down:  50,  50
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 51: I bottom:  99, top   :  98, ptrs: up: 164, 164, down:  51,  51
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 52: I bottom: 101, top   : 100, ptrs: up: 165, 165, down:  52,  52
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 53: I bottom: 103, top   : 102, ptrs: up: 166, 166, down:  53,  53
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 54: I bottom: 105, top   : 104, ptrs: up: 167, 167, down:  54,  54
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 55: I bottom: 107, top   : 106, ptrs: up: 168, 168, down:  55,  55
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 56: I bottom: 109, top   : 108, ptrs: up: 169, 169, down:  56,  56
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 57: I bottom: 111, top   : 110, ptrs: up: 170, 170, down:  57,  57
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 58: I bottom: 113, top   : 112, ptrs: up: 171, 171, down:  58,  58
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 59: I bottom: 115, top   : 114, ptrs: up: 172, 172, down:  59,  59
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 60: I bottom: 117, top   : 116, ptrs: up: 173, 173, down:  60,  60
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 61: I bottom: 119, top   : 118, ptrs: up: 174, 174, down:  61,  61
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 62: I bottom: 121, top   : 120, ptrs: up: 175, 175, down:  62,  62
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 63: I bottom: 123, top   : 122, ptrs: up: 176, 176, down:  63,  63
+ssTop:  0.11388, ssOn:  0.00000, ssBot:  0.00000
+ 64:   bottom: 125, top   : 124, ptrs: up:  64,  64, down:  65,  65
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+ 65:   bottom: 126, top   : 124, ptrs: up:  65,  65, down:  64,  64
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+ 66:   bottom: 127, top   :   7, ptrs: up:  71,  71, down:  66,  66
+ssTop:  0.11259, ssOn:  0.02263, ssBot:  0.02392
+ 67:   bottom:  12, top   :   3, ptrs: up:   7,   7, down:  67,  67
+ssTop:  0.11219, ssOn:  0.00115, ssBot:  0.00283
+ 68:   bottom:  17, top   :   5, ptrs: up:  10,  10, down:  68,  68
+ssTop:  0.11103, ssOn:  0.00372, ssBot:  0.00657
+ 69: I bottom: 124, top   : 122, ptrs: up:  69,  69, down:  69,  69
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+ 70:   bottom:  15, top   :  12, ptrs: up:   9,   9, down:  70,  70
+ssTop:  0.11029, ssOn:  0.00070, ssBot:  0.00428
+ 71:   bottom: 127, top   :  17, ptrs: up:  66,  66, down:  71,  71
+ssTop:  0.10668, ssOn:  0.01673, ssBot:  0.02392
+ 72: I bottom: 123, top   : 120, ptrs: up:  63,  63, down:  72,  72
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+ 73:   bottom:  19, top   :  15, ptrs: up:  11,  11, down:  73,  73
+ssTop:  0.10890, ssOn:  0.00304, ssBot:  0.00802
+ 74:   bottom: 128, top   : 127, ptrs: up:  82,  82, down:  74,  74
+ssTop:  0.06600, ssOn:  0.00740, ssBot:  0.05528
+ 75: I bottom: 121, top   : 118, ptrs: up:  62,  62, down:  75,  75
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+ 76:   bottom:  21, top   :  19, ptrs: up:  12,  12, down:  76,  76
+ssTop:  0.10529, ssOn:  0.00344, ssBot:  0.01202
+ 77: I bottom: 119, top   : 116, ptrs: up:  61,  61, down:  77,  77
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+ 78:   bottom:  23, top   :  21, ptrs: up:  13,  13, down:  78,  78
+ssTop:  0.10145, ssOn:  0.00945, ssBot:  0.02187
+ 79: I bottom: 117, top   : 114, ptrs: up:  60,  60, down:  79,  79
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+ 80:   bottom:   1, top   :  23, ptrs: up:   0,   0, down:  80,  80
+ssTop:  0.09190, ssOn:  0.00201, ssBot:  0.02399
+ 81: I bottom: 115, top   : 112, ptrs: up:  59,  59, down:  81,  81
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+ 82:   bottom: 128, top   :   1, ptrs: up:  74,  74, down:  82,  82
+ssTop:  0.06590, ssOn:  0.00730, ssBot:  0.05528
+ 83: I bottom: 113, top   : 110, ptrs: up:  58,  58, down:  83,  83
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+ 84: I bottom:  24, top   : 128, ptrs: up:  84,  84, down:  84,  84
+ssTop:  0.00331, ssOn:  0.00330, ssBot:  0.11387
+ 85: I bottom: 111, top   : 108, ptrs: up:  57,  57, down:  85,  85
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+ 86: I bottom:  27, top   :  24, ptrs: up:  15,  15, down:  86,  86
+ssTop:  0.00001, ssOn:  0.00000, ssBot:  0.11387
+ 87: I bottom: 109, top   : 106, ptrs: up:  56,  56, down:  87,  87
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+ 88: I bottom:  29, top   :  26, ptrs: up:  16,  16, down:  88,  88
+ssTop:  0.00001, ssOn:  0.00000, ssBot:  0.11387
+ 89: I bottom: 107, top   : 104, ptrs: up:  55,  55, down:  89,  89
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+ 90: I bottom:  31, top   :  28, ptrs: up:  17,  17, down:  90,  90
+ssTop:  0.00001, ssOn:  0.00000, ssBot:  0.11387
+ 91: I bottom: 105, top   : 102, ptrs: up:  54,  54, down:  91,  91
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+ 92: I bottom:  33, top   :  30, ptrs: up:  18,  18, down:  92,  92
+ssTop:  0.00001, ssOn:  0.00000, ssBot:  0.11387
+ 93: I bottom: 103, top   : 100, ptrs: up:  53,  53, down:  93,  93
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+ 94: I bottom:  35, top   :  32, ptrs: up:  19,  19, down:  94,  94
+ssTop:  0.00001, ssOn:  0.00000, ssBot:  0.11387
+ 95: I bottom: 101, top   :  98, ptrs: up:  52,  52, down:  95,  95
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+ 96: I bottom:  37, top   :  34, ptrs: up:  20,  20, down:  96,  96
+ssTop:  0.00001, ssOn:  0.00000, ssBot:  0.11387
+ 97: I bottom:  99, top   :  96, ptrs: up:  51,  51, down:  97,  97
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+ 98: I bottom:  39, top   :  36, ptrs: up:  21,  21, down:  98,  98
+ssTop:  0.00001, ssOn:  0.00000, ssBot:  0.11387
+ 99: I bottom:  97, top   :  94, ptrs: up:  50,  50, down:  99,  99
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+100: I bottom:  41, top   :  38, ptrs: up:  22,  22, down: 100, 100
+ssTop:  0.00001, ssOn:  0.00000, ssBot:  0.11387
+101: I bottom:  95, top   :  92, ptrs: up:  49,  49, down: 101, 101
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+102: I bottom:  43, top   :  40, ptrs: up:  23,  23, down: 102, 102
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11387
+103: I bottom:  93, top   :  90, ptrs: up:  48,  48, down: 103, 103
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+104: I bottom:  45, top   :  42, ptrs: up:  24,  24, down: 104, 104
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11387
+105: I bottom:  91, top   :  88, ptrs: up:  47,  47, down: 105, 105
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+106: I bottom:  47, top   :  44, ptrs: up:  25,  25, down: 106, 106
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11387
+107: I bottom:  89, top   :  86, ptrs: up:  46,  46, down: 107, 107
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+108: I bottom:  49, top   :  46, ptrs: up:  26,  26, down: 108, 108
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11387
+109: I bottom:  87, top   :  84, ptrs: up:  45,  45, down: 109, 109
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+110: I bottom:  51, top   :  48, ptrs: up:  27,  27, down: 110, 110
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11387
+111: I bottom:  85, top   :  82, ptrs: up:  44,  44, down: 111, 111
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+112: I bottom:  53, top   :  50, ptrs: up:  28,  28, down: 112, 112
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+113: I bottom:  83, top   :  80, ptrs: up:  43,  43, down: 113, 113
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+114: I bottom:  55, top   :  52, ptrs: up:  29,  29, down: 114, 114
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+115: I bottom:  81, top   :  78, ptrs: up:  42,  42, down: 115, 115
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+116: I bottom:  57, top   :  54, ptrs: up:  30,  30, down: 116, 116
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+117: I bottom:  79, top   :  76, ptrs: up:  41,  41, down: 117, 117
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+118: I bottom:  59, top   :  56, ptrs: up:  31,  31, down: 118, 118
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+119: I bottom:  77, top   :  74, ptrs: up:  40,  40, down: 119, 119
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+120: I bottom:  61, top   :  58, ptrs: up:  32,  32, down: 120, 120
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+121: I bottom:  75, top   :  72, ptrs: up:  39,  39, down: 121, 121
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+122: I bottom:  63, top   :  60, ptrs: up:  33,  33, down: 122, 122
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+123: I bottom:  73, top   :  70, ptrs: up:  38,  38, down: 123, 123
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+124: I bottom:  65, top   :  62, ptrs: up:  34,  34, down: 124, 124
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+125: I bottom:  71, top   :  68, ptrs: up:  37,  37, down: 125, 125
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+126: I bottom:  67, top   :  64, ptrs: up:  35,  35, down: 126, 126
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+127: I bottom:  69, top   :  66, ptrs: up:  36,  36, down: 127, 127
+ssTop:  0.00000, ssOn:  0.00000, ssBot:  0.11388
+Updated to size 28
+Updated to size 28
+Updated to size 28
+Updated to size 28
+Leaf-pruned tree to 1 arcs with priority bound of 15453.
+Pruning took  0.00000 seconds
+------------------------------
+Longest Path: 0
+Average Path:  0.00000
+Total Triangles displayed: 0.  Extracted in  0.00000 seconds
+Frame time:  0.00000.  Frame rate:      inf Hz.
+------------------------------
+Longest Path: 0
+Average Path:  0.00000
+Total Triangles displayed: 0.  Extracted in  0.00000 seconds
+Frame time:  0.00000.  Frame rate:      inf Hz.
+------------------------------
+Longest Path: 0
+Average Path:  0.00000
+Total Triangles displayed: 0.  Extracted in  0.00000 seconds
+Frame time:  2.00000.  Frame rate:  0.50000 Hz.

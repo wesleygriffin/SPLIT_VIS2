@@ -39,6 +39,56 @@ svVector3 svQDOT::GetPlanePosition(int index)
     p = min_plane +( index * plane_distance)*plane_dir;
     return p;
 }
+
+void svQDOT::NewSymmetryMesh( vector<int> symmetrytype,SymmetryProperty &property, svChar *dir)
+{
+    char *symmetrystr = new char[200];
+    for(int j=0;j<200;j++) symmetrystr[j] = '\0';
+    sprintf(symmetrystr, "%s%0.2f%0.2f%0.2f%0.2f%0.2f%0.2f", symmetrystr,
+                  property.pos[0], property.pos[1], property.pos[2],
+                  property.dir[0], property.dir[1], property.dir[2]);
+    sort(symmetrytype.begin(), symmetrytype.end());
+    for(int i=0;i<symmetrytype.size();i++)
+        sprintf(symmetrystr, "%s%d", symmetrystr, symmetrytype[i]);
+
+    char *str = new char[400];
+    sprintf(str,"%s/meshsize%s", dir, symmetrystr);
+
+    ifstream infile(str);
+    int n;
+    infile>>n;
+    
+    for(int i=0;i<n;i++)
+    {
+      int ii;
+      infile>>ii;
+      if(ii>=0)
+      {
+          char *inputfile = new char[400];
+          sprintf(inputfile, "%s/region%s%d", dir, symmetrystr, ii);
+          char *outputfile = new char[400];
+          sprintf(outputfile, "%s/mesh%s%d", dir, symmetrystr, ii);
+         // ifstream test(outputfile);
+          //if(test.is_open())
+         // {
+           //    test.close();
+          //}
+          //else
+         // {
+            //   test.close();
+               char *exe = new char[2048];
+               sprintf(exe, "%s/ex_alpha_shapes_3 %s > %s 2>&1", BIN_DIR,
+                      inputfile, outputfile);
+               system(exe);
+               delete [] exe;
+          //}
+      }
+    }
+        
+    infile.close();
+    delete [] str;
+    delete [] symmetrystr;
+}
 void svQDOT::NewMesh(char *dir)
 {
    for(int i=0;i<unique_region.size();i++)
@@ -67,7 +117,24 @@ void svQDOT::NewMesh(char *dir)
        delete [] exe;
    }
 }
+void svQDOT::NewMesh(char *inputfile, char *outputfile)
+{
+      char *exe = new char[1024];
+      sprintf(exe, "%s/ex_alpha_shapes_3 %s > %s 2>&1", BIN_DIR, inputfile, outputfile);
+//      cerr<<exe<<endl;
+       ifstream infile(outputfile);
 
+       if(infile.is_open())
+       {
+           infile.close();
+       }
+       else
+       {
+           infile.close();
+           system(exe);
+       }
+       delete [] exe;
+}
 
 void svQDOT::SetVTK(svChar *rawdir, svChar *rawfile, svChar *dir,
                             svChar *sortFile, svChar *formatFile,

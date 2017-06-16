@@ -2,6 +2,7 @@
 #ifndef __SV_GLYPH_H
 #define __SV_GLYPH_H
 //#include "dual_depth_peeling.h"
+#include "svUtil.h"
 #include "svArray.h"
 #include "svVectorField.h"
 #include "svParticle.h"
@@ -55,7 +56,9 @@ class svGlyph : public svPrimitive
   
   virtual void New(svVectorField* f, int numPlane);//svChar *indir, svChar *inf1, svChar *inf2,
             
-
+  virtual void SaveSymmetry(int symmetrytype,
+                           char *str1, char *str2,
+                           SymmetryProperty &property);
   virtual void SaveToFile(char *fname); // save for later rendering
 
   virtual void ResetData(int seed);
@@ -63,6 +66,7 @@ class svGlyph : public svPrimitive
   
   virtual void SetData(char *infName, int seed);
   virtual void SetFormat(char *infname, int seed);
+  virtual void SetFormat(char *format_fname, char *index_fname);
   virtual void SetSampleData(int size);
 
   virtual void SetSampling(svInt frequency); 
@@ -75,11 +79,11 @@ class svGlyph : public svPrimitive
   virtual void SetVisible(svIntArray layer);
   virtual void SetVisible(int contour);
   virtual void SetVisible(int contour, svScalar z1, svScalar z2, int frequency);
+  virtual void SetNeighborLabel(vector<int> symmetrytype,SymmetryProperty &property, svChar *outputdir);
   virtual void SetSymmetryVisible(vector<int> type); //"OR" function instead of "AND"
   virtual void SetVisible(svScalar z1, svScalar z2);
   
   virtual void SetContourLabel();
-
 
   virtual void SetROI(); //default ROI
   virtual void SetROI(svScalar mag1, svScalar mag2);
@@ -99,6 +103,9 @@ class svGlyph : public svPrimitive
                       vector<int> symmetrytype);
   virtual void GenerateClusters(KmeansProperty & property);// const;
   virtual void GenerateSymmetry(SymmetryProperty & property);
+  virtual void GenerateNeighbors(NeighborProperty &property);
+  virtual void GenerateEntropy();
+  //virtual void GenerateSymmetry(SymmetryProperty & property, NeighborProperty &property);
   virtual void Generate(svVector3Array *vec3in);
   virtual void Generate(svVector3Array *vec3in, svVector4Array *color4in);
 
@@ -124,6 +131,7 @@ class svGlyph : public svPrimitive
   virtual void SetColorByCluster(svIntArray cluster);
   virtual void SetColorByClusterMag();
   virtual void SetColorByPower();
+  virtual void SetColorBySymmetryType();
    // colorModel: SV_GRAY, SV_LOCS
   virtual void SetScaling(svInt s){scaling =s;}
   virtual void SetNumPower(svInt power){numPower = power;}
@@ -160,6 +168,12 @@ class svGlyph : public svPrimitive
    virtual svScalar GetRadius(){return glyphRadius;}
    virtual svScalar GetScale(){return glyphScale;}
    virtual svIntArray* GetClusterLabels(){return clusterLabel;}
+   svScalarArray GetEntropyValues(){return entropy;}
+   svScalarArray *GetMagProb(svScalar &level);
+   svScalarArray *GetSymmetryMagProb(int &topvalue);
+   int *GetSymmetryCount(){return symmetrycount;}
+   int GetSymmetryTopCount(){return symmetrytopcount;}
+   int GetSymmetryCount(int index){return symmetrycount[index];} 
  private:
 
  protected:
@@ -186,14 +200,15 @@ class svGlyph : public svPrimitive
   svScalarArray  *mag;   // magnitude
   svScalarArray *exp;
   svScalarArray *coe;
-
-  
+  svIntArray *stype;
+  svScalarArray entropy;
+ 
   svInt dataSize;
   svInt glyphSize;
   svScalar   glyphScale;
   svScalar   glyphRadius;
  
-  svIntArray *glyphFormat; 
+  svIntArray *glyphFormat[3]; 
 
   int maxClusterLabel;
   svIntArray clusterLabelbymag;
@@ -222,7 +237,9 @@ class svGlyph : public svPrimitive
  //svPeeling *peeling;
 
   svChar *infile;
-  svList *symmetrylist[6];
+  svList *symmetrylist[SYMMETRY_TYPE];
+  int symmetrycount[SYMMETRY_TYPE+1];
+  int symmetrytopcount;
   //svChar *glyphDir;
   //svChar *glyphFile;
   //svChar *fileName1;

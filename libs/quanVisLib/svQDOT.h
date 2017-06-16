@@ -45,6 +45,8 @@ class svQDOT : public svVectorField
 					svVector3 pdir, svScalar pdis,
                                     int format);
 	virtual void New(char *formatfName);
+        virtual void NewSymmetryMesh( vector<int> symmetrytype,SymmetryProperty &property, svChar *dir);
+        virtual void NewMesh(char *inputfile, char *outputfile);
 	virtual void NewMesh(char *dir);
 	int GetPlaneIndex(svVector3 p);
 	svScalar GetMaxDensitybyLayer(char *densityfName, int layer);

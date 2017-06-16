@@ -7,6 +7,15 @@
 
 namespace __svl_lib {
 
+void ProgressBar(int percent)
+{
+  std::cout << "\r" << percent << "% completed ";
+
+//  std::cout << std::string(percentage, '|');
+
+  std::cout.flush();
+}
+
 svVector3 svGetPerpendicularVector(const svVector3 & v)
 {
 	svVector3 r;
@@ -187,6 +196,64 @@ void GetRotateFont(svVector3 dir, double &angle_x,  double &angle_z,
      angle_z = -angle_z;
 }
 //----------------------------------------------------------
+svScalar GetEntropy(svVector3Array vec)
+{
+   svScalar entropy= 0 ;
+
+   svInt size = 30;
+   svIntArray prob;
+   int whole_slice = 2*size;//cerr<<whole_slice<<endl;
+   int whole_stack = size;//cerr<<whole_stack<<endl;
+   svScalar seg = SV_PI/size;
+   svInt count = whole_slice * whole_stack;
+//cerr<<count<<endl;
+   for(int i=0;i<count;i++)
+     prob.add(0);
+   for(int i=0;i<vec.size();i++)
+   {
+       svScalar r = 1;
+       svScalar theta = acos(vec[i][2]);
+       svScalar xy = sqrt(vec[i][0]*vec[i][0]
+                   + vec[i][1]*vec[i][1]);
+
+       svScalar x,y, phi;
+       if(fabs(xy)<1e-3)
+       {
+            x = 0; y = 0;
+            phi = 0;
+       }
+       else
+       {
+        x = vec[i][0]/xy;
+        y = vec[i][1]/xy;
+        phi = acos(x/xy);
+       if(y<0) phi = 2.*SV_PI-phi; 
+       }
+
+       theta = fmod(theta, SV_PI);
+       if(phi>0)phi = fmod(phi, 2.*SV_PI);
+       else phi = 0;
+
+       int slice = phi/seg;
+       int stack = theta/seg;
+       int index = stack*whole_slice + slice;
+//cerr<<theta<<" "<<phi<<" "<<whole_slice<<" "<<whole_stack<<" "<<stack<<" "<<slice<<" "<<index<<" "<<count<<endl; 
+       prob[index]++;
+   }
+//cerr<<count<<endl;
+   for(int i=0;i<count;i++)
+   {
+       if(prob[i]>0)
+       {//cerr<<prob[i]<<" ";
+           svScalar p = (svScalar)prob[i]/(svScalar)vec.size();
+           entropy += p * log(p);
+       }
+   }//cerr<<endl;
+   entropy = - entropy;
+   prob.free();
+   return entropy;
+}
+
 svVector3 GetVertical(svVector3 pos, svVector3 dir,  ViewProperty &property)
 {
     GLfloat *invert_tb= new GLfloat[16];
@@ -1318,7 +1385,7 @@ void RenderCone(svVector3 glyph, svVector3 dir,
           }
         }
       for(int i=0;i<segment-1;i++)
-      {//cerr<<cone_seg_norm[i+1][0]<<" "<<cone_seg_norm[i+2][0]<<" "<<cone_seg_norm[i+1][1]<<" "<<cone_seg_norm[i+2][1]<<" "<<cone_seg_norm[i+1][2]<<" "<<cone_seg_norm[i+2][2]<<endl;
+      {//cerr<<cone_seg_pos[i+1][0]<<" "<<cone_seg_norm[i+2][0]<<" "<<cone_seg_norm[i+1][1]<<" "<<cone_seg_norm[i+2][1]<<" "<<cone_seg_norm[i+1][2]<<" "<<cone_seg_norm[i+2][2]<<endl;
           glBegin(GL_TRIANGLES);
               glNormal3f(cone_seg_norm[0][0],cone_seg_norm[0][1],cone_seg_norm[0][2]);
               glVertex3f(glyph[0],glyph[1],glyph[2]);

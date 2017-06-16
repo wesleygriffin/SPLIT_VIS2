@@ -1,11 +1,11 @@
 #datadir:
-~/Documents/SPLIT_VIS2-master/data/
+~/Documents/henan/NIST/NIST_SPLIT/data/2014Mar
 #dataname:
-spin_proj_norm_vs_pos_p_v_z_10z_newcolumn
+spin_proj_norm_vs_pos_p_v_xpy_10z
 #folderToStoreFiles:
 tmp
 #type
-4
+2
 #planeCenter
 0 0 0
 #planeDirection
@@ -42,12 +42,16 @@ G R 0.5
 #symmetry
 #planeCenter
 0 0 0 
-#planeDirection
--1 1 0
-#planeX
+#planeDirection(planeZ)
 1 1 0
+#planeX
+-1 1 0
 #planeY
 0 0 1
+#angleUncertainty
+10
+#magUncertainty
+1e-9
 #ROI
-3
-0 107 108
+2
+0 108

@@ -361,6 +361,47 @@ for(int i=0;i<59;i++)
 	}
 }
 
+svVector4 svColors::Get8Colors(int value)
+{
+ double colors[8][3]=
+ {
+  {141,211,199},
+  {255,255,179},
+  {190,186,218},
+  {251,128,114},
+  {128,177,211},
+  {253,180,98},
+  {179,222,105},
+  {252,205,229}
+ };
+
+ for(int i=0;i<8;i++)
+ {
+   colors[i][0] = colors[i][0]/255.;
+   colors[i][1] = colors[i][1]/255.;
+   colors[i][2] = colors[i][2]/255.;
+   
+   //double R,G,B, r,g,b;
+   //R = colors[i][0];
+   //G = colors[i][1];
+   //B = colors[i][2];
+   //ColorBlindSafe(R,G,B,r,g,b);
+
+   //colors[i][0] = r;
+   //colors[i][1] = g;
+   //colors[i][2] = b;
+ }
+
+ svVector4 color;
+ color[0]=1;color[1]=1;color[2]=1;color[3]=1;
+ if(value<0)return color;
+
+ color[0] = colors[value%8][0];
+ color[1] = colors[value%8][1];
+ color[2] = colors[value%8][2];
+ return color; 
+}
+
 svVector4 svColors::GetDiscreteColors(int value)
 {
         svVector4 color;

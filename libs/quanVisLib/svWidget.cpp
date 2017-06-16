@@ -10,6 +10,7 @@ namespace __svl_lib {
 void svWidget::Init()
 {
    layer.free();
+   histovalues = new svScalarArray[4];
 
   for(int i=0;i<level;i++)layer.add(0);
 
@@ -244,7 +245,7 @@ void svWidget::Move(int x, int y)
   SetVisible();
 }
 
-void svWidget::Render()
+void svWidget::Render(svScalar maglevel)
 {
   glEnable (GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -265,7 +266,6 @@ void svWidget::Render()
   glVertex2f(box[1][0],box[1][1]+boxside);
   glVertex2f(box[0][0],box[0][1]+boxside);
   glEnd();    
-
 
   glColor4f(0.,0.,0.,0.5);
 
@@ -363,7 +363,7 @@ void svWidget::Render()
      if( (showbox &&i==2) || i<2)
      {
      sprintf(str, "(%0.2f, %0.2f, %0.2f)", values[i][0],values[i][1],values[i][2]);
-     glRasterPos2f(x[i],box[i][1]-boxside*1.5);
+     glRasterPos2f(x[i]+boxside*0.8,box[i][1]-boxside*1.3);
      for(int j=0;j<strlen(str);j++)
             glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, str[j]); 
      
@@ -377,17 +377,129 @@ void svWidget::Render()
    }
   }
 
+//============================================================
+  svScalar seg = boxside/topmax;
+  svScalar shift = boxside*1.5;
+  glLineWidth(2);
+  glBegin(GL_LINE_STRIP);
+  for(int i=0;i<level;i++)
+  {
+     svScalar l = shift + seg * topvalues[i];
+     glVertex2f(line[0][0]+boxside + boxside*(float)i,box[0][1]+l);
+  }  
+  glEnd();
+  glLineWidth(1);
+
+  glColor3f(0.5,0.5,0.5);
+
+  svScalar topmaxy = (svScalar)((int)topmax) * seg;
+  glPointSize(1.5);
+  glBegin(GL_POINTS);
+  glVertex2f(line[0][0], line[0][1]+shift + topmaxy);
+  glEnd();
+  glPointSize(1.);
+
+  glBegin(GL_LINES);
+  glVertex2f(line[0][0], line[0][1] + shift);
+  glVertex2f(line[1][0], line[0][1] + shift);
+  glEnd(); 
+  glBegin(GL_LINES);
+  glVertex2f(line[0][0], line[0][1] + shift);
+  glVertex2f(line[0][0], line[0][1] + shift + boxside);
+  glEnd();
+
+  glColor3f(0,0,0);
+  sprintf(str, "Entropy");
+  glRasterPos2f(line[0][0]-boxside*5,line[0][1] + shift + boxside);
+     for(int j=0;j<strlen(str);j++)
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, str[j]);
+ 
+//  sprintf(str, "%d", (int)topmax);
+//  glRasterPos2f(line[0][0]+boxside*0.5,line[0][1] + shift+topmaxy);
+//     for(int j=0;j<strlen(str);j++)
+//            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, str[j]);
+ 
+//=============================================================
+  svVector3 colors[4];
+  colors[0][0]=215.;colors[0][1]=25.; colors[0][2]=28.;
+  colors[1][0]=253.;colors[1][1]=174.;colors[1][2]=97.;
+  colors[2][0]=171.;colors[2][1]=217.;colors[2][2]=233.;
+  colors[3][0]=44.; colors[3][1]=123.;colors[3][2]=182.;
+  seg = boxside*2./tophisto;
+  for(int i=0;i<histovalues[0].size();i++)
+  { 
+    svScalar height;
+    svScalar preheight = 0;
+    svScalar y = line[0][1] - boxside*4;
+    for(int j=3;j>=0;j--)
+    {
+      glColor3f(colors[j][0]/255., colors[j][1]/255., colors[j][2]/255.);
+      height = preheight+seg * histovalues[j][i];
+      glBegin(GL_QUADS);
+      glVertex2f(line[0][0]+boxside+(svScalar)i * boxside - boxside/3., y+preheight);
+      glVertex2f(line[0][0]+boxside+(svScalar)i * boxside + boxside/3., y+preheight);
+      glVertex2f(line[0][0]+boxside+(svScalar)i * boxside + boxside/3., y+height);
+      glVertex2f(line[0][0]+boxside+(svScalar)i * boxside - boxside/3., y+height);
+      glEnd();
+      preheight =  height;
+    }
+  }
+  svScalar lx = line[1][0];
+  svScalar ly = line[0][1] - boxside*4;
+  for(int i=0;i<4;i++)
+  {
+      glColor3f(colors[3-i][0]/255., colors[3-i][1]/255., colors[3-i][2]/255.);
+     glBegin(GL_QUADS);
+     glVertex2f(lx, ly);
+     glVertex2f(lx+boxside/2., ly);
+     glVertex2f(lx+boxside/2., ly + boxside/2.);
+     glVertex2f(lx, ly + boxside/2.);
+     glEnd();
+     ly =ly + boxside/2.;
+  }
+  glColor3f(0,0,0);
+  lx = line[1][0];
+  ly = line[0][1] - boxside*4;
+  for(int i=0;i<4;i++)
+  {
+    int v = maglevel+i;//hard code!!!!!!
+    sprintf(str, "1e%d",v);
+    glRasterPos2f(line[1][0]+boxside*0.5,ly);
+     for(int j=0;j<strlen(str);j++)
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, str[j]);
+     ly =ly + boxside/2.; 
+ }
+
+//  sprintf(str, "%d", (int)tophisto);
+//  svScalar tophistoy = (svScalar)((int)tophisto) * seg;
+//  glRasterPos2f(line[0][0]-boxside*3.5,line[0][1]-boxside*4+tophistoy);
+//     for(int j=0;j<strlen(str);j++)
+//            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, str[j]);
+
+  glColor3f(0.5,0.5,0.5);
+  glBegin(GL_LINES);
+  glVertex2f(line[0][0], line[0][1] - boxside*4);
+  glVertex2f(line[1][0], line[0][1] - boxside*4);
+  glEnd();
+  glBegin(GL_LINES);
+  glVertex2f(line[0][0], line[0][1] - boxside*4);
+  glVertex2f(line[0][0], line[0][1] - boxside*4 + boxside*2.);
+  glEnd();  
+//=============================================================
+  glColor3f(0,0,0);
   for(int i=0;i<level;i=i+10)
   {
      sprintf(str, "%d", i);
-     glRasterPos2f(line[0][0]+boxside + boxside*(float)i,box[i][1]+boxside*1.2);
+     glRasterPos2f(line[0][0]+boxside + boxside*(float)i,box[0][1]+boxside*1.2);
      for(int j=0;j<strlen(str);j++)
             glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, str[j]);
      glBegin(GL_LINES);
-     glVertex2f(line[0][0]+boxside + boxside*(float)i,box[i][1]+boxside*1.2);
+     glVertex2f(line[0][0]+boxside + boxside*(float)i,box[0][1]+boxside*1.2);
      glVertex2f(line[0][0]+boxside + boxside*(float)i,line[0][1]);
      glEnd();
   }  
+
+  
 }
 
 void svWidget::SetIndex( int zmin, int zmax, int notshowz)

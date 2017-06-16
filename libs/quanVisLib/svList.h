@@ -13,6 +13,13 @@
 
 namespace __svl_lib {
 
+template <typename T>
+struct tnode {
+    T data1;
+    T data2;
+    tnode *next;
+};
+
 struct node
 {
    int data1;

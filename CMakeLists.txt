@@ -54,6 +54,13 @@ add_executable(Contour ${Contour_SOURCES})
 target_link_libraries(Contour ${VTK_LIBRARIES})
 install(TARGETS Contour RUNTIME DESTINATION bin)
 
+ExternalProject_Add(contourtree
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/ContourTree
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND make
+    BUILD_IN_SOURCE 1
+    INSTALL_COMMAND ${CMAKE_COMMAND} -E copy <SOURCE_DIR>/ContourTree ${CMAKE_CURRENT_BINARY_DIR}/../bin/)
+
 ExternalProject_Add(glui
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/glui-2.35
     CONFIGURE_COMMAND ""
@@ -170,8 +177,11 @@ set(svl_SOURCES
     libs/quanVisLib/GLSLProgramObject.cpp
     libs/quanVisLib/dual_depth_peeling.cpp
     libs/quanVisLib/svList.cpp
+    libs/quanVisLib/svBST.cpp
+    libs/quanVisLib/svCCL.cpp
     libs/quanVisLib/svMagnitude.cpp
     libs/quanVisLib/svWidget.cpp
+    libs/quanVisLib/svIcons.cpp
     libs/quanVisLib/svUtil.h
     libs/quanVisLib/svLut.h
     libs/quanVisLib/svParticle.h
@@ -204,8 +214,11 @@ set(svl_SOURCES
     libs/quanVisLib/GLSLProgramObject.h
     libs/quanVisLib/dual_depth_peeling.h
     libs/quanVisLib/svList.h
+    libs/quanVisLib/svBST.h
+    libs/quanVisLib/svCCL.h
     libs/quanVisLib/svMagnitude.h
-    libs/quanVisLib/svWidget.h)
+    libs/quanVisLib/svWidget.h
+    libs/quanVisLib/svIcons.h)
 
 configure_file(libs/quanVisLib/svConfig.h.in
     ${CMAKE_CURRENT_BINARY_DIR}/svConfig.h)

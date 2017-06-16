@@ -13,6 +13,7 @@
 #include <fstream>
 #include "svException.h"
 #include "svUtil.h"
+#include "svColors.h"
 
 using namespace std;
 
@@ -26,7 +27,7 @@ void svMesh::New(vector<int> region)
     int size = region.size();
     mesh = new svVector3Array[size];
     dir = new svVector3Array[size]; 
-
+    colors = new svVector4Array[size];
     meshregion.resize(size);
     for(int i=0;i<region.size();i++)
            meshregion[i] = region[i];
@@ -34,11 +35,14 @@ void svMesh::New(vector<int> region)
    
 void svMesh::SetData(char *file, int index)
 { 
+//   cerr<<meshregion.size()<<" "<<index<<" ";
+
    ifstream infile(file);
    if(infile.is_open())
    {
     int n1, n2;
     infile>>n1;//>>n2;
+//    cerr<<n1<<endl;
     for(int i=0;i<n1;i++)
     {
          svVector3 p[3];
@@ -57,6 +61,19 @@ void svMesh::SetData(char *file, int index)
 
   }
   infile.close();
+}
+
+void svMesh::SetColors()
+{
+     svColors *color = new svColors();
+     for(int i=0;i<meshregion.size();i++)
+     {
+         for(int j=0;j<mesh[i].size();j++)
+         {
+             colors[i].add(color->Get8Colors(meshregion[i]));
+         }
+     }
+     delete color;
 }
 
 void svMesh::GenerateWireframe(int region)
@@ -151,16 +168,15 @@ void svMesh::GenerateSurface(int region)
    glEndList();
 }
 
-void svMesh::GenerateSurface()
+void svMesh::GenerateSurfaces(int index)
 {
     if(glIsList(display_list))
                 glDeleteLists(display_list, 1);
     glNewList(display_list, GL_COMPILE);
 
    glColor3f(166./255., 206./255., 227./255.);
-
       glBegin(GL_TRIANGLES);
-  for(int j=0;j<meshregion.size()-1;j++)
+  for(int j=0;j<meshregion.size()-index;j++)
   {
    for(int i=0;i<mesh[j].size()-2;)
    {
@@ -178,6 +194,7 @@ void svMesh::GenerateSurface()
 
    glEndList();
 }
+
 
 
 void svMesh::GenerateWireframe(char *file)
@@ -205,65 +222,18 @@ void svMesh::GenerateWireframe(char *file)
          for(int j=0;j<3;j++)
             glVertex3f(p[j][0], p[j][1], p[j][2]);
          glEnd();
-     //    pos.add(p);
     }
-/*
-    for(int i=0;i<n2;i++)
-    {
-          svVector3 p;
-         infile>>p[0]>>p[1]>>p[2];
-         index.add(p);
-    }
-*/
     infile.close();
     }
     glEndList();
 }
 
+
 void svMesh::GenerateWiresolid(char *file)
 {
-    //glEnable(GL_LIGHTING);
-    //glEnable(GL_LIGHT0);
-//cerr<<display_list<<endl;
         if(glIsList(display_list))
                 glDeleteLists(display_list, 1);
     glNewList(display_list, GL_COMPILE);
-   /*
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    glEnable(GL_COLOR_MATERIAL);
-    glEnable(GL_NORMALIZE);
-
-    glEnable( GL_LINE_SMOOTH );
-    glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
- */
- //   glDisable(GL_LIGHTING);
-/*
-        glEnable(GL_COLOR_MATERIAL);
-        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-        glEnable(GL_LIGHTING);
-        glEnable(GL_LIGHT0);
-
-        glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glEnable(GL_BLEND);
-
-*/
-
-/*   GLfloat mat[4];
-   mat[0] = 0.0215; mat[1] = 0.1745; mat[2] = 0.0215; mat[3] = 1.0;
-   glMaterialfv(GL_FRONT, GL_AMBIENT, mat);
-   mat[0] = 0.076; mat[1] = 0.61; mat[2] = 0.076;
-   glMaterialfv(GL_FRONT, GL_DIFFUSE, mat);
-   mat[0] = 0.633; mat[1] = 0.73; mat[2] = 0.633;
-   glMaterialfv(GL_FRONT, GL_SPECULAR, mat);
-   GLfloat shine = 0.6;
-   glMaterialf(GL_FRONT, GL_SHININESS, shine * 128.0);
-   glEnable(GL_NORMALIZE);
- */
     ifstream infile(file);
     int n1, n2;
     infile>>n1;
@@ -298,6 +268,34 @@ void svMesh::Render()
     glCallList(display_list);
 }
 
+void svMesh::GenerateSurfacesByColor()
+{
+    if(glIsList(display_list))
+                glDeleteLists(display_list, 1);
+    glNewList(display_list, GL_COMPILE);
+
+      glBegin(GL_TRIANGLES);
+  for(int j=0;j<meshregion.size();j++)
+  {
+   
+   for(int i=0;i<mesh[j].size()-2;)
+   {
+     int index = j;
+      glColor3f( colors[index][i][0],colors[index][i][1],colors[index][i][2]);
+      glNormal3f( dir[index][i][0],dir[index][i][1],dir[index][i][2]);
+      glVertex3f( mesh[index][i][0],mesh[index][i][1],mesh[index][i][2]);
+      glNormal3f( dir[index][i+1][0],dir[index][i+1][1],dir[index][i+1][2]);
+      glVertex3f( mesh[index][i+1][0],mesh[index][i+1][1],mesh[index][i+1][2]);
+      glNormal3f( dir[index][i+2][0],dir[index][i+2][1],dir[index][i+2][2]);
+      glVertex3f( mesh[index][i+2][0],mesh[index][i+2][1],mesh[index][i+2][2]);
+      i+=3;
+   }
+ }   
+   glEnd();
+
+   glEndList();
+}
+ 
 void svMesh::cleanup()
 {
     for(int i=0;i<meshregion.size();i++)  
@@ -308,6 +306,10 @@ void svMesh::cleanup()
           dir[i].free();
     delete []dir;
     meshregion.clear();
+     
+     for(int i=0;i<meshregion.size();i++)
+         colors[i].free();
+    delete []colors;
 }
 
 }

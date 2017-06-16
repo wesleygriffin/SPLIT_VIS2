@@ -32,9 +32,8 @@
 #include "svMesh.h"
 #include "svConfig.h"
 #include "svWidget.h"
+#include "svCCL.h"
 #include <string.h>
-#include "libconfig.h++"
-#include "libconfig.h"
 
 #include <GL/glui.h>
 
@@ -74,8 +73,7 @@
 #define ENCODE_ID 13
 #define ALPHA_ID 15
 #define LAYER_REPEAT_ID 16
-
-using namespace libconfig;
+#define LENGTH_VIS_ID 17
 using namespace __svl_lib;
 
 void reshape(int w, int h);
@@ -96,6 +94,7 @@ GLUI_Checkbox *symmetrybox;
 GLUI_Checkbox *box_encode;
 GLUI_Checkbox *box_layer;
 GLUI_Scrollbar *sb_line;
+GLUI_Listbox *list_widget_vis;
 GLUI_Scrollbar *sb_arrow;
 GLUI_Scrollbar *sb_tube;
 GLUI_Scrollbar *sb_mag;
@@ -109,7 +108,6 @@ GLUI_StaticText *text_layer_min;
 GLUI_StaticText *text_layer_max;
 //=========END================
 
-
 view3d view_info;
 
 //svPeeling *peeling;
@@ -119,7 +117,9 @@ svSplitArrow *splitglyph;
 svSummaryGlyph *summaryglyph;
 svOutline *outline;
 svMesh *mesh;
+svMesh *symmetrymesh;
 svWidget *widget;
+//svConnect *ccl;
 
 char *configFile;
 
@@ -154,12 +154,15 @@ bool tube_scale_up=false;
 bool updatecluster = false;
 bool updatevisible = false;
 bool updaterender = false;
+int length_vis = 0;
 
-int mesh_enable;
+int symmetrymesh_enable = 0;
+int mesh_enable = 0;
 int mesh_type = 0;
 vector<int> unique_region;
 int mesh_vis = 1;
 
+int symmetrymesh_solid_list;
 int  mesh_solid_list;
 int  outline_display_list;
 int  summary_list;
@@ -211,6 +214,7 @@ struct ConfigProperty{
 	KmeansProperty step1_kmeansproperty;
 	KmeansProperty step2_kmeansproperty;
         SymmetryProperty symmetryproperty; 
+        NeighborProperty neighborproperty;
 
         vector<string> contourname;	
 	ContourProperty contourproperty;
@@ -353,8 +357,18 @@ void DrawSymmetryButtons(void)
        glPushMatrix();
      //glTranslatef(500,0,0);
      //glScalef(100, 100, 100);
+   
+       glColor3f(0,0,0); 
+       glRasterPos2f(texture_pos[0][0]-texture_size/2.,texture_pos[0][1]+texture_size/2.); 
+       glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'X');
      
-      
+       glRasterPos2f(texture_pos[2][0]-texture_size/2.,texture_pos[2][1]+texture_size/2.);
+       glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'Y');
+
+       glRasterPos2f(texture_pos[4][0]-texture_size/2.,texture_pos[4][1]+texture_size/2.);
+       glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'Z');
+ 
+       glColor3f(1,1,1);
        for(int i=0;i<SYMMETRY_TYPE_NUM;i++)
        {
           int index1 = texture_status[i]+i*SYMMETRY_STATUS_NUM; 
@@ -669,7 +683,7 @@ void Reshape(int w, int h)
    image_height = h;
 
   widget_tranx=325;
-  widget_trany=image_height-50;
+  widget_trany=image_height-75;
   widget_scalex=5;
   widget_scaley=10.;
 
@@ -793,6 +807,64 @@ void UpdateVBOData()
    splitglyph->UpdateData();
    directglyph->UpdateData();
 }
+void UpdateSymmetryMesh()
+{
+   if(!configproperty.isContour)
+   {
+      char *symmetrystr = new char[200];
+      for(int j=0;j<200;j++) symmetrystr[j] = '\0';
+      sprintf(symmetrystr, "%s%0.2f%0.2f%0.2f%0.2f%0.2f%0.2f", symmetrystr,
+                  configproperty.symmetryproperty.pos[0],
+                  configproperty.symmetryproperty.pos[1],
+                  configproperty.symmetryproperty.pos[2],
+                  configproperty.symmetryproperty.dir[0],
+                  configproperty.symmetryproperty.dir[1],
+                  configproperty.symmetryproperty.dir[2]);
+      for(int j=0;j<symmetrytype.size();j++)
+            sprintf(symmetrystr,"%s%d", symmetrystr, symmetrytype[j]);
+      char *str1 = new char[400];
+      char *str2 = new char[400];
+      sprintf(str1, "%s/%s/symmetryregion%s1.txt", configproperty.storeDir,  configproperty.rawFile,symmetrystr);
+      sprintf(str2, "%s/%s/symmetryregion%s2.txt", configproperty.storeDir,  configproperty.rawFile,symmetrystr);
+     directglyph->SaveSymmetry(symmetrytype, str1, str2,configproperty.symmetryproperty);
+     splitglyph->SaveSymmetry(symmetrytype, str1, str2,configproperty.symmetryproperty);
+      char *outstr1 = new char[400];
+      char *outstr2 = new char[400];
+      sprintf(outstr1, "%s/%s/symmetrymesh%s1.txt", configproperty.storeDir,  configproperty.rawFile,symmetrystr);
+      sprintf(outstr2, "%s/%s/symmetrymesh%s2.txt", configproperty.storeDir,  configproperty.rawFile,symmetrystr);
+
+      flow_field->NewMesh(str1, outstr1);
+      flow_field->NewMesh(str2, outstr2);
+
+      vector<int> region;
+      region.push_back(0);
+      region.push_back(1);
+      symmetrymesh->New(region);
+      symmetrymesh->SetDisplayList(symmetrymesh_solid_list);
+      symmetrymesh->SetData(outstr1, 0);
+      symmetrymesh->SetData(outstr2, 1);
+      symmetrymesh->GenerateSurfaces(0);//unique_region[1]);
+
+      delete [] outstr1;
+      delete [] outstr2;
+      delete [] str1;
+      delete [] str2;
+   }
+}
+
+void UpdateMesh()
+{
+   char *str = new char[400];
+   sprintf(str,"%s/%s", configproperty.storeDir, configproperty.rawFile);
+   if(!configproperty.isContour)
+   {
+     directglyph->SetNeighborLabel(symmetrytype, configproperty.symmetryproperty,str);
+     splitglyph->SetNeighborLabel(symmetrytype, configproperty.symmetryproperty,str);
+     flow_field->NewSymmetryMesh(symmetrytype, configproperty.symmetryproperty, str);
+   }
+
+   delete [] str;
+}
 void UpdateVisible()
 {
     for(int i=0;i<VISUAL_TYPE-1;i++)
@@ -819,11 +891,15 @@ void UpdateVisible()
 
      }
 */
+   char *str = new char[400];
+   sprintf(str, "%s/%s/", configproperty.storeDir, configproperty.rawFile);
    directglyph->ResetVisible();
    if(configproperty.isContour)
      directglyph->SetSampling(frequency);
    else
+   {
      directglyph->SetSampling(symmetrytype, frequency);
+   }   
 //   directglyph->SetSymmetryVisible(symmetrytype);
    directglyph->SetVisible(contourindex);
 //   directglyph->SetVisible(zmin, zmax);
@@ -836,7 +912,11 @@ void UpdateVisible()
    if(configproperty.isContour)
     splitglyph->SetSampling(frequency);
    else
-    splitglyph->SetSampling(symmetrytype, frequency);
+   {
+       splitglyph->SetSampling(symmetrytype, frequency);
+   }
+
+   delete [] str;
 //   splitglyph->SetSymmetryVisible(symmetrytype);
    splitglyph->SetVisible(contourindex);
 //   splitglyph->SetVisible(zmin, zmax);
@@ -919,6 +999,11 @@ void control_cb(int control)
          UpdateVisible();
         }
      }
+     else if(control == LENGTH_VIS_ID)
+     {//cerr<<length_vis<<endl;
+           widget->SetHistoValues(splitglyph->GetMagProb());
+           widget->SetValues(splitglyph->GetEntropyValues(), true);
+     }
      else if(control == LENGTH_ID || control == ARROW_ID || control == TUBE_ID)
      {
           if(encode_type == LINEAR)
@@ -950,10 +1035,14 @@ void control_cb(int control)
      }
      else if(control == UPDATE_ID)
      {
+          cout<<"Please wait ...."<<endl;
           if(updatecluster)
                UpdateCluster();
           if(updatevisible)
+          {
                UpdateVisible();
+               UpdateSymmetryMesh();
+          }
           if(updaterender)
           {
                   UpdateColor(); UpdateRender(); 
@@ -963,6 +1052,7 @@ void control_cb(int control)
           updatevisible = false;
           updaterender = false;
           arrow_scale_up = false;
+          cout<<"Update done ..."<<endl;
      }
      else if(control == MESH_TYPE_ID || control == MESH_VIS_ID)
      {
@@ -974,9 +1064,10 @@ void control_cb(int control)
           }
           else
           {
-                mesh->GenerateSurface();//unique_region[1]);
+                mesh->GenerateSurfaces(1);//unique_region[1]);
           }
      }
+
      else if(control == ALPHA_ID)
      {
      }
@@ -1014,30 +1105,35 @@ void key(unsigned char key, int x, int y)
                cout<<"min plane: "<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
                p = flow_field->GetPlanePosition(zmax);
                cout<<"max plane: "<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
-                }break;  
-        case 't':if(zmin>0)
-                {zmin = zmin - 1;
-                zmax = zmax - 1;
-               UpdateVisible();
-               svVector3 p = flow_field->GetPlanePosition(zmin);
-               cout<<"min plane: "<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
-               p = flow_field->GetPlanePosition(zmax);
-               cout<<"max plane: "<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
                 }break;
-         case 'T':if(zmax <flow_field->GetPlaneNum()-1)
+*/  
+        case 't':
+                {
+                   svVector3 value[3];
+                   widget->MoveRight();
+                   svInt *index=new svInt[3];  widget->GetIndex(index);
+                   for(int i=0;i<3;i++)
+                   {
+                     value[i]  = flow_field->GetPlanePosition(index[i]);
+                   }
+                   widget->SetValues(value);                   
+                   UpdateVisible();
+                } break;
+         case 'T':
               {
-                zmin = zmin + 1;
-                zmax = zmax + 1;
-               UpdateVisible();
-               svVector3 p = flow_field->GetPlanePosition(zmin);
-               cout<<"min plane: "<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
-               p = flow_field->GetPlanePosition(zmax);
-               cout<<"max plane: "<<p[0]<<" "<<p[1]<<" "<<p[2]<<endl;
+                  svVector3 value[3];
+                  widget->MoveLeft();
+                  svInt *index=new svInt[3];  widget->GetIndex(index);
+                  for(int i=0;i<3;i++)
+                  {
+                      value[i]  = flow_field->GetPlanePosition(index[i]);
+                  }
+                  widget->SetValues(value);
+                  UpdateVisible();
                } break;
-*/
         }
- glutPostRedisplay();
-
+ 
+        glutPostRedisplay();
 }
 void mouse(int button, int state, int x, int y)
 {
@@ -1063,6 +1159,10 @@ void mouse(int button, int state, int x, int y)
               && image_height-y>texture_pos[i][1] 
               && image_height-y<texture_pos[i][1]+texture_size)
             {//cerr<<i<<" "<<texture_status[i]<<" ";
+                if(i%2==0 && texture_status[i+1] == SYMMETRY_DOWN)
+                       continue;
+                if(i%2==1 && texture_status[i-1] == SYMMETRY_DOWN)
+                       continue;
                  if(texture_status[i] == SYMMETRY_DOWN_SELECT)
                        texture_status[i] = SYMMETRY_UP;
                  else if (texture_status[i] == SYMMETRY_UP_SELECT)
@@ -1186,6 +1286,11 @@ void movement(int x, int y)
        {
            for(int i=0;i<SYMMETRY_TYPE_NUM;i++)
            {
+                if(i%2==0 && texture_status[i+1] == SYMMETRY_DOWN)
+                       continue;
+                if(i%2==1 && texture_status[i-1] == SYMMETRY_DOWN)
+                       continue;
+
              if(x > texture_pos[i][0] && x < texture_pos[i][0]+texture_size *1.5
               && image_height-y>texture_pos[i][1]
               && image_height-y<texture_pos[i][1]+texture_size)
@@ -1228,10 +1333,43 @@ void movement(int x, int y)
        }
        glutPostRedisplay();
 }
+void InitField()
+{
+	char *qdot_format = new char[400];
+	sprintf(qdot_format,"%s/%s/format.txt", configproperty.storeDir, 
+	            configproperty.rawFile);
+        flow_field->SetVTK(configproperty.rawDir, configproperty.rawFile,
+	                   configproperty.storeDir,
+					   "sort.txt", "format.txt", "density.txt",
+					   configproperty.plane_center,
+					   configproperty.plane_vector,
+					   configproperty.plane_distance,
+                                           configproperty.format);
+        flow_field->New(qdot_format);	
+        char *str = new char[200];
+
+        sprintf(str, "%s/%s/", configproperty.storeDir,  configproperty.rawFile);				
+        flow_field->NewMesh(str);
+      delete [] str;
+      delete [] qdot_format;
+
+}
+/*void InitContour()
+{
+       delete [] property.contourproperty.contourValues;
+
+        property.contourproperty.seed_num = flow_field->GetPlaneNum();
+        property.contourproperty.contourValues = new svScalarArray[flow_field->GetPlaneNum()];
+        property.contourproperty.isUpdate.free()
+        for(int i=0;i<flow_field->GetPlaneNum();i++)
+                property.contourproperty.isUpdate.add(0);
+       property.contourname.clear();
+}
+*/
 //******************************************
 // initialization code for GL and NV_EXT
 //******************************************
-void LibConfig(char *configfname, ConfigProperty &property)
+/*void LibConfig(char *configfname, ConfigProperty &property)
 {
    Config cfg;
    try
@@ -1240,7 +1378,7 @@ void LibConfig(char *configfname, ConfigProperty &property)
    }
    catch (const FileIOException &fioex)
    {
-             std::cerr << "I/O error while reading file." << std::endl;
+      std::cerr << "I/O error while reading file." << std::endl;
              //return(EXIT_FAILURE);
    }
   catch(const ParseException &pex)
@@ -1262,6 +1400,9 @@ void LibConfig(char *configfname, ConfigProperty &property)
        datainput.lookupValue("type", format);
        datainput.lookupValue("name", rawFile);
        cerr<<rawDir<<" "<<format<<" "<<rawFile<<endl;
+       sprintf(property.rawDir, "%s", rawDir);
+       sprintf(property.rawFile, "%s", rawFile);
+       property.format = format;
   }
   catch(const SettingNotFoundException &nfex)
   {
@@ -1276,6 +1417,7 @@ void LibConfig(char *configfname, ConfigProperty &property)
       const Setting &dataprocessing = root["config"]["dataprocessing"];
       dataprocessing.lookupValue("foldertostorefiles", storeDir);
       cerr<<storeDir<<endl;
+      sprintf(property.storeDir, "%s",storeDir);
   }
   catch(const SettingNotFoundException &nfex)
   {
@@ -1305,6 +1447,8 @@ void LibConfig(char *configfname, ConfigProperty &property)
           }
       };
       cerr<<cc[0]<<" "<<cc[1]<<" "<<cc[2]<<endl;
+      for(int i=0;i<3;i++)
+           property.plane_center[i] = cc[i];
   }
   catch(const SettingNotFoundException &nfex)
   {
@@ -1331,6 +1475,9 @@ void LibConfig(char *configfname, ConfigProperty &property)
       };
 
       cerr<<dir[0]<<" "<<dir[1]<<" "<<dir[2]<<endl;
+      for(int i=0;i<3;i++)
+           property.plane_vector[i] = dir[i];
+      property.plane_vector.normalize();
   }
   catch(const SettingNotFoundException &nfex)
   {
@@ -1351,12 +1498,13 @@ void LibConfig(char *configfname, ConfigProperty &property)
       }
       else
              cuttingplane.lookupValue("distance", distance); 
- 
       cerr<<distance<<endl;
+      property.plane_distance = distance;
   }
   catch(const SettingNotFoundException &nfex)
   {
   }
+  InitField();
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++
 //display
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1366,6 +1514,7 @@ void LibConfig(char *configfname, ConfigProperty &property)
       const Setting &display = root["config"]["display"];
       display.lookupValue("ifcontour", isContour);
       cerr<<isContour<<endl;
+      property.isContour = isContour;
   }
   catch(const SettingNotFoundException &nfex)
   {
@@ -1400,7 +1549,12 @@ void LibConfig(char *configfname, ConfigProperty &property)
           }
           else
                contour.lookupValue("value", contourvalue);
-      
+
+          if(!strcmp(contourtype, "Ratio") || !strcmp(contourtype, "ratio") )  
+          {
+                
+          }    
+
           cerr<<contourtype<<" "<<contourvalue<<endl;
       } 
   }
@@ -1777,7 +1931,7 @@ void LibConfig(char *configfname, ConfigProperty &property)
 
   }
 }
-
+*/
 void ReadConfig(char *configfname, ConfigProperty &property)
 {
 	ifstream infile(configfname);
@@ -1803,23 +1957,23 @@ void ReadConfig(char *configfname, ConfigProperty &property)
 	infile>>property.plane_distance;
 	
 /*--------------initialization of QDOT field------------*/
-	char *qdot_format = new char[400];
-	sprintf(qdot_format,"%s/%s/format.txt", property.storeDir, 
-	            property.rawFile);
-        flow_field->SetVTK(property.rawDir, property.rawFile,
-	                   property.storeDir,
-					   "sort.txt", "format.txt", "density.txt",
-					   property.plane_center,
-					   property.plane_vector,
-					   property.plane_distance,
-                                           property.format);
-        flow_field->New(qdot_format);	
+//	char *qdot_format = new char[400];
+//	sprintf(qdot_format,"%s/%s/format.txt", property.storeDir, 
+//	            property.rawFile);
+//        flow_field->SetVTK(property.rawDir, property.rawFile,
+//	                   property.storeDir,
+//					   "sort.txt", "format.txt", "density.txt",
+//					   property.plane_center,
+//					   property.plane_vector,
+//					   property.plane_distance,
+//                                           property.format);
+//        flow_field->New(qdot_format);	
         char *str = new char[200];
-
+//
         sprintf(str, "%s/%s/", property.storeDir,  property.rawFile);				
-        flow_field->NewMesh(str);
-	delete [] qdot_format;
-	
+//        flow_field->NewMesh(str);
+//	delete [] qdot_format;
+        InitField();	
 /*------------------contour----------------------*/
 	infile>>tmp; //cerr<<tmp<<endl;
 	double store;
@@ -2023,7 +2177,6 @@ void ReadConfig(char *configfname, ConfigProperty &property)
         property.symmetryproperty.planepos = flow_field->GetMinPlane();
         property.symmetryproperty.planedir = flow_field->GetPlaneDir();
         property.symmetryproperty.planedistance = property.plane_distance;
-        delete [] str;	
 /*--------------------------ROI----------------------------------------*/
         infile>>tmp;
         infile>>num;
@@ -2031,9 +2184,52 @@ void ReadConfig(char *configfname, ConfigProperty &property)
         infile>>zmax; //cerr<<tmp<<" "<<num<<" "<<zmin<<" "<<zmax<<endl;
         if(num == 3) {infile>>nonz;layer_repeat = true;}
         else nonz = -1;
+/*-------------------------Neighbors----------------------------------*/
+        infile>>tmp;
+        sprintf(str, "%s/%s/layerall.txt", property.storeDir, property.rawFile);
+        property.neighborproperty.inputfile = strdup(str);
+        sprintf(str, "%s/%s/neighbors.txt", property.storeDir, property.rawFile);
+        property.neighborproperty.outputfile = strdup(str);
+        property.neighborproperty.svectors.free();
+        num = property.neighborproperty.dvectors.size();
+        for(int i=0;i<num;i++)
+        {
+           property.neighborproperty.dvectors[i].free();
+        }
+        property.neighborproperty.zvalues.free();
+        infile>>num;
+        for(int i=0;i<num;i++)
+        {
+             infile>>pp[0]>>pp[1]>>pp[2];
+    //         if(pp[1] <=0.)
+             property.neighborproperty.svectors.add(pp);
+        }
+        infile>>num;
+        property.neighborproperty.dvectors.resize(num);
+        for(int i=0;i<num;i++)
+        {
+            infile>>store;
+            property.neighborproperty.zvalues.add(store);
+            int m;
+            infile>>m;cerr<<store<<" "<<m<<endl;
+            for(int j=0;j<m;j++)
+            {
+                infile>>pp[0]>>pp[1]>>pp[2];
+      //          if(pp[1] <=0. && pp[2]<=0.)
+                   property.neighborproperty.dvectors[i].add(pp);
+            }
+        }
+        property.neighborproperty.planepos = flow_field->GetMinPlane();
+        property.neighborproperty.planedir = flow_field->GetPlaneDir();
+        property.neighborproperty.planedistance = property.plane_distance; 
+
+    //    svNeighbor *testnei = new svNeighbor(flow_field);
+    //    testnei->ComputeNeighbors(property.neighborproperty);
      //   widget->SetIndex(zmin, zmax);
 /*-------------------------end----------------------------------------*/
         infile.close();
+        delete [] str;
+
        symmetrytype.clear();
 //       symmetrytype.push_back(0);
 //       symmetrytype.push_back(1);
@@ -2163,10 +2359,10 @@ void LocateTexture()
     svScalar size = texture_size;//cerr<<size<<endl;
     texture_pos[0][0]=325;          texture_pos[0][1]=image_height-size*1.2; 
     texture_pos[1][0]=325+size*1.7; texture_pos[1][1]=image_height-size*1.2; 
-    texture_pos[2][0]=325+size*3.4; texture_pos[2][1]=image_height-size*1.2; 
-    texture_pos[3][0]=325+size*5.1; texture_pos[3][1]=image_height-size*1.2; 
-    texture_pos[4][0]=325+size*6.8; texture_pos[4][1]=image_height-size*1.2;
-    texture_pos[5][0]=325+size*8.5; texture_pos[5][1]=image_height-size*1.2;
+    texture_pos[2][0]=325+size*4.4; texture_pos[2][1]=image_height-size*1.2; 
+    texture_pos[3][0]=325+size*6.1; texture_pos[3][1]=image_height-size*1.2; 
+    texture_pos[4][0]=325+size*8.8; texture_pos[4][1]=image_height-size*1.2;
+    texture_pos[5][0]=325+size*10.5; texture_pos[5][1]=image_height-size*1.2;
 
     size = texture_visual_size;
     texture_visual_pos[0][0]=325;          texture_visual_pos[0][1]=image_height-size*1.2;
@@ -2369,6 +2565,7 @@ void RenderDualPeeling()
         }
         if(summaryVisible)summaryglyph->Render();
         if(mesh_enable) mesh->Render();
+        if(symmetrymesh_enable) symmetrymesh->Render();
         glDisable(GL_LIGHTING);
         outline->DrawXYZ(splitglyph->GetLb(), splitglyph->GetRb(), viewproperty);
         outline->DrawAxis(splitglyph->GetLb(), splitglyph->GetRb());
@@ -2436,6 +2633,7 @@ void RenderDualPeeling()
                  }
                  if(summaryVisible)summaryglyph->Render();
                  if(mesh_enable)mesh->Render();
+                 if(symmetrymesh_enable)symmetrymesh->Render();
                  glDisable(GL_LIGHTING);
                  outline->DrawXYZ(splitglyph->GetLb(), splitglyph->GetRb(),viewproperty);
                  outline->DrawAxis(splitglyph->GetLb(), splitglyph->GetRb());
@@ -2525,7 +2723,10 @@ void InitGL(string shader)
 
 void init(char *configfname)//rbfname, char *cpname)
 {
-  LibConfig("/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/SplitTool/default.cfg", configproperty);
+  //LibConfig("/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/SplitTool/default.cfg", configproperty);
+cerr<<"start"<<endl;
+  // ccl = new svConnect();
+//   ccl->TwoPass("/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/tmp/spin_proj_norm_vs_pos_p_v_z_10z_newcolumn/neighbors.txt", "test_results");
 
   if(encode_type == LINEAR)
     length_scale = LINEAR_SCALE;
@@ -2540,6 +2741,7 @@ void init(char *configfname)//rbfname, char *cpname)
   configproperty.rawFile = new char[200];
   configproperty.storeDir = new char[200];
 
+  symmetrymesh_solid_list = 50;
   mesh_solid_list =30;
   render_list = 10;
   summary_list = 20;
@@ -2553,6 +2755,7 @@ void init(char *configfname)//rbfname, char *cpname)
   delete [] str;
 
   mesh = new svMesh();
+  symmetrymesh = new svMesh();
   outline = new svOutline();
   flow_field = new svQDOT();
   widget = new svWidget();
@@ -2561,7 +2764,7 @@ void init(char *configfname)//rbfname, char *cpname)
   configproperty.symmetryproperty.outputdir = new char[200];
   configproperty.symmetryproperty.inputfile = new char[200];
   ReadConfig(configfname, configproperty);
-
+//ccl->TwoPass("/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/tmp/spin_proj_norm_vs_pos_p_v_z_10z_newcolumn/neighbors.txt", "test_results");
   //zmin=0;
   //zmax = flow_field->GetPlaneNum()-1;
 
@@ -2625,6 +2828,7 @@ void Update()
          value[i]  = flow_field->GetPlanePosition(index[i]);
   }
    widget->SetValues(value);
+//   widget->SetValues(splitglyph->GetEntropyValues());
 
   summaryglyph->New(flow_field, flow_field->GetPlaneNum());
   directglyph->New(flow_field, flow_field->GetPlaneNum());
@@ -2648,13 +2852,22 @@ void Update()
                    summaryglyph->SetFormat(str,i);
                    splitglyph->SetFormat(str,i);
          }
+
+   splitglyph->GenerateEntropy();
+   directglyph->GenerateEntropy();
+   widget->SetHistoValues(splitglyph->GetMagProb());
+   widget->SetValues(splitglyph->GetEntropyValues(),true);
         directglyph->SetContourLabel();
         summaryglyph->SetContourLabel();
         splitglyph->SetContourLabel();
         directglyph->GenerateSymmetry(configproperty.symmetryproperty);//, frequency);
         splitglyph->GenerateSymmetry(configproperty.symmetryproperty);//, frequency);
         summaryglyph->GenerateSymmetry(configproperty.symmetryproperty);//, frequency);
+     //   directglyph->GenerateNeighbors(configproperty.neighborproperty);
+     //   splitglyph->GenerateNeighbors(configproperty.neighborproperty);
+     //   summaryglyph->GenerateNeighbors(configproperty.neighborproperty);
    }
+
 
    directglyph->ResetCluster();//cerr<<"done1"<<endl;
    directglyph->SetXdistance(flow_field->GetXdistance());//cerr<<"done1"<<endl;
@@ -2704,8 +2917,7 @@ void Update()
                unique_region[i]);
         mesh->SetData(str, i); 
    }
-   //cerr<<"region "<<unique_region[1]<<endl;
-   mesh->GenerateSurface();//unique_region[1]);
+   mesh->GenerateSurfaces(1);//unique_region[1]);
    delete [] str;
 
   svVector3 center = flow_field->GetCenter();//cerr<<"done"<<endl;
@@ -2744,7 +2956,13 @@ void glui_display()
   box_layer = glui->add_checkbox_to_panel(panel_layer,"Layers", &layerVisible, LAYER_ID, control_cb);
   glui->add_column_to_panel(panel_layer, true);
   new GLUI_Checkbox(panel_layer, "Repeat", &layer_repeat, LAYER_REPEAT_ID, control_cb);
+//  list_widget_vis = glui->add_listbox_to_panel(panel_layer, "Show",
+//                                        &length_vis, LENGTH_VIS_ID, control_cb);
+//  list_widget_vis->add_item(0, "Magnitude");
+//  list_widget_vis->add_item(1, "Orientation");
+
   new GLUI_Checkbox(glui, "Summary glyph", &summaryVisible, OVERVIEW_ID, control_cb);
+  new GLUI_Checkbox(glui, "Symmetry surface", &symmetrymesh_enable);
 //  (glui, "Visual mapping", &encode_visible, ENCODE_ID, control_cb);
   /// Mesh
   /// 
@@ -2851,22 +3069,22 @@ int main(int argc, char** argv)
 {
    image_width  = IMAGE_WIDTH;
    image_height = IMAGE_HEIGHT;
-
+cerr<<"start"<<endl;
    glutInit(&argc, argv);
    glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGBA
                           | GLUT_DEPTH | GLUT_ACCUM);
-
-        window = glutCreateWindow("QDOT");
+cerr<<"start"<<endl;
         glutInitWindowSize(image_width, image_height);
            glutInitWindowPosition(0, 0);
- 
+        window = glutCreateWindow("QDOT");
+cerr<<"start"<<endl; 
         if (glewInit() != GLEW_OK)
         {
                 printf("glewInit failed. Exiting...\n");
                 exit(1);
         }
 
-
+cerr<<"start"<<endl;
    GLUI_Master.set_glutReshapeFunc(Reshape);
    init(argv[1]);
    Init();

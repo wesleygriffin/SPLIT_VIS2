@@ -1,0 +1,399 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Ric">
+      <UniqueIdentifier>{77fe9068-3059-49e2-a17c-ed40f6c94a6b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Array3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ball.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BallAux.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BallMath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FollowCubeTables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLUTArcBall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLUTCheckableBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLUTCheckBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLUTDebugGLCalls.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLUTHorizPane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLUTHorizSlider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLUTLabelledRadioButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLUTPane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLUTRadioButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLUTRadioGroup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLUTStaticText.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLUTString.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLUTTextButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLUTToolbox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLUTVertPane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLUTVertSlider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLUTWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightField.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Malloc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PriorityIndex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Superarc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Supernode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IsosurfaceWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sphere.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IsosurfacePane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="writetofile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ColourSelectionPane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ContourTreePane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LogCollapsePane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\crc32.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\deflate.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\dtypes.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\inffast.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\inffixed.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\inflate.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\inftrees.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\nemardr.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\nifti1.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\nifti1_io.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\RicMatrix.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\RicMesh.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\RicMeshSet.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\RicPoint.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\RicTexture.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\RicTextureSet.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\RicUtil.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\RicVolume.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\RicVolumeSet.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\trees.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\zconf.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\zconf.in.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\zlib.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\znzlib.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MyContourTree\MyContourTree\Ric\zutil.h">
+      <Filter>Ric</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Ball.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BallAux.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BallMath.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FollowCubeTables.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLUTArcBall.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLUTCheckableBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLUTCheckBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLUTDebugGLCalls.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLUTHorizPane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLUTHorizSlider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLUTLabelledRadioButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLUTPane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLUTRadioButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLUTRadioGroup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLUTStaticText.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLUTTextButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLUTVertPane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLUTVertSlider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLUTWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightField_Collapse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightField_Construction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightField_Contour_Follow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightField_Debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightField_Draw_Trees.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightField_Flexible.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightField_Layout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightField_Marching_Cubes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightField_Utilities.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Malloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="spare_collapse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="spare_flexible.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sphere.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Superarc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Supernode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IsosurfaceWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IsosurfacePane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="writetofile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ColourSelectionPane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ContourTreePane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LogCollapsePane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLUTString.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\adler32.c">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\compress.c">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\crc32.c">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\deflate.c">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\gzio.c">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\infback.c">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\inffast.c">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\inflate.c">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\inftrees.c">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\nemardr.cpp">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\nifti1_io.c">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\NiftiOrientConvert.cpp">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\RicMesh.cpp">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\RicMeshSet.cpp">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\RicTexture.cpp">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\RicTextureSet.cpp">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\RicUtil.cpp">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\RicVolume.cpp">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\RicVolumeSet.cpp">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\trees.c">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\uncompr.c">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\znzlib.c">
+      <Filter>Ric</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MyContourTree\MyContourTree\Ric\zutil.c">
+      <Filter>Ric</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

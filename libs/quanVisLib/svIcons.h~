@@ -1,0 +1,114 @@
+#ifndef __SV_ICONS_H
+#define __SV_ICONS_H
+
+
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
+
+#include "svType.h"
+#include "svVectorMatrix.h"
+#include "svArray.h"
+#include "svUtil.h"
+
+namespace __svl_lib{
+
+
+void DrawArrow1(float arrowbase,
+                float arrowheight,
+                float height,
+                svVector3 pos);
+void DrawArrow2(float arrowbase,
+                float arrowheight,
+                float height,
+                svVector3 pos);
+
+
+void DrawArrowDownButton1(char *text,
+                     float w, float h,
+                     svVector3 pos,
+                     svVector4 color);
+void DrawArrowUpButton1(char *text, 
+                     float w, float h,
+                     svVector3 pos,
+                     svVector4 color);
+void DrawArrowDownButton2(char *text,
+                     float w, float h,
+                     svVector3 pos,
+                     svVector4 color);
+void DrawArrowUpButton2(char *text,
+                     float w, float h,
+                     svVector3 pos,
+                     svVector4 color);
+void DrawArrowDownButton3(char *text,
+                     float w, float h,
+                     svVector3 pos,
+                     svVector4 color);
+void DrawArrowUpButton3(char *text,
+                     float w, float h,
+                     svVector3 pos,
+                     svVector4 color);
+void DrawArrowDownButton4(char *text,
+                     float w, float h,
+                     svVector3 pos,
+                     svVector4 color);
+void DrawArrowUpButton4(char *text,
+                     float w, float h,
+                     svVector3 pos,
+                     svVector4 color);
+void DrawArrowDownButton5(char *text,
+                     float w, float h,
+                     svVector3 pos,
+                     svVector4 color);
+void DrawArrowUpButton5(char *text,
+                     float w, float h,
+                     svVector3 pos,
+                     svVector4 color);
+void DrawArrowDownButton6(char *text,
+                     float w, float h,
+                     svVector3 pos,
+                     svVector4 color);
+void DrawArrowUpButton6(char *text,
+                     float w, float h,
+                     svVector3 pos,
+                     svVector4 color);
+void DrawArrowDownButton7(char *text,
+                     float w, float h,
+                     svVector3 pos,
+                     svVector4 color);
+void DrawArrowUpButton7(char *text,
+                     float w, float h,
+                     svVector3 pos,
+                     svVector4 color);
+void DrawArrowDownButton8(char *text,
+                     float w, float h,
+                     svVector3 pos,
+                     svVector4 color);
+void DrawArrowUpButton8(char *text,
+                     float w, float h,
+                     svVector3 pos,
+                     svVector4 color);
+void DrawArrowDownButton1(char *text,
+                     float w, float h,
+                     svVector3 pos,
+                     svVector4 color);
+void DrawArrowUpButton1(char *text,
+                     float w, float h,
+                     svVector3 pos,
+                     svVector4 color);
+void DrawArrowButton(float w, float h,
+                     svVector3 pos,
+                     int type);
+
+void DrawEncodeDownButton(char *text,
+                     float w, float h,
+                     svVector3 pos);
+void DrawEncodeUpButton(char *text,
+                     float w, float h,
+                     svVector3 pos);
+}
+#endif

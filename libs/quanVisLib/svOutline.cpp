@@ -20,12 +20,12 @@ void svOutline::DrawAxis_scale(svVector3 lbbox, svVector3 rbbox, int width)
   GLdouble mvmatrix[16];
   GLdouble projmatrix[16];
 
-    int i, j;
+   int i, j;
 
-    svVector3 p[4];
-  GLdouble wx[4];
-  GLdouble wy[4];
-  GLdouble wz[4];
+   svVector3 p[4];
+   GLdouble wx[4];
+   GLdouble wy[4];
+   GLdouble wz[4];
 
     glGetIntegerv (GL_VIEWPORT, viewport);
     glGetDoublev (GL_MODELVIEW_MATRIX, mvmatrix);
@@ -558,11 +558,237 @@ void svOutline::DrawAxis(svVector3 lbbox, svVector3 rbbox)
 	//glDisable(GL_DEPTH_TEST);
 	glLineWidth(1.);
 }
+//eye is in (0,0,z);
+svScalar svOutline::GetDistance(svVector3 newv1, svVector3 newv2, ViewProperty &property)
+{
+    //svVector3 newv1 = GetNewVector(v1, property.tm);
+    //svVector3 newv2 = GetNewVector(v2, property.tm);
+
+    GLdouble objx, objy, objz;
+    GLdouble winx, winy, winz;
+    objx=newv1[0];objy=newv1[1];objz=newv1[2];
+    gluProject(objx, objy, objz, property.mvmatrix,
+                       property.projmatrix,property.viewport,
+                       &winx, &winy, &winz);
+    newv1[0]=winx;newv1[1]=winy;newv1[2]=winz;
+    objx=newv2[0];objy=newv2[1];objz=newv2[2];
+    gluProject(objx, objy, objz, property.mvmatrix,
+                       property.projmatrix,property.viewport,
+                       &winx, &winy, &winz);
+    newv2[0]=winx;newv2[1]=winy;newv2[2]=winz;
+
+    svScalar distance = sqrt((newv2[0]-newv1[0])*(newv2[0]-newv1[0])
+                       +(newv2[1]-newv1[1])*(newv2[1]-newv1[1]));
+    return distance;
+}
+
+void svOutline::DrawAxisFont(svVector3 lbbox, svVector3 rbbox, ViewProperty &property)
+{
+    glColor3f(0,0,0);
+
+    svVector3 v1, v2, newv1, newv2;
+    v1[0]=rbbox[0];v1[1]=lbbox[1];v1[2]=lbbox[2];
+    v2[0]=lbbox[0];v2[1]=lbbox[1];v2[2]=lbbox[2];
+    svScalar xdistance = GetDistance(v1,v2,property);
+    int xmin = lbbox[0]+1;
+    int seg;
+    newv1 = GetNewVector(v1, property.tm);
+    newv2 = GetNewVector(v2, property.tm);
+    svScalar distance = GetDistance(newv1, newv2, property);
+    if(fabs(distance - xdistance)<1e-3) seg = 2;
+    else
+    {
+      seg =  xdistance/distance+2;
+    }
+    for(int i=xmin;i<=rbbox[0];i+=seg)
+    {
+        v1[0]=(svScalar)i+0.2;v1[1]=lbbox[1]-1;v1[2]=lbbox[2]-0.5;
+        newv1 = GetNewVector(v1, property.tm);
+
+        glPushMatrix();
+        glTranslatef(newv1[0],newv1[1],newv1[2]);
+        glScalef(0.004,0.004,0.004);
+        char str[20];
+        sprintf(str, "%d", i);
+        for(int j=0;j<strlen(str);j++)
+        glutStrokeCharacter(GLUT_STROKE_ROMAN,str[j]);
+        glPopMatrix();
+    }
+
+    v1[0]=lbbox[0];v1[1]=lbbox[1];v1[2]=lbbox[2];
+    v2[0]=lbbox[0];v2[1]=rbbox[1];v2[2]=lbbox[2];
+    svScalar ydistance = GetDistance(v1,v2,property);
+    int ymin = lbbox[1]+1;
+    newv1 = GetNewVector(v1, property.tm);
+    newv2 = GetNewVector(v2, property.tm);
+    distance = GetDistance(newv1, newv2, property);
+    if(fabs(distance - ydistance)<1e-3) seg = 2;
+    else
+    {
+      seg =  ydistance/distance+2;
+    }
+    for(int i=ymin;i<=rbbox[1];i+=seg)
+    {
+        v1[0]=lbbox[0]-1;v1[1]=(svScalar)i+0.2;v1[2]=lbbox[2]-0.5;
+        newv1 = GetNewVector(v1, property.tm);
+
+        glPushMatrix();
+        glTranslatef(newv1[0],newv1[1],newv1[2]);
+        glScalef(0.004,0.004,0.004);
+        char str[20];
+        sprintf(str, "%d", i);
+        for(int j=0;j<strlen(str);j++)
+        glutStrokeCharacter(GLUT_STROKE_ROMAN,str[j]);
+        glPopMatrix();
+    }
+
+    v1[0]=lbbox[0];v1[1]=lbbox[1];v1[2]=lbbox[2];
+    v2[0]=lbbox[0];v2[1]=lbbox[1];v2[2]=rbbox[2];
+    svScalar zdistance = GetDistance(v1,v2,property);
+    int zmin = lbbox[2]+1;
+    newv1 = GetNewVector(v1, property.tm);
+    newv2 = GetNewVector(v2, property.tm);
+    distance = GetDistance(newv1, newv2, property);
+    if(fabs(distance - zdistance)<1e-3) seg = 2;
+    else
+    {
+      seg =  zdistance/distance+2;
+    }
+    for(int i=zmin;i<=rbbox[2];i+=seg)
+    {
+        v1[0]=lbbox[0]-0.5;v1[1]=lbbox[1]-0.5;v1[2]=(svScalar)i-0.2;
+        newv1 = GetNewVector(v1, property.tm);
+
+        glPushMatrix();
+        glTranslatef(newv1[0],newv1[1],newv1[2]);
+        glScalef(0.004,0.004,0.004);
+        char str[20];
+        sprintf(str, "%d", i);
+        for(int j=0;j<strlen(str);j++)
+       glutStrokeCharacter(GLUT_STROKE_ROMAN,str[j]);
+        glPopMatrix();
+    }
+
+
+/*
+    v1[0]=lbbox[0];v1[1]=lbbox[1];v1[2]=lbbox[2];
+    v2[0]=lbbox[0];v2[1]=rbbox[1];v2[2]=lbbox[2];
+    svScalar ydistance = GetDistance(v1,v2,property);
+    int ymin = lbbox[1]+1;
+    newv1 = GetNewVector(v1, property.tm);
+    newv2 = GetNewVector(v2, property.tm);
+    distance = GetDistance(newv1, newv2, property);
+    if(fabs(distance - ydistance)<1e-3) seg = 1;
+    else
+    {
+      seg =  ydistance/distance+1;
+    }
+    glPointSize(5);
+    glColor3f(8./255., 29./255., 88./255.);
+    glBegin(GL_POINTS);
+    for(int i=ymin;i<=rbbox[1];i+=seg)
+    {
+        glVertex3f(lbbox[0],(svScalar)i, lbbox[2]);
+    }
+    glEnd();
+
+    v1[0]=lbbox[0];v1[1]=lbbox[1];v1[2]=lbbox[2];
+    v2[0]=lbbox[0];v2[1]=lbbox[1];v2[2]=rbbox[2];
+    svScalar zdistance = GetDistance(v1,v2,property);
+    int zmin = lbbox[2]+1;
+    newv1 = GetNewVector(v1, property.tm);
+    newv2 = GetNewVector(v2, property.tm);
+    distance = GetDistance(newv1, newv2, property);
+    if(fabs(distance - zdistance)<1e-3) seg = 1;
+    else
+    {
+      seg =  zdistance/distance+1;
+    }
+    glPointSize(5);
+    glColor3f(8./255., 29./255., 88./255.);
+    glBegin(GL_POINTS);
+    for(int i=zmin;i<=rbbox[2];i+=seg)
+    {
+        glVertex3f(lbbox[0],lbbox[1],(svScalar)i);
+    }
+    glEnd();
+    glPointSize(1);
+*/
+}
+
+void svOutline::DrawAxisSticks(svVector3 lbbox, svVector3 rbbox, ViewProperty &property)
+{
+    svVector3 v1, v2, newv1, newv2;
+    v1[0]=rbbox[0];v1[1]=lbbox[1];v1[2]=lbbox[2];
+    v2[0]=lbbox[0];v2[1]=lbbox[1];v2[2]=lbbox[2];
+    svScalar xdistance = GetDistance(v1,v2,property);
+    int xmin = lbbox[0]+1;
+    int seg;
+    newv1 = GetNewVector(v1, property.tm);
+    newv2 = GetNewVector(v2, property.tm);
+    svScalar distance = GetDistance(newv1, newv2, property);
+    if(fabs(distance - xdistance)<1e-3) seg = 2;
+    else 
+    {
+      seg =  xdistance/distance+2; 
+    }
+    glPointSize(5);
+    glColor3f(8./255., 29./255., 88./255.);
+    glBegin(GL_POINTS);
+    for(int i=xmin;i<=rbbox[0];i+=seg)
+    {   
+        glVertex3f((svScalar)i, lbbox[1], lbbox[2]);
+    }  
+    glEnd();
+
+    v1[0]=lbbox[0];v1[1]=lbbox[1];v1[2]=lbbox[2];
+    v2[0]=lbbox[0];v2[1]=rbbox[1];v2[2]=lbbox[2];
+    svScalar ydistance = GetDistance(v1,v2,property);
+    int ymin = lbbox[1]+1;
+    newv1 = GetNewVector(v1, property.tm);
+    newv2 = GetNewVector(v2, property.tm);
+    distance = GetDistance(newv1, newv2, property);
+    if(fabs(distance - ydistance)<1e-3) seg = 2;
+    else
+    {
+      seg =  ydistance/distance+2;
+    }
+    glPointSize(5);
+    glColor3f(8./255., 29./255., 88./255.);
+    glBegin(GL_POINTS);
+    for(int i=ymin;i<=rbbox[1];i+=seg)
+    {   
+        glVertex3f(lbbox[0],(svScalar)i, lbbox[2]);
+    } 
+    glEnd();
+
+    v1[0]=lbbox[0];v1[1]=lbbox[1];v1[2]=lbbox[2];
+    v2[0]=lbbox[0];v2[1]=lbbox[1];v2[2]=rbbox[2];
+    svScalar zdistance = GetDistance(v1,v2,property);
+    int zmin = lbbox[2]+1;
+    newv1 = GetNewVector(v1, property.tm);
+    newv2 = GetNewVector(v2, property.tm);
+    distance = GetDistance(newv1, newv2, property);
+    if(fabs(distance - zdistance)<1e-3) seg = 2;
+    else
+    {
+      seg =  zdistance/distance+2;
+    }
+    glPointSize(5);
+    glColor3f(8./255., 29./255., 88./255.);
+    glBegin(GL_POINTS);
+    for(int i=zmin;i<=rbbox[2];i+=seg)
+    {
+        glVertex3f(lbbox[0],lbbox[1],(svScalar)i);
+    } 
+    glEnd();
+    glPointSize(1);
+}
 void svOutline::DrawXYZFont(svVector3 lbbox, svVector3 rbbox, ViewProperty &property)
 {
 	glColor3f(227./255.,26./255.,28./255.);
 
-        svVector3 v1; v1[0]=rbbox[0]*1.5+2.;v1[1]=0;v1[2]=0;
+        svVector3 v1; v1[0]=rbbox[0]*1.2+2.;v1[1]=0;v1[2]=0;
         svVector3 newv1 = GetNewVector(v1, property.tm);
 
         glPushMatrix();
@@ -573,7 +799,7 @@ void svOutline::DrawXYZFont(svVector3 lbbox, svVector3 rbbox, ViewProperty &prop
 
         glColor3f(35./255.,139./255.,69./255.); 
 
-        v1[0]=0;v1[1]=rbbox[1]*1.5+2.;v1[2]=0;
+        v1[0]=0;v1[1]=rbbox[1]*1.2+2.;v1[2]=0;
         newv1 = GetNewVector(v1, property.tm);
 
         glPushMatrix();
@@ -582,7 +808,7 @@ void svOutline::DrawXYZFont(svVector3 lbbox, svVector3 rbbox, ViewProperty &prop
         glutStrokeCharacter(GLUT_STROKE_ROMAN,'y');
         glPopMatrix();
 
-        v1[0]=0;v1[2]=rbbox[2]*1.5+2.;v1[1]=0;
+        v1[0]=0;v1[2]=rbbox[2]*1.2+2.;v1[1]=0;
         newv1 = GetNewVector(v1, property.tm);
 
         glColor3f(33./255.,113./255.,181./255.);
@@ -592,15 +818,142 @@ void svOutline::DrawXYZFont(svVector3 lbbox, svVector3 rbbox, ViewProperty &prop
         glutStrokeCharacter(GLUT_STROKE_ROMAN,'z');
         glPopMatrix();
 }
+void svOutline::DrawXYZPrimeFont(svVector3 pos, svVector3 dir, svVector3 x, svVector3 y, svVector3 rbbox, ViewProperty &property)
+{
+        glColor3f(227./255.,26./255.,28./255.);
+
+        svVector3 v1; 
+        v1[0]=pos[0]+x[0]*(rbbox[0]*1.8+2.);
+        v1[1]=pos[1]+x[1]*(rbbox[0]*1.8+2.);
+        v1[2]=pos[2]+x[2]*(rbbox[0]*1.8+2.);
+        svVector3 newv1 = GetNewVector(v1, property.tm);
+
+        char str[5];
+        sprintf(str,"x'");
+        glPushMatrix();
+        glTranslatef(newv1[0],newv1[1],newv1[2]);
+        glScalef(0.02,0.02,0.02);
+        for(int i=0;i<strlen(str);i++)
+            glutStrokeCharacter(GLUT_STROKE_ROMAN,str[i]);
+        glPopMatrix();
+
+        glColor3f(35./255.,139./255.,69./255.);
+
+        v1[0]=pos[0]+y[0]*(rbbox[0]*1.8+2.);
+        v1[1]=pos[1]+y[1]*(rbbox[0]*1.8+2.);
+        v1[2]=pos[2]+y[2]*(rbbox[0]*1.8+2.);
+        newv1 = GetNewVector(v1, property.tm);
+
+        sprintf(str,"y'");
+        glPushMatrix();
+        glTranslatef(newv1[0],newv1[1],newv1[2]);
+        glScalef(0.02,0.02,0.02);
+        for(int i=0;i<strlen(str);i++)
+            glutStrokeCharacter(GLUT_STROKE_ROMAN,str[i]);
+        glPopMatrix();
+
+        v1[0]=pos[0]+dir[0]*(rbbox[0]*1.8+2.);
+        v1[1]=pos[1]+dir[1]*(rbbox[0]*1.8+2.);
+        v1[2]=pos[2]+dir[2]*(rbbox[0]*1.8+2.);
+        newv1 = GetNewVector(v1, property.tm);
+
+        sprintf(str,"z'");
+        glColor3f(33./255.,113./255.,181./255.);
+        glPushMatrix();
+        glTranslatef(newv1[0],newv1[1],newv1[2]);
+        glScalef(0.02,0.02,0.02);
+        for(int i=0;i<strlen(str);i++)
+            glutStrokeCharacter(GLUT_STROKE_ROMAN,str[i]);
+        glPopMatrix();
+}
+void svOutline::DrawXYZPrime(svVector3 pos, svVector3 dir, svVector3 x, svVector3 y, svVector3 rbbox)
+{
+       glEnable(GL_LIGHTING);
+       svVector3 p;
+       p[0] = pos[0]+x[0]*rbbox[0]*1.8;
+       p[1] = pos[1]+x[1]*rbbox[0]*1.8;
+       p[2] = pos[2]+x[2]*rbbox[0]*1.8;
+       svVector3 d;
+       d = x;
+       svScalar radius = 0.5;
+       svScalar height = radius*3.;
+       glColor3f(227./255.,26./255.,28./255.);
+       RenderCone(p, d, radius, height, 4);
+
+       p[0] = pos[0]+y[0]*rbbox[0]*1.8;
+       p[1] = pos[1]+y[1]*rbbox[0]*1.8;
+       p[2] = pos[2]+y[2]*rbbox[0]*1.8;
+       d = y;
+       glColor3f(35./255.,139./255.,69./255.);
+       RenderCone(p, d, radius, height, 4);
+
+       glColor3f(33./255.,113./255.,181./255.);
+       p[0] = pos[0]+dir[0]*rbbox[0]*1.8;
+       p[1] = pos[1]+dir[1]*rbbox[0]*1.8;
+       p[2] = pos[2]+dir[2]*rbbox[0]*1.8;
+       d = dir;
+       RenderCone(p, d, radius, height, 4);
+
+        glLineWidth(2);
+//===========================================================
+        glDisable(GL_LIGHTING);
+	glColor3f(227./255.,26./255.,28./255.);
+	glBegin(GL_LINES);
+	glVertex3f(pos[0]+x[0]*rbbox[0]*1.8,
+                   pos[1]+x[1]*rbbox[0]*1.8,
+                   pos[2]+x[2]*rbbox[0]*1.8);
+	glVertex3f(pos[0],pos[1],pos[2]);
+	glEnd();
+
+        glColor3f(35./255.,139./255.,69./255.); 
+        glBegin(GL_LINES);
+        glVertex3f(pos[0]+y[0]*rbbox[0]*1.8,
+                   pos[1]+y[1]*rbbox[0]*1.8,
+                   pos[2]+y[2]*rbbox[0]*1.8);
+        glVertex3f(pos[0],pos[1],pos[2]);
+        glEnd();
+
+        glColor3f(33./255.,113./255.,181./255.);
+        glBegin(GL_LINES);
+        glVertex3f(pos[0]+dir[0]*rbbox[0]*1.8,
+                   pos[1]+dir[1]*rbbox[0]*1.8,
+                   pos[2]+dir[2]*rbbox[0]*1.8);
+        glVertex3f(pos[0],pos[1],pos[2]);
+        glEnd();
+       glLineWidth(1);
+
+}
 void svOutline::DrawXYZ(svVector3 lbbox, svVector3 rbbox, ViewProperty &property)
 {
+       glEnable(GL_LIGHTING);
+       svVector3 pos;
+       pos[0]=rbbox[0]*1.2;pos[1]=0;pos[2]=0;
+       svVector3 dir;
+       dir[0]=1;dir[1]=0;dir[2]=0;
+       svScalar radius = 0.25;
+       svScalar height = radius*3.;
+       glColor3f(227./255.,26./255.,28./255.);
+       RenderCone(pos, dir, radius, height, 4);
+
+       pos[0]=0;pos[1]=rbbox[1]*1.2;pos[2]=0;
+       dir[0]=0;dir[1]=1;dir[2]=0;
+       glColor3f(35./255.,139./255.,69./255.);
+       RenderCone(pos, dir, radius, height, 4);
+
+       pos[0]=0;pos[1]=0;pos[2]=rbbox[2]*1.2;
+       dir[0]=0;dir[1]=0;dir[2]=1;
+       glColor3f(33./255.,113./255.,181./255.);
+       RenderCone(pos, dir, radius, height, 4);
+
+
+       glDisable(GL_LIGHTING);
 	//draw x,y,z
 	glColor3f(227./255.,26./255.,28./255.);
 	glBegin(GL_LINES);
-	glVertex3f(rbbox[0]*1.5,0,0);
+	glVertex3f(rbbox[0]*1.2,0,0);
 	glVertex3f(0,0,0);
 	glEnd();
-	glBegin(GL_TRIANGLE_FAN);
+/*	glBegin(GL_TRIANGLE_FAN);
 	glVertex3f(rbbox[0]*1.5,0,0);
 	glVertex3f(rbbox[0]*1.5-1,0.5,0);
 	glVertex3f(rbbox[0]*1.5-1,0,0.5);
@@ -608,7 +961,7 @@ void svOutline::DrawXYZ(svVector3 lbbox, svVector3 rbbox, ViewProperty &property
 	glVertex3f(rbbox[0]*1.5-1,0,-0.5);
 	glVertex3f(rbbox[0]*1.5-1,0.5,0);
 	glEnd();
-
+*/
         /*svVector3 v1; v1[0]=rbbox[0]*1.5+2.;v1[1]=0;v1[2]=0;
         svVector3 v2; v2[0]=rbbox[0]*1.5+2.;v2[1]=0;v2[2]=1;
         svVector3 newv1 = GetNewVector(v1, property.tm);
@@ -631,10 +984,10 @@ void svOutline::DrawXYZ(svVector3 lbbox, svVector3 rbbox, ViewProperty &property
 //  	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'x');
         glColor3f(35./255.,139./255.,69./255.); 
         glBegin(GL_LINES);
-        glVertex3f(0,rbbox[1]*1.5,0);
+        glVertex3f(0,rbbox[1]*1.2,0);
         glVertex3f(0,0,0);
         glEnd();
-        glBegin(GL_TRIANGLE_FAN);
+/*        glBegin(GL_TRIANGLE_FAN);
         glVertex3f(0,rbbox[1]*1.5,0);
         glVertex3f(-0.5,rbbox[1]*1.5-1,0);
         glVertex3f(0,rbbox[1]*1.5-1,0.5);
@@ -642,6 +995,7 @@ void svOutline::DrawXYZ(svVector3 lbbox, svVector3 rbbox, ViewProperty &property
         glVertex3f(0,rbbox[1]*1.5-1,-0.5);
         glVertex3f(-0.5,rbbox[1]*1.5-1,0);
 	glEnd();
+*/
   	//glColor3f(1., 1, 1);
   //	glRasterPos3f(0.,rbbox[1]*1.5+2.,0);
  // 	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'y');
@@ -658,10 +1012,10 @@ void svOutline::DrawXYZ(svVector3 lbbox, svVector3 rbbox, ViewProperty &property
 */
         glColor3f(33./255.,113./255.,181./255.);
         glBegin(GL_LINES);
-        glVertex3f(0,0,rbbox[2]*1.5);
+        glVertex3f(0,0,rbbox[2]*1.2);
         glVertex3f(0,0,0);
         glEnd();
-	glBegin(GL_TRIANGLE_FAN);
+/*	glBegin(GL_TRIANGLE_FAN);
         glVertex3f(0,0,rbbox[2]*1.5);
         glVertex3f(0.5,0,rbbox[2]*1.5-1);
         glVertex3f(0,0.5,rbbox[2]*1.5-1);
@@ -669,6 +1023,7 @@ void svOutline::DrawXYZ(svVector3 lbbox, svVector3 rbbox, ViewProperty &property
         glVertex3f(0,-0.5,rbbox[2]*1.5-1);
         glVertex3f(0.5,0,rbbox[2]*1.5-1);
 	glEnd();
+*/
   	//glColor3f(1., 1, 1);
   //	glRasterPos3f(0.,0.,rbbox[2]*1.5+2.);
   //	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'z');

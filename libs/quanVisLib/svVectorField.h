@@ -15,7 +15,7 @@
 #endif
 
 #ifndef SYMMETYR_TYPE 
-#define SYMMETRY_TYPE 6
+#define SYMMETRY_TYPE 8
 #endif
 
 using namespace std;
@@ -23,12 +23,14 @@ using namespace std;
 namespace __svl_lib {
 typedef enum
 {
-    _ZANTI = 0,
-    _ZSYM = 1,
-    _XANTI = 2,
-    _XSYM = 3,
-    _YANTI = 4,
-    _YSYM = 5
+    _XSYSZS = 0,
+    _XSYSZA = 1,
+    _XSYAZS = 2,
+    _XSYAZA = 3,
+    _XAYSZS = 4,
+    _XAYSZA = 5,
+    _XAYAZS = 6,
+    _XAYAZA = 7,
 }SYMMETRYTYPE;
 
 typedef struct _KmeansProperty {
@@ -50,7 +52,7 @@ typedef struct _ContourProperty {
    svIntArray isUpdate; //detect if we already have the contours;   
    svChar *outputfile;
    svChar *vtkdir;
-   
+   svChar *wholefile; 
 } ContourProperty; 
 
 typedef struct _SymmetryProperty{
@@ -64,7 +66,21 @@ typedef struct _SymmetryProperty{
    svVector3 planepos;
    svVector3 planedir;
    svScalar planedistance;
+   svScalar angle_uncertain;
+   svScalar mag_uncertain;
+   svChar *outputfile[SYMMETRY_TYPE];
 } SymmetryProperty;
+
+typedef struct _NeighborProperty{
+   svChar *inputfile;
+   svChar *outputfile;
+   svVector3Array svectors;
+   vector<svVector3Array> dvectors;
+   svVector3 planepos;
+   svVector3 planedir;
+   svScalar planedistance;
+   svScalarArray zvalues;
+} NeighborProperty;
 
 /*
 typedef enum {
@@ -166,7 +182,11 @@ class svVectorField {
     
     //svChar *GetDataFile(){return dataFile;}
    // svChar *GetDataDir(){return dataDir;}
-
+ // svVector3 CoordinateMatrix(svVector3 p, 
+   //                          svVector3 origin,
+     //                        svVector3 x,
+       //                      svVector3 y,
+         //                    svVector3 z);
 	
  protected:
   //svContourType contour_type;
@@ -218,10 +238,23 @@ class svVectorField {
     struct svSymmetry{
        svVectorField *field;
        svSymmetry(svVectorField *inputfield);
+       int GetType(svVector3 pos1, svVector3 end1, svScalar mag1,
+                         svVector3 pos2, svVector3 end2, svScalar mag2,
+                         svScalar angle_uncertain, svScalar mag_uncertain);
+        void SymmetryPair(svVector3 pos, svVector3 end,
+                    svVector3 &pair, svVector3 &pairend,
+                    SYMMETRYTYPE type);
        void SymmetryPair(SymmetryProperty &property, 
                     svVector3 pos, svVector3 dir,
                     svVector3 &pair, svVector3 &pairdir,
                     SYMMETRYTYPE type);
+       svVector3 CoordinateMatrix(svVector3 p,
+                             svVector3 origin,
+                             svVector3 x,
+                             svVector3 y,
+                             svVector3 z);
+       int GetType(svVector3 pos1, svVector3 end1,
+                   svVector3 pos2, svVector3 end2);
       // int SymmetryPair(SymmetryProperty &property, svVector3 pos, svVector3 dir,
         //            svVector3 *pair, svVector3 *pairdir,
           //          SYMMETRYTYPE type);
@@ -233,11 +266,19 @@ class svVectorField {
        void ComputeSymmetry(SymmetryProperty &property);
     } *symmetry;
     friend struct svSymmetry;
-   
+  
+    struct svNeighbor{
+      svVectorField *field;
+      svNeighbor(svVectorField *inputfield);
+      void ComputeNeighbors(NeighborProperty &property);
+    } *neighbor;
+    friend struct svNeihgbor;
+ 
 };
 
 typedef svVectorField::svKmeans svKmeans;
 typedef svVectorField::svContour svContour;
 typedef svVectorField::svSymmetry svSymmetry;
+typedef svVectorField::svNeighbor svNeighbor;
 }
 #endif // __SV_VECTORFIELD_H

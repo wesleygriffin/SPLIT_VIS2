@@ -15,6 +15,7 @@ public:
 	svColors();
 	~svColors();
 
+        svVector4 Get8Colors(int value);
         svVector4 GetDiscreteColors(int value);
 	svVector4 GetDiscreteColors(int color_model, int value);
 	svVector4Array GetContinuousColors(svScalarArray & value);//not implemented

@@ -1,0 +1,84 @@
+#datadir:
+~/Documents/henan/NIST/NIST_SPLIT/data/2014Mar
+#dataname:
+spin_proj_norm_vs_pos_p_v_z_10z
+#folderToStoreFiles:
+tmp
+#type
+4
+#planeCenter
+0 0 0
+#planeDirection
+0 0 1
+#planeDistance
+0.25
+#ifcontour
+0
+#contours:
+G R 0.5
+#clusters:
+#step1:
+#weights:
+1 1 1 1 1 1 1
+#layer:
+0 108
+#bywhole:
+1
+#magrange:
+0 1
+#numofclusters:
+10
+#step2:
+#weights:
+1 1 1 1 1 1 1
+#layer:
+0 -1 
+#bywhole:
+1
+#magrange:
+1e-4 1e-3
+#numofclusters:
+5
+#symmetry
+#planeCenter
+0 0 0 
+#planeDirection
+1 -1 0
+#planeX
+1 1 0
+#planeY
+0 0 1
+#ROI
+3
+0 107 108
+#Neighbors
+4
+0.5 0.5 0
+-0.5 0.5 0
+-0.5 -0.5 0
+0.5 -0.5 0
+4
+0 
+4
+-0.25 0.25 -0.25
+0.75 0.25 -0.25
+0.25 -0.25 -0.25
+-0.75 -0.25 -0.25
+0.25
+4
+0.25 0.25 -0.25
+-0.75 0.25 -0.25
+0.75 -0.25 -0.25
+-0.25 -0.25 -0.25
+0.5
+4
+-0.25 0.25 -0.25
+0.75 0.25 -0.25
+0.25 -0.25 -0.25
+-0.75 -0.25 -0.25
+0.75
+4
+0.25 0.25 -0.25
+-0.75 0.25 -0.25
+0.75 -0.25 -0.25
+-0.25 -0.25 -0.25

@@ -70,6 +70,8 @@ void svContour::Get2DContour(char *infile,  double density) //density is only th
       //  cerr<<"a"<<endl;
 
   	vtkSmartPointer<vtkPolygon> polygon = vtkSmartPointer<vtkPolygon>::New();
+
+        //cerr<<pd->GetCellType(0)<<" "<<pd->GetNumberOfCells()<<" "<<pd->GetNumberOfPoints()<<endl;
         for(int i=0;i<pd->GetNumberOfPoints();i++)
         {
             double *tmpp = new  double [3];

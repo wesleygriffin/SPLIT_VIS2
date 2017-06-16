@@ -92,9 +92,7 @@ void svList::add_first(int index, int value1, int value2)
 }
 void svList::add_next(int index, vector<int> value)
 {
-
    add_first(index, value[0], value[1]);
-
 
    for(int i=1;i<value.size()/2;i++)
    {

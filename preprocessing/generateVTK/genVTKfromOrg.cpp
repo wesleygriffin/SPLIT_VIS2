@@ -1,6 +1,21 @@
 #include "genVTKfromOrg.h"
 #include <iostream>
 
+
+bool Sort_Spin_Y(const Spin &a, const Spin &b)
+{
+ if (fabs(a.py - b.py)>0.0001)
+ {
+   return (a.py<b.py);
+ }
+ else if (fabs(a.px - b.px)>0.0001)
+ {
+   return (a.px<b.px);
+ }
+
+ return 0;
+}
+
 bool Sort_Spin_Z(const Spin &a, const Spin &b)
 {
  if (fabs(a.pz - b.pz)>0.0001)
@@ -520,12 +535,10 @@ int  int_min_den = (double) getNumOfIntegerDigits(min_den);
   sort(data.begin(), data.end(), Sort_Spin_Z); //cerr<<scaling<<endl;  
   sort(data.begin(), data.end(), Sort_Spin_Z);
   
-
-  
   //cerr<<scaling<<endl;  
   
   SplitData();
-  
+  //Compute2DData();
 
 }
 
@@ -557,10 +570,10 @@ void genVTKfromOrg::SplitData(double pos_x, double pos_y, double pos_z,
                 dir_y = - dir_y;
                 dir_z = - dir_z;
 	}
-                double dir[3];
-                dir[0] = dir_x;
-                dir[1] = dir_y;
-                dir[2] = dir_z;
+        double dir[3];
+        dir[0] = dir_x;
+        dir[1] = dir_y;
+        dir[2] = dir_z;
 
 //cerr<<min_p[0]<<" "<<min_p[1]<<" "<<min_p[2]<<" "<<distance<<" "<<dir[0]<<" "<<dir[1]<<" "<<dir[2]<<endl;
 
@@ -614,10 +627,13 @@ void genVTKfromOrg::SplitData(double pos_x, double pos_y, double pos_z,
         plane_dir[2] = dir[2];
 	plane_distance = distance;
 
-	
+        splitIndex.resize(numPlane);	
 	splitData.resize(numPlane);
+        split2dData.resize(numPlane);
 	layerDensity.resize(numPlane);
+
 cerr<<"Split data by "<<numPlane<<" layers along direction ("<<dir[0]<<","<<dir[1]<<","<<dir[2]<<")"<<endl;
+
 	for(int i=0;i<numPlane;i++)
 	{
 		layerDensity[i] = 0;	
@@ -638,12 +654,61 @@ cerr<<"Split data by "<<numPlane<<" layers along direction ("<<dir[0]<<","<<dir[
 		{
 			int index = (int)(dot/distance);
 			splitData[index].push_back(data[i]);
+                        splitIndex[index].push_back(i);
+                        splitReverseIndex[0].push_back(index);
+                        splitReverseIndex[1].push_back(splitIndex[index].size()-1); 
 			if(data[i].den > layerDensity[index])
 			{
 				layerDensity[index] = data[i].den;
 			}
 		}	
 	}			
+}
+
+void genVTKfromOrg::Compute2DData()
+{
+   for(int i=0;i<splitData.size();i++)
+   {
+      double xAxis[3], yAxis[3], z[3];
+      z[0] = plane_dir[0];
+      z[1] = plane_dir[1];
+      z[2] = plane_dir[2];
+      if(splitData[i].size()>1)
+      {
+         GenerateCoordinates(splitData[i][0], splitData[i][1],
+                             z, xAxis, yAxis);
+         xCoor[0].push_back(xAxis[0]);
+         xCoor[1].push_back(xAxis[1]);
+         xCoor[2].push_back(xAxis[2]);
+         yCoor[0].push_back(yAxis[0]);
+         yCoor[1].push_back(yAxis[1]);
+         yCoor[2].push_back(yAxis[2]);
+      }
+      else
+      {
+         Spin tmp = splitData[i][0];
+         tmp.px = 0; tmp.py = 0;
+         split2dData[i].push_back(tmp);
+         xCoor[0].push_back(0);
+         xCoor[1].push_back(0);
+         xCoor[2].push_back(0);
+         yCoor[0].push_back(0);
+         yCoor[1].push_back(0);
+         yCoor[2].push_back(0);
+         continue;
+      }
+      for(int j=0;j<splitData[i].size();j++)
+      {
+         double x, y;
+         SetNewCoordinates(splitData[i][j], splitData[i][0], 
+                           xAxis, yAxis,
+                           x, y);
+         Spin tmp = splitData[i][j];
+         tmp.px = x;tmp.py=y;
+         split2dData[i].push_back(tmp);
+      }
+      
+   }cerr<<"compute2D"<<endl;
 }
 
 void genVTKfromOrg::SplitData()
@@ -676,7 +741,7 @@ void genVTKfromOrg::SaveDensityBylayer(char *file)
 
 	outfile.close();	
 }
-void genVTKfromOrg::SortedData(char *file)
+void genVTKfromOrg::SaveSortedData(char *file)
 {
   ofstream outfile;
  
@@ -809,7 +874,6 @@ void genVTKfromOrg::SortedData(char *file)
   delete [] str;*/
 //=======================================================
 }
-
 void genVTKfromOrg::SaveSplitData(char *file)
 {
 	ofstream outfile;
@@ -836,7 +900,144 @@ void genVTKfromOrg::SaveSplitData(char *file)
 		}
 
 		outfile.close();
+   
 	}
+        delete [] str;
+}
+void genVTKfromOrg::SaveIndex(char *file)
+{
+        ofstream outfile;
+        char * str = new char[400];
+
+        for(int i=0;i<splitData.size();i++)
+        {
+                sprintf(str, "%s/index%d.txt", file, i);
+                outfile.open(str);
+                outfile<<splitData[i].size()<<endl;
+                for(int j=0;j<splitData[i].size();j++)
+                {
+                       outfile<<splitIndex[i][j]<<endl;
+                }
+                outfile.close();
+        }
+
+        sprintf(str, "%s/reverseindex.txt",file);
+        outfile.open(str);
+        outfile<<data.size()<<endl;
+        for(int i=0;i<splitReverseIndex[0].size();i++)
+            outfile<<splitReverseIndex[0][i]<<" "<<splitReverseIndex[1][i]<<endl;
+        outfile.close();
+
+        delete [] str;
+}
+
+void genVTKfromOrg::Save2DDensity(char *file)
+{
+    ofstream outfile;
+    char *str = new char[400];
+
+    for(int i=0;i<splitData.size();i++)
+    {
+        sprintf(str,"%s/density%d.txt", file, i);
+        outfile.open(str);
+        vector<Spin> tmp;
+        for(int j=0;j<splitData[i].size();j++)
+           tmp.push_back(split2dData[i][j]);
+
+        sort(tmp.begin(), tmp.end(), Sort_Spin_Y);
+        sort(tmp.begin(), tmp.end(), Sort_Spin_Y);
+
+        int ycount = 0;
+        int xcount = 0;
+        vector<int> layercount;
+        double prevx, x;
+        double prevy, y;
+        int count = 0;
+        for(int j=0;j<splitData[i].size();j++)
+        {
+          if(j==0)
+          {
+             prevx = tmp[j].px;
+             prevy = tmp[j].py;
+             count++;
+          }
+          else
+          {
+             x = tmp[j].px;
+             y = tmp[j].py;
+             if(fabs(y - prevy) > 0.0001)
+             {
+                if(count > xcount) xcount = count;
+                layercount.push_back(count);
+                count=1;
+                ycount++;
+             }
+             else
+             {
+                count++;
+             }
+             prevx = x;
+             prevy = y;
+          }
+        }
+        ycount++;
+        if(count > xcount) xcount = count;
+        layercount.push_back(count);
+
+//------------------------------------output files------------------------------
+        count = 0;
+        outfile<<1<<" "<<ycount<<" "<<xcount<<endl;
+        for(int j=0;j<splitData[i].size();j++)
+        {
+          if(j==0)
+          {
+             prevx = tmp[j].px;
+             prevy = tmp[j].py;
+             outfile<<tmp[j].den<<" ";
+          }
+          else
+          {
+             x = tmp[j].px;
+             y = tmp[j].py;
+
+             if(fabs(y - prevy) > 0.0001)
+             {
+                if(layercount[count]< xcount)
+                {
+                    for(int t=0;t<xcount-layercount[count];t++)
+                         outfile<<tmp[j-1].den<<" ";
+                }
+                outfile<<endl;
+                outfile<<tmp[j].den<<" ";
+                count++;
+             }
+             else
+             {
+                outfile<<tmp[j].den<<" ";
+             }
+             prevx = x;
+             prevy = y;
+          }
+        }
+        if(layercount[count]< xcount)
+        {
+          for(int t=0;t<xcount-layercount[count];t++)
+               outfile<<tmp[splitData[i].size()-1].den<<" ";
+        }
+        outfile<<endl;
+        outfile.close();
+
+        tmp.clear();
+        layercount.clear();
+    }
+//----------------------------------------------------------------------------
+    delete [] str;
+}
+
+void genVTKfromOrg::SaveAllData(char *file)
+{
+        ofstream outfile;
+        char * str = new char[400];
 
         sprintf(str, "%s/layerall.txt", file);
         outfile.open(str);
@@ -846,9 +1047,9 @@ void genVTKfromOrg::SaveSplitData(char *file)
               outfile<<splitData[i].size()<<endl;
                 for(int j=0;j<splitData[i].size();j++)
                 {
-                        double exp,coe;
-                        exp = (double)getNumOfIntegerDigits(splitData[i][j].den);
-                        coe = splitData[i][j].den/pow(10., exp);
+       //                 double exp,coe;
+       //                 exp = (double)getNumOfIntegerDigits(splitData[i][j].den);
+       //                 coe = splitData[i][j].den/pow(10., exp);
 
                         outfile<<splitData[i][j].px<<" "<<splitData[i][j].py<<" "<<splitData[i][j].pz
                                 <<" "<<splitData[i][j].vx<<" "<<splitData[i][j].vy<<" "<<splitData[i][j].vz
@@ -858,10 +1059,22 @@ void genVTKfromOrg::SaveSplitData(char *file)
        }
       outfile.close();
 
-	delete [] str;
-	
-	
-	
+      sprintf(str, "%s/zall.txt", file);
+      outfile.open(str);
+      outfile<<Zlayer_Num.size()-1<<endl;
+      for(int i=1;i<Zlayer_Num.size();i++)
+      { 
+          outfile<<Zlayer_Num[i] - Zlayer_Num[i-1]<<endl;   
+          for(int j=Zlayer_Num[i-1];j<Zlayer_Num[i];j++)
+          {
+              outfile<<data[j].px<<" "<<data[j].py<<" "<<data[j].pz<<" "
+                     <<data[j].vx<<" "<<data[j].vx<<" "<<data[j].vz<<" "
+                     <<data[j].den<<endl;
+          }
+      }
+      outfile.close();
+
+      delete [] str;
 }
 
 void genVTKfromOrg::SaveRegiontoFile(char *file)
@@ -942,7 +1155,7 @@ void genVTKfromOrg::SavetoVTK(char *file)
     for(int i=0;i<splitData.size();i++)
     {
     sprintf(str, "%s/%d.vtk", file, i);
-    
+//cerr<<str<<endl;    
     outfile.open(str);
   
     outfile<<"# vtk DataFile Version 2.0"<<endl;
@@ -951,7 +1164,7 @@ void genVTKfromOrg::SavetoVTK(char *file)
     outfile<<"DATASET UNSTRUCTURED_GRID"<<endl;   
 
     outfile<<"POINTS "<<splitData[i].size()<<" float"<<endl;   
-
+/*
     Spin x,y;
     x = splitData[i][0];
     y = splitData[i][1];
@@ -980,54 +1193,63 @@ void genVTKfromOrg::SavetoVTK(char *file)
     yaxis[0] = yaxis[0]/sum;
     yaxis[1] = yaxis[1]/sum;
     yaxis[2] = yaxis[2]/sum;
+*/
+//    char *name = new char[100];
+//    sprintf(name, "%s/coor%d.txt", file,i);
+//    ofstream coorout(name);
+//    coorout<<x.px<<" "<<x.py<<" "<<x.pz<<endl;
+//    coorout<<xaxis[0]<<" "<<xaxis[1]<<" "<<xaxis[2]<<endl;
+//    coorout<<yaxis[0]<<" "<<yaxis[1]<<" "<<yaxis[2]<<endl;
+//    coorout<<z[0]<<" "<<z[1]<<" "<<z[2]<<endl;
+//    coorout.close();
 
-    char *name = new char[100];
-    sprintf(name, "%s/coor%d.txt", file,i);
+//    sprintf(name, "%s/format%d.txt",file,i);
+//    ofstream formatout(name);
 
-    ofstream coorout(name);
-    coorout<<x.px<<" "<<x.py<<" "<<x.pz<<endl;
-    coorout<<xaxis[0]<<" "<<xaxis[1]<<" "<<xaxis[2]<<endl;
-    coorout<<yaxis[0]<<" "<<yaxis[1]<<" "<<yaxis[2]<<endl;
-    coorout<<z[0]<<" "<<z[1]<<" "<<z[2]<<endl;
-    coorout.close();
+//    formatout<<splitData[i].size()<<endl;
+//    int xi = 0; int yi =0;
+//    double prevx, prevy;
+//    double xvalue, yvalue;
+//    prevx = 0; prevy = 0;
+//    xvalue = 0; yvalue = 0;
+//    int maxx = -1;
+//    int maxy = -1;
 
-    sprintf(name, "%s/format%d.txt",file,i);
-    ofstream formatout(name);
 
-    formatout<<splitData[i].size()<<endl;
-    int xi = 0; int yi =0;
-    double prevx, prevy;
-    double xvalue, yvalue;
-    prevx = 0; prevy = 0;
-    xvalue = 0; yvalue = 0;
+//    cerr<<split2dData[i].size()<<endl;
     for(int j=0;j<splitData[i].size();j++)
     {
-      double tmp[3];
-      tmp[0] = splitData[i][j].px - x.px;
-      tmp[1] = splitData[i][j].py - x.py;
-      tmp[2] = splitData[i][j].pz - x.pz;
+//      double tmp[3];
+//      tmp[0] = splitData[i][j].px - x.px;
+//      tmp[1] = splitData[i][j].py - x.py;
+//      tmp[2] = splitData[i][j].pz - x.pz;
 
-      prevx = xvalue; prevy = yvalue;
+//      prevx = xvalue; prevy = yvalue;
 
-      xvalue = tmp[0] * xaxis[0] + tmp[1] * xaxis[1] + tmp[2] * xaxis[2];
-      yvalue = tmp[0] * yaxis[0] + tmp[1] * yaxis[1] + tmp[2] * yaxis[2]; 
+//      xvalue = tmp[0] * xaxis[0] + tmp[1] * xaxis[1] + tmp[2] * xaxis[2];
+//      yvalue = tmp[0] * yaxis[0] + tmp[1] * yaxis[1] + tmp[2] * yaxis[2]; 
 
-      formatout<<xi<<" "<<yi<<endl;
-      if(xvalue < prevx)
-      {
-        xi = 0;yi++;
-      }    
-      else
-      {
-        xi++;
-      }
+//      formatout<<xi<<" "<<yi<<endl;
+//      if(xvalue < prevx)
+//      {
+//        xi = 0;yi++;
+//      }    
+//      else
+//      {
+//        xi++;
+//      }
   //    outfile<<splitData[i][j].px<<" "<<splitData[i][j].py<<" "<<splitData[i][j].pz<<endl;
-    	outfile<<xvalue<<" "<<yvalue<<" 0"<<endl;
-    }
+//    	outfile<<xvalue<<" "<<yvalue<<" 0"<<endl;
+//        if(xvalue > maxx) maxx = xvalue;
+//        if(yvalue > maxy) maxy = yvalue;
+        outfile<<split2dData[i][j].px
+              <<" "<<split2dData[i][j].py
+              <<" "<<split2dData[i][j].pz<<endl; 
+   }
     outfile<<endl;
-   
-    formatout.close();
-    delete [] name;
+//    formatout.close();
+
+//    delete [] name;
  
     outfile<<"POINT_DATA "<<splitData[i].size()<<endl;
     outfile<<"VECTORS velocity float"<<endl;  
@@ -1049,42 +1271,42 @@ void genVTKfromOrg::SavetoVTK(char *file)
 
   }
 //=======================================================
-  sprintf(str, "%s/all.vtk", file);
-  outfile.open(str);
+//  sprintf(str, "%s/all.vtk", file);
+//  outfile.open(str);
 
-    outfile<<"# vtk DataFile Version 2.0"<<endl;
-    outfile<<str<<endl;
-    outfile<<"ASCII"<<endl;
-    outfile<<"DATASET UNSTRUCTURED_GRID"<<endl;   
+//    outfile<<"# vtk DataFile Version 2.0"<<endl;
+//    outfile<<str<<endl;
+//    outfile<<"ASCII"<<endl;
+//    outfile<<"DATASET UNSTRUCTURED_GRID"<<endl;   
 
-    outfile<<"POINTS "<<dataSize<<" float"<<endl;  
+//    outfile<<"POINTS "<<dataSize<<" float"<<endl;  
 
-  for(int j=0;j<dataSize;j++)
-  {
-      outfile<<data[j].px<<" "<<data[j].py<<" "<<data[j].pz<<endl;
-   }
-    outfile<<endl;
+//  for(int j=0;j<dataSize;j++)
+//  {
+  //    outfile<<data[j].px<<" "<<data[j].py<<" "<<data[j].pz<<endl;
+//   }
+//    outfile<<endl;
     
-    outfile<<"POINT_DATA "<<dataSize<<endl;
-    outfile<<"VECTORS velocity float"<<endl;  
+//    outfile<<"POINT_DATA "<<dataSize<<endl;
+//    outfile<<"VECTORS velocity float"<<endl;  
 
-  for(int j=0;j<dataSize;j++)
-  {
-      outfile<<data[j].vx<<" "<<data[j].vy<<" "<<data[j].vz<<endl;
-    }
-    outfile<<endl; 
+//  for(int j=0;j<dataSize;j++)
+//  {
+  //    outfile<<data[j].vx<<" "<<data[j].vy<<" "<<data[j].vz<<endl;
+//    }
+//    outfile<<endl; 
     
-    outfile<<"SCALARS density float 1"<<endl;
-    outfile<<"LOOKUP_TABLE default"<<endl;   
+//    outfile<<"SCALARS density float 1"<<endl;
+//    outfile<<"LOOKUP_TABLE default"<<endl;   
  
-  for(int j=0;j<dataSize;j++)
-  {
-      outfile<<data[j].region<<endl;
-    }
-    outfile<<endl;
+//  for(int j=0;j<dataSize;j++)
+//  {
+  //    outfile<<data[j].region<<endl;
+//    }
+//    outfile<<endl;
 
 
-  outfile.close();
+//  outfile.close();
 
 //=======================================================
 /*  for(int i=0;i<region_count.size();i++)
@@ -1135,7 +1357,66 @@ void genVTKfromOrg::SavetoVTK(char *file)
 */
   delete [] str;
 }
+void genVTKfromOrg::SaveLayerFormat(char *file)
+{
+      ofstream outfile;
+      char *str = new char[400];
 
+      for(int i=0;i<splitData.size();i++)
+      {
+         sprintf(str, "%s/coor%d.txt", file, i);
+         outfile.open(str);
+         outfile<<splitData[i][0].px<<" "<<splitData[i][0].py<<" "<<splitData[i][0].pz<<endl;
+         outfile<<xCoor[0][i]<<" "<<xCoor[1][i]<<" "<<xCoor[2][i]<<" "<<endl;
+         outfile<<yCoor[0][i]<<" "<<yCoor[1][i]<<" "<<yCoor[2][i]<<" "<<endl;
+         outfile<<plane_dir[0]<<" "<<plane_dir[1]<<" "<<plane_dir[2]<<endl;
+         outfile.close();
+      }
+}
+void genVTKfromOrg::SaveZFormat(char *file)
+{
+      ofstream outfile;
+      char *str = new char[400];
+
+      sprintf(str, "%s/zformat.txt",file);
+      outfile.open(str);
+      outfile<<data.size()<<endl;
+      //Zlayer_Num.size()-1<<endl;
+      int count_x = 0;
+      int count_y = 0;
+      for(int i=1;i<Zlayer_Num.size();i++)
+      {
+           count_x = 0;
+           count_y = 0;
+         //sprintf(str, "%s/format%d.txt", file, i);
+//         outfile.open(str);
+//          outfile<<Zlayer_Num[i] - Zlayer_Num[i-1]<<endl;
+          for(int j=Zlayer_Num[i-1];j<Zlayer_Num[i];j++)
+          {
+//              outfile<<data[j].px<<" "<<data[j].py<<" "<<data[j].pz<<" "
+//                     <<data[j].vx<<" "<<data[j].vx<<" "<<data[j].vz<<" "
+//                     <<data[j].den<<endl;
+                if(j>Zlayer_Num[i-1])
+                {
+                   if(fabs(data[j].py-data[j-1].py)<1e-3)
+                   {
+                      count_x++;
+                   }
+                   else
+                   {
+                      count_x = 0;
+                      count_y++;
+                   }
+                }
+                outfile<<count_x<<" ";
+                outfile<<count_y<<" ";
+                outfile<<i-1<<endl;
+          }
+//         outfile.close();
+      }
+
+     outfile.close();
+}
 void genVTKfromOrg::SaveDataFormat(char *file)
 {
 	ofstream outfile(file);
@@ -1227,10 +1508,43 @@ void genVTKfromOrg::SaveDataFormat(char *file)
 	temp_x.clear();
 	temp_y.clear();
 }
+void genVTKfromOrg::GenerateCoordinates(Spin p1, Spin p2, double *z, double *xAxis, double *yAxis)
+{
+    xAxis[0] = p2.px - p1.px;
+    xAxis[1] = p2.py - p1.py;
+    xAxis[2] = p2.pz - p1.pz;
 
+    double sum = xAxis[0]*xAxis[0]
+               + xAxis[1]*xAxis[1]
+               + xAxis[2]*xAxis[2];
+    sum = sqrt(sum);
+    xAxis[0] = xAxis[0]/sum;
+    xAxis[1] = xAxis[1]/sum;
+    xAxis[2] = xAxis[2]/sum;
+
+    yAxis[0] = z[1]*xAxis[2] - z[2] * xAxis[1];
+    yAxis[1] = z[2]*xAxis[0] - z[0] * xAxis[2];
+    yAxis[2] = z[0]*xAxis[1] - z[1] * xAxis[0];
+}
+void genVTKfromOrg::SetNewCoordinates(Spin p, Spin origin, double *xAxis, double *yAxis,
+                           double &x, double &y)
+{
+    double v[3];
+    v[0] = p.px - origin.px;
+    v[1] = p.py - origin.py;
+    v[2] = p.pz - origin.pz;
+    x  = v[0] * xAxis[0]
+              + v[1] * xAxis[1]
+              + v[2] * xAxis[2];
+    y = v[0] * yAxis[0]
+              + v[1] * yAxis[1] 
+              + v[2] * yAxis[2];
+}
 void genVTKfromOrg::cleanup()
 {
   data.clear();
+  splitReverseIndex[0].clear();
+  splitReverseIndex[1].clear();
   Zlayer_Num.clear();
   region_count.clear();
   unique_region.clear();
@@ -1240,7 +1554,17 @@ void genVTKfromOrg::cleanup()
 
   for(int i=0;i<splitData.size();i++)
   {
+                split2dData[i].clear();
 		splitData[i].clear();
+                splitIndex[i].clear();
    }
+  split2dData.clear();
   splitData.clear();
+  splitIndex.clear();
+  
+  for(int i=0;i<3;i++)
+  {
+     xCoor[i].clear();
+     yCoor[i].clear();
+  }
 }

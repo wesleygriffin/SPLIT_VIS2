@@ -32,9 +32,14 @@
 #include "svMesh.h"
 #include "svConfig.h"
 #include "svWidget.h"
+#include "svCCL.h"
+#include "svIcons.h"
+#include "svColors.h"
 #include <string.h>
 
 #include <GL/glui.h>
+
+#define ENCODE 0
 
 #define SPLITVECTORS_SCALE 0.5
 #define LINEAR_SCALE  50000
@@ -43,11 +48,13 @@
 #define TUBE_SCALE 0.05
 #define SUMMARY_TUBE_SCALE 0.325
 
+#define SYMMETRY_CHECK 1
+#define SYMMETRY_UNCHECK 0
 #define SYMMETRY_UP 0
 #define SYMMETRY_DOWN 1
 #define SYMMETRY_UP_SELECT 2
 #define SYMMETRY_DOWN_SELECT 3
-#define SYMMETRY_TYPE_NUM 6
+#define SYMMETRY_TYPE_NUM 8
 #define SYMMETRY_STATUS_NUM 4
 #define CLUSTER_DIMENSION 7
 
@@ -72,7 +79,14 @@
 #define ENCODE_ID 13
 #define ALPHA_ID 15
 #define LAYER_REPEAT_ID 16
-
+#define LENGTH_VIS_ID 17
+#define PICTURE_ID 18
+#define PICTURE_TEXT_ID 19
+#define COLORBY_ID 20
+#define COLORBY_CLUSTER_ID 21
+#define COLORBY_SYMMETRY_ID 22
+#define ENCODE_LINEAR_ID 23
+#define ENCODE_SPLIT_ID 24
 using namespace __svl_lib;
 
 void reshape(int w, int h);
@@ -93,6 +107,7 @@ GLUI_Checkbox *symmetrybox;
 GLUI_Checkbox *box_encode;
 GLUI_Checkbox *box_layer;
 GLUI_Scrollbar *sb_line;
+GLUI_Listbox *list_widget_vis;
 GLUI_Scrollbar *sb_arrow;
 GLUI_Scrollbar *sb_tube;
 GLUI_Scrollbar *sb_mag;
@@ -104,8 +119,13 @@ GLUI_StaticText *text_mag_min;
 GLUI_StaticText *text_mag_max;
 GLUI_StaticText *text_layer_min;
 GLUI_StaticText *text_layer_max;
+GLUI_EditText *text_picture;
+GLUI_Checkbox *color_box1;
+GLUI_Checkbox *color_box2;
+GLUI_Checkbox *color_box3;
+GLUI_Checkbox *encode_box1;
+GLUI_Checkbox *encode_box2;
 //=========END================
-
 
 view3d view_info;
 
@@ -116,14 +136,20 @@ svSplitArrow *splitglyph;
 svSummaryGlyph *summaryglyph;
 svOutline *outline;
 svMesh *mesh;
+svMesh *symmetrymesh;
 svWidget *widget;
+//svConnect *ccl;
 
 char *configFile;
 
 
 static GLuint *texture;//[4*3];
 svVector3 *texture_pos;
+svVector3 texture_lbbox;
+svVector3 texture_rbbox;
 svScalar texture_size;
+svScalar texture_ratio;
+svScalar texture_visual_ratio;
 svScalar texture_visual_size;
 svVector3 *texture_visual_pos;
 int *texture_status;
@@ -131,7 +157,11 @@ int *texture_visual_status;
 static GLuint *texture_visual;
 int textureinit;
 vector<int> symmetrytype;
+svScalarArray *symmetrycount;
+int symmetrytopvalue;
 int symmetry_enable;
+svVector4 buttoncolors[SYMMETRY_TYPE+1];
+svScalar topmaglevel;
 
 int layerVisible = 0;
 int layer_repeat = 0;
@@ -151,12 +181,17 @@ bool tube_scale_up=false;
 bool updatecluster = false;
 bool updatevisible = false;
 bool updaterender = false;
+int length_vis = 0;
 
-int mesh_enable;
+string picture_name;
+
+int symmetrymesh_enable = 0;
+int mesh_enable = 0;
 int mesh_type = 0;
 vector<int> unique_region;
 int mesh_vis = 1;
 
+int symmetrymesh_solid_list;
 int  mesh_solid_list;
 int  outline_display_list;
 int  summary_list;
@@ -182,6 +217,12 @@ int samplesize = 20;
 
 int encode_visible = 0;
 int encode_type = LINEAR;
+int colorby = ENCODE;
+int color_cluster = 1;
+int color_symmetry = 0;
+int color_magnitude = 0;
+int encode_linear = 1;
+int encode_split = 0;
 ///////////////////
 
 int frequency =1;
@@ -208,6 +249,7 @@ struct ConfigProperty{
 	KmeansProperty step1_kmeansproperty;
 	KmeansProperty step2_kmeansproperty;
         SymmetryProperty symmetryproperty; 
+        NeighborProperty neighborproperty;
 
         vector<string> contourname;	
 	ContourProperty contourproperty;
@@ -295,9 +337,42 @@ void ArrowLight();
 void glui_display();
 void VisualMapping();
 
+void  getTime(char *buffer)
+{
+                        time_t rawtime;
+                        struct tm * timeinfo;
+
+                        time (&rawtime);
+                        timeinfo = localtime (&rawtime);
+
+                        sprintf(buffer,"%s", asctime(timeinfo));
+
+}
+
+void CaptureScreen(char *file, int startw, int starth, int w, int h)
+{
+//  int w = image_width;
+//  int h = image_height;
+  char *image_buf = new char [w*h*3];
+  glPixelStorei(GL_PACK_ALIGNMENT, 1);
+  glReadPixels(startw, starth, w, h, GL_RGB, GL_UNSIGNED_BYTE, image_buf);
+
+  FILE* fp;
+  if (NULL != (fp = fopen(file, "wb"))){
+    // Write the 'header' information
+    fprintf(fp, "P6 %d %d 255\n", w, h);
+    for (int i=h-1; i >= 0; --i)
+    {
+       // write binary data
+       fwrite(image_buf+3*i*w, sizeof(unsigned char), 3*w, fp);
+    }
+    fclose(fp);
+  }
+  delete [] image_buf;
+}
+
 void InitLight()
 {
- 
   //setting of lighting
   GLfloat mat_diffuse[] = { 0.8, 0.8, 0.8,1};
   GLfloat mat_specular[] = { 0.2,0.2,0.2,0.2 };
@@ -336,59 +411,194 @@ void ArrowLight()
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat_specular);
   glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 }
-//***************************
-// GLUT callback functions
-//****************************
 
 void DrawSymmetryButtons(void)
 {
-       glEnable (GL_BLEND); 
-       glEnable(GL_TEXTURE_2D);
+   glEnable(GL_MULTISAMPLE);
+   glDisable(GL_DEPTH_TEST);
+   glEnable(GL_BLEND);
+//   glEnable(GL_TEXTURE_2D);
 
-//     LoadTexture();
-       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-       glPushMatrix();
-     //glTranslatef(500,0,0);
-     //glScalef(100, 100, 100);
-     
-      
-       for(int i=0;i<SYMMETRY_TYPE_NUM;i++)
-       {
-          int index1 = texture_status[i]+i*SYMMETRY_STATUS_NUM; 
-          glBindTexture(GL_TEXTURE_2D, texture[index1]);
-          //cerr<<index1<<" ";
-          glBegin(GL_QUADS);
-          glTexCoord2d(0,0); 
-          glVertex2f(texture_pos[i][0],texture_pos[i][1]+texture_size);
-          glTexCoord2d(1,0); 
-          glVertex2f(texture_pos[i][0]+1.7*texture_size,
-                          texture_pos[i][1]+texture_size);
-          glTexCoord2d(1,1); 
-          glVertex2f(texture_pos[i][0]+1.7*texture_size,texture_pos[i][1]);
-          glTexCoord2d(0,1); 
-          glVertex2f(texture_pos[i][0],texture_pos[i][1]);
-          glEnd();
-          //cerr<<texture_pos[i][0]<<" "<<texture_pos[i][1]<<endl;
-       }//cerr<<endl;
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glPushMatrix();
 
-       glPopMatrix();
-       
-       glBindTexture(GL_TEXTURE_2D, 0);
+//   glColor3f(1,1,1);
+//   for(int i=0;i<SYMMETRY_TYPE;i++)
+//   {
+//      glColor3f(1,1,1);
+//
+//      glBegin(GL_QUADS);
+//      glVertex2f(texture_pos[i][0],texture_pos[i][1]+texture_size);
+//       glVertex2f(texture_pos[i][0]+texture_size,
+//                          texture_pos[i][1]+texture_size);
+//       glVertex2f(texture_pos[i][0]+texture_size,texture_pos[i][1]);
+//       glVertex2f(texture_pos[i][0],texture_pos[i][1]);
+//      glEnd();
+//
+//      glColor3f(0,0,0);
 
-    //   glDisable(GL_TEXTURE_2D);
-  //     glDisable(GL_BLEND); 
+//      glBegin(GL_LINE_LOOP);
+//      glVertex2f(texture_pos[i][0],texture_pos[i][1]+texture_size);
+//       glVertex2f(texture_pos[i][0]+texture_size,
+//                          texture_pos[i][1]+texture_size);
+//       glVertex2f(texture_pos[i][0]+texture_size,texture_pos[i][1]);
+//       glVertex2f(texture_pos[i][0],texture_pos[i][1]);
+//      glEnd(); 
+//
+//      if(texture_status[i] == SYMMETRY_CHECK)
+//      {
+//       glBegin(GL_LINES);
+//       glVertex2f(texture_pos[i][0],texture_pos[i][1]+texture_size);
+//       glVertex2f(texture_pos[i][0]+texture_size,texture_pos[i][1]);
+//       glEnd();
+//       glBegin(GL_LINES);
+//       glVertex2f(texture_pos[i][0]+texture_size,
+//                          texture_pos[i][1]+texture_size);
+//       glVertex2f(texture_pos[i][0],texture_pos[i][1]);
+//       glEnd();
+//      }
+//   }
+//   glColor3f(1,1,1);
+
+//   glBindTexture(GL_TEXTURE_2D, texture[0]);
+//   glBegin(GL_QUADS); 
+//   glTexCoord2d(0,0);
+//   glVertex2f(texture_lbbox[0], texture_rbbox[1]);
+//   glTexCoord2d(1,0);
+//   glVertex2f(texture_rbbox[0], texture_rbbox[1]);
+//   glTexCoord2d(1,1);
+//   glVertex2f(texture_rbbox[0], texture_lbbox[1]);
+//   glTexCoord2d(0,1);
+//   glVertex2f(texture_lbbox[0], texture_lbbox[1]);
+//   glEnd(); 
+//   glBindTexture(GL_TEXTURE_2D, 0);
+
+   svVector4 color;
+
+   char str[5];
+   glColor3f(0,0,0);  
+   sprintf(str,"Symmetry");
+   glRasterPos2f(texture_pos[0][0]-90, texture_pos[0][1]+texture_size*3./4.);
+   for(int i=0;i<strlen(str);i++)
+   glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, str[i]);
+   sprintf(str,"about x' y' z'");
+   glRasterPos2f(texture_pos[0][0]-90, texture_pos[0][1]+texture_size/4.);
+   for(int i=0;i<strlen(str);i++)
+   glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, str[i]);
+
+//   glRasterPos2f(texture_pos[0][0]-27, texture_pos[0][1]+texture_size/3.);
+//   sprintf(str,"y'");
+//   for(int i=0;i<strlen(str);i++)
+//   glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, str[i]);
+//   glRasterPos2f(texture_pos[0][0]-15, texture_pos[0][1]+texture_size/3.);
+//   sprintf(str,"z'");
+//   for(int i=0;i<strlen(str);i++)
+//   glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, str[i]);
+
+ 
+   color[0]=1;color[1]=0;color[2]=0;color[3]=0.5;
+   for(int i=0;i<SYMMETRY_TYPE;i++)
+   {
+         if(texture_status[i] == SYMMETRY_DOWN
+            ||texture_status[i]==SYMMETRY_UP_SELECT)
+          DrawArrowDownButton(i,
+                       texture_size*texture_ratio,//*8.5,
+                       texture_size,//*5,
+                       texture_pos[i],
+                       buttoncolors[i]);
+         else
+          DrawArrowUpButton(i,
+                       texture_size*texture_ratio,//8.5,
+                       texture_size,//*5,
+                       texture_pos[i],
+                       buttoncolors[i]);
+   }
+
+         if(texture_status[SYMMETRY_TYPE] == SYMMETRY_DOWN
+            ||texture_status[SYMMETRY_TYPE]==SYMMETRY_UP_SELECT)
+          DrawTextDownButton("Others",
+                       texture_size*texture_ratio,//*8.5,
+                       texture_size,//*5,
+                       texture_pos[SYMMETRY_TYPE] );
+         else
+          DrawTextUpButton("Others",
+                       texture_size*texture_ratio,//*8.5,
+                       texture_size,//*5,
+                       texture_pos[SYMMETRY_TYPE] );
+
+
+   svVector3 end = texture_pos[SYMMETRY_TYPE];
+   end[0] = end[0] + texture_size*texture_ratio;
+   DrawStackBars(topmaglevel,
+                   texture_size*texture_ratio,
+                   texture_size, texture_pos,
+                   end,
+                   symmetrytopvalue,
+                   symmetrycount);
+   DrawHorizonBars(texture_size*texture_ratio,
+                   texture_size,
+                   texture_pos,
+                   directglyph->GetSymmetryTopCount(),
+                   directglyph->GetSymmetryCount(),
+                   SYMMETRY_TYPE+1);
+ 
+   glEnable(GL_DEPTH_TEST);
+   glDisable(GL_MULTISAMPLE);
 }
+
+//void DrawSymmetryButtons(void)
+//{
+//       glEnable (GL_BLEND); 
+//       glEnable(GL_TEXTURE_2D);
+
+//       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//       glPushMatrix();
+   
+//       glColor3f(0,0,0); 
+//       glRasterPos2f(texture_pos[0][0]-texture_size/2.,texture_pos[0][1]+texture_size/2.); 
+//       glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'X');
+     
+//       glRasterPos2f(texture_pos[2][0]-texture_size/2.,texture_pos[2][1]+texture_size/2.);
+//       glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'Y');
+
+//       glRasterPos2f(texture_pos[4][0]-texture_size/2.,texture_pos[4][1]+texture_size/2.);
+//       glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, 'Z');
+ 
+//       glColor3f(1,1,1);
+//       for(int i=0;i<SYMMETRY_TYPE_NUM;i++)
+//       {
+//          int index1 = texture_status[i]+i*SYMMETRY_STATUS_NUM; 
+//          glBindTexture(GL_TEXTURE_2D, texture[index1]);
+          //cerr<<index1<<" ";
+//          glBegin(GL_QUADS);
+//          glTexCoord2d(0,0); 
+//          glVertex2f(texture_pos[i][0],texture_pos[i][1]+texture_size);
+//          glTexCoord2d(1,0); 
+//          glVertex2f(texture_pos[i][0]+1.7*texture_size,
+//                          texture_pos[i][1]+texture_size);
+//          glTexCoord2d(1,1); 
+//          glVertex2f(texture_pos[i][0]+1.7*texture_size,texture_pos[i][1]);
+//          glTexCoord2d(0,1); 
+//          glVertex2f(texture_pos[i][0],texture_pos[i][1]);
+//           glEnd();
+          //cerr<<texture_pos[i][0]<<" "<<texture_pos[i][1]<<endl;
+//       }//cerr<<endl;
+
+//       glPopMatrix();
+       
+//       glBindTexture(GL_TEXTURE_2D, 0);
+//}
 void DrawVisibleButtons(void)
 {
        glEnable (GL_BLEND);
-       glEnable(GL_TEXTURE_2D);
+//       glEnable(GL_TEXTURE_2D);
 
        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-       glPushMatrix();
+//       glPushMatrix();
       
-       for(int i=0;i<VISUAL_TYPE-1;i++)
-       {
-          int index1 = texture_visual_status[i]+i*SYMMETRY_STATUS_NUM;
+//       for(int i=0;i<VISUAL_TYPE-1;i++)
+//       {
+/*          int index1 = texture_visual_status[i]+i*SYMMETRY_STATUS_NUM;
           glBindTexture(GL_TEXTURE_2D, texture_visual[index1]);
           glBegin(GL_QUADS);
           glTexCoord2d(0,0);
@@ -401,14 +611,54 @@ void DrawVisibleButtons(void)
           glTexCoord2d(0,1);
           glVertex2f(texture_visual_pos[i][0],texture_visual_pos[i][1]);
           glEnd();
+*/
 
-       }//cerr<<endl;
+//       }//cerr<<endl;
 
-       glPopMatrix();
+//       glPopMatrix();
 
-       glBindTexture(GL_TEXTURE_2D, 0);
-       glDisable(GL_TEXTURE_2D);
-       glDisable(GL_BLEND);
+//       glBindTexture(GL_TEXTURE_2D, 0);
+//       glDisable(GL_TEXTURE_2D);
+//       glDisable(GL_BLEND);
+
+       char *text[4];
+       text[0] = new char[20];
+       text[1] = new char[20];
+       text[2] = new char[20];
+       text[3] = new char[20];
+       sprintf(text[0],"color");
+       sprintf(text[1],"cluster");
+       sprintf(text[2],"length");
+       sprintf(text[3],"magnitude");
+ 
+      if(texture_visual_status[0] == SYMMETRY_DOWN 
+         || texture_visual_status[0] == SYMMETRY_UP_SELECT)
+           DrawEncodeDownButton(text, 
+                    texture_visual_size*texture_visual_ratio, 
+                     texture_visual_size,
+                     texture_visual_pos[0]);
+      else
+           DrawEncodeUpButton(text,
+                    texture_visual_size*texture_visual_ratio,
+                     texture_visual_size,
+                     texture_visual_pos[0]);
+
+
+       sprintf(text[0],"color");
+       sprintf(text[1],"power");
+       sprintf(text[2],"length");
+       sprintf(text[3],"digit");
+      if(texture_visual_status[1] == SYMMETRY_DOWN 
+         || texture_visual_status[1] == SYMMETRY_UP_SELECT)
+       DrawEncodeDownButton(text,
+                    texture_visual_size*texture_visual_ratio,
+                     texture_visual_size,
+                     texture_visual_pos[1]);
+      else
+           DrawEncodeUpButton(text,
+                    texture_visual_size*texture_visual_ratio,
+                     texture_visual_size,
+                     texture_visual_pos[1]);
 }
 
 
@@ -627,7 +877,7 @@ void accDisplay(void)
       //  glDisable(GL_LIGHTING);
         //glEnable(GL_TEXTURE_2D);
         if(symmetry_enable)
-                DrawSymmetryButtons();
+       DrawSymmetryButtons();
         else if(encode_visible)
                 DrawVisibleButtons();
         else if(layerVisible)
@@ -638,7 +888,7 @@ void accDisplay(void)
         glPushMatrix();
         glTranslatef(widget_tranx, widget_trany,0);
         glScalef(widget_scalex,widget_scaley,1);
-        widget->Render();
+        widget->Render(topmaglevel);
         glPopMatrix();
         }
         glMatrixMode(GL_PROJECTION);
@@ -666,7 +916,7 @@ void Reshape(int w, int h)
    image_height = h;
 
   widget_tranx=325;
-  widget_trany=image_height-50;
+  widget_trany=image_height-75;
   widget_scalex=5;
   widget_scaley=10.;
 
@@ -707,6 +957,8 @@ void Reshape(int w, int h)
 
 void UpdateColor()
 {
+  if(colorby == ENCODE)
+  {
    if(encode_type == LINEAR)
    {
       directglyph->SetColorByClusterMag();
@@ -719,11 +971,28 @@ void UpdateColor()
    {
        splitglyph->SetColorByClusterMag();
    }
+  }
+  else
+  {
+   if(encode_type == LINEAR)
+   {
+      directglyph->SetColorBySymmetryType();
+   }
+   else if(encode_type == LC)
+    {
+        splitglyph->SetColorByPower();
+    }
+
+    //directglyph->SetColorBySymmetryType();
+    //splitglyph->SetColorBySymmetryType();
+  }
 
    summaryglyph->SetColorByClusterMag();
 }
 void UpdateCluster()
 {
+ if(!configproperty.isContour)
+ {
    directglyph->ResetCluster();//cerr<<"done1"<<endl;
    directglyph->SetROI(configproperty.magrange[0][0], configproperty.magrange[0][1]);
    directglyph->GenerateClustersBySymmetry(configproperty.step1_kmeansproperty,
@@ -739,7 +1008,21 @@ void UpdateCluster()
 
    summaryglyph->ResetCluster();
    summaryglyph->GenerateClusters(directglyph->GetClusterLabels());
+ }
+ else
+ {
+   directglyph->ResetCluster();//cerr<<"done1"<<endl;
+   directglyph->SetROI(configproperty.magrange[0][0], configproperty.magrange[0][1]);
+   directglyph->GenerateClusters(configproperty.step1_kmeansproperty);
+   directglyph->SetROI(configproperty.magrange[1][0], configproperty.magrange[1][1]);
+   directglyph->GenerateClusters(configproperty.step2_kmeansproperty);
 
+   splitglyph->ResetCluster();
+   splitglyph->GenerateClusters(directglyph->GetClusterLabels());
+
+   summaryglyph->ResetCluster();
+   summaryglyph->GenerateClusters(directglyph->GetClusterLabels());
+ }
 }
 void UpdateRender()
 {
@@ -747,7 +1030,6 @@ void UpdateRender()
     directglyph->SetScale(length_scale);
     length_scale = (glui_length_scale * SPLITVECTORS_SCALE)*5.;
     splitglyph->SetScale(length_scale);
-
 
     arrow_scale = (glui_arrow_scale * ARROW_SCALE)*2.;
     directglyph->SetRadius(arrow_scale);
@@ -790,37 +1072,131 @@ void UpdateVBOData()
    splitglyph->UpdateData();
    directglyph->UpdateData();
 }
+void UpdateSymmetryMesh()
+{
+   if(!configproperty.isContour)
+   {
+      vector<int> region;
+      for(int i=0;i<symmetrytype.size();i++)
+      {
+       if(texture_status[symmetrytype[i]] == SYMMETRY_DOWN && symmetrytype[i]>=0)
+       {
+         region.push_back(symmetrytype[i]);
+         region.push_back(symmetrytype[i]);
+       }
+      }
+      symmetrymesh->New(region);
+      symmetrymesh->SetDisplayList(symmetrymesh_solid_list);
+
+     for(int i=0;i<symmetrytype.size();i++)
+     {
+       if(symmetrytype[i]<0) continue;
+//cerr<<i<<endl;
+      char *symmetrystr = new char[200];
+      for(int j=0;j<200;j++) symmetrystr[j] = '\0';
+      sprintf(symmetrystr, "%s%0.2f%0.2f%0.2f%0.2f%0.2f%0.2f", symmetrystr,
+                  configproperty.symmetryproperty.pos[0],
+                  configproperty.symmetryproperty.pos[1],
+                  configproperty.symmetryproperty.pos[2],
+                  configproperty.symmetryproperty.dir[0],
+                  configproperty.symmetryproperty.dir[1],
+                  configproperty.symmetryproperty.dir[2]);
+      char *str1 = new char[400];
+      char *str2 = new char[400];
+      sprintf(str1, "%s/%s/symmetryregion%s%d1.txt", configproperty.storeDir,  
+                    configproperty.rawFile,symmetrystr, symmetrytype[i]);
+      sprintf(str2, "%s/%s/symmetryregion%s%d2.txt", configproperty.storeDir,  
+                    configproperty.rawFile,symmetrystr, symmetrytype[i]);
+      directglyph->SaveSymmetry(symmetrytype[i], str1, str2,
+                              configproperty.symmetryproperty);
+      splitglyph->SaveSymmetry(symmetrytype[i], str1, str2,
+                              configproperty.symmetryproperty);
+      char *outstr1 = new char[400];
+      char *outstr2 = new char[400];
+      sprintf(outstr1, "%s/%s/symmetrymesh%s%d1.txt", configproperty.storeDir,
+                     configproperty.rawFile,symmetrystr, symmetrytype[i]);
+      sprintf(outstr2, "%s/%s/symmetrymesh%s%d2.txt", configproperty.storeDir,  
+                     configproperty.rawFile,symmetrystr, symmetrytype[i]);
+
+      flow_field->NewMesh(str1, outstr1);
+      flow_field->NewMesh(str2, outstr2);
+      
+      symmetrymesh->SetData(outstr1, i*2);
+      symmetrymesh->SetData(outstr2, i*2+1);
+     // symmetrymesh->GenerateSurfaces(0);//unique_region[1]);
+
+      delete [] outstr1;
+      delete [] outstr2;
+      delete [] str1;
+      delete [] str2;
+   }
+
+   region.clear();
+   symmetrymesh->SetColors();
+   symmetrymesh->GenerateSurfacesByColor();
+  }
+}
+
+void UpdateMesh()
+{
+   char *str = new char[400];
+   sprintf(str,"%s/%s", configproperty.storeDir, configproperty.rawFile);
+   if(!configproperty.isContour)
+   {
+     directglyph->SetNeighborLabel(symmetrytype, configproperty.symmetryproperty,str);
+     splitglyph->SetNeighborLabel(symmetrytype, configproperty.symmetryproperty,str);
+     flow_field->NewSymmetryMesh(symmetrytype, configproperty.symmetryproperty, str);
+   }
+
+   delete [] str;
+}
 void UpdateVisible()
 {
-    for(int i=0;i<VISUAL_TYPE-1;i++)
-             if(texture_visual_status[i] == SYMMETRY_DOWN)
-                                { encode_type = i;}
+//    for(int i=0;i<VISUAL_TYPE-1;i++)
+//             if(texture_visual_status[i] == SYMMETRY_DOWN)
+//                                { encode_type = i;}
 
-      symmetrytype.clear();
+    if(encode_linear) encode_type = LINEAR;
+    else encode_type = LC;
 
-      bool flag = false;
-      for(int i=0;i<SYMMETRY_TYPE_NUM;i++)
-      {
-              if(texture_status[i] == SYMMETRY_DOWN)
-              {
-                  symmetrytype.push_back(i);
-                  flag = true;
-              }
-      }
-/*     if(!flag)
-     {
-      for(int i=0;i<SYMMETRY_TYPE_NUM;i++)
-      {
-                  symmetrytype.push_back(i);
-      }
+    symmetrytype.clear();
+    bool flag = false;
+    for(int i=0;i<SYMMETRY_TYPE+1;i++)
+    {
+         if(i<SYMMETRY_TYPE)//&&texture_status[i] == SYMMETRY_DOWN)
+         { 
+            if(texture_status[i] == SYMMETRY_DOWN)
+            {
+              symmetrytype.push_back(i);
+              flag = true;
+            }
+         }
+         else if(texture_status[i] == SYMMETRY_DOWN)
+         {
+              symmetrytype.push_back(-1);
+              flag = true;
+         }
+    } 
+//      symmetrytype.clear();
 
-     }
-*/
+//      bool flag = false;
+//      for(int i=0;i<SYMMETRY_TYPE_NUM;i++)
+//      {
+//              if(texture_status[i] == SYMMETRY_DOWN)
+//              {
+//                  symmetrytype.push_back(i);
+//                  flag = true;
+//              }
+//      }
+   char *str = new char[400];
+   sprintf(str, "%s/%s/", configproperty.storeDir, configproperty.rawFile);
    directglyph->ResetVisible();
    if(configproperty.isContour)
      directglyph->SetSampling(frequency);
    else
+   {
      directglyph->SetSampling(symmetrytype, frequency);
+   }  //cerr<<"done1"<<endl; 
 //   directglyph->SetSymmetryVisible(symmetrytype);
    directglyph->SetVisible(contourindex);
 //   directglyph->SetVisible(zmin, zmax);
@@ -833,7 +1209,11 @@ void UpdateVisible()
    if(configproperty.isContour)
     splitglyph->SetSampling(frequency);
    else
-    splitglyph->SetSampling(symmetrytype, frequency);
+   {
+       splitglyph->SetSampling(symmetrytype, frequency);
+   }
+
+   delete [] str;
 //   splitglyph->SetSymmetryVisible(symmetrytype);
    splitglyph->SetVisible(contourindex);
 //   splitglyph->SetVisible(zmin, zmax);
@@ -874,7 +1254,7 @@ void control_cb(int control)
                    encode_visible = 0;
                    layerVisible = 0;
                    box_layer->set_int_val(layerVisible);
-                   box_encode->set_int_val(encode_visible);
+                   //box_encode->set_int_val(encode_visible);
            }  
           // UpdateVisible();     
      }
@@ -882,21 +1262,58 @@ void control_cb(int control)
      {
            
      }
-     else if(control == ENCODE_ID)
+     else if(control == ENCODE_LINEAR_ID)
      {
-        if(encode_visible)
-        {
-              layerVisible = 0;
-              box_layer->set_int_val(layerVisible);
-             symmetry_enable = 0; symmetrybox->set_int_val(symmetry_enable);
+     //   if(encode_visible)
+     //   {
+     //         layerVisible = 0;
+     //         box_layer->set_int_val(layerVisible);
+     //        symmetry_enable = 0; symmetrybox->set_int_val(symmetry_enable);
+     //    }
+         if(encode_linear) 
+         {
+            if(color_cluster + color_symmetry == 0)
+            {
+                color_cluster = 1;
+                color_box1->set_int_val(1);
+            }
+            color_magnitude =0;
+            color_box1->enable();
+            if(!configproperty.isContour)
+               color_box2->enable();
+            color_box3->set_int_val(0);
+            color_box3->disable();
+            encode_split = 0;
+            encode_box2->set_int_val(0);
          }
+          updatevisible = true;
+          updaterender = true;
+     }
+     else if(control == ENCODE_SPLIT_ID)
+     {
+         if(encode_split)
+         {
+             color_cluster =0;
+             color_symmetry = 0;
+             color_magnitude = 1;
+             color_box1->set_int_val(0);
+             color_box2->set_int_val(0);
+             color_box1->disable();//cerr<<"1"<<endl;
+             color_box2->disable();//cerr<<"1"<<endl;
+             color_box3->disable();//cerr<<"1"<<endl;
+             color_box3->set_int_val(1);//cerr<<"1"<<endl;
+             encode_linear = 0;//cerr<<"1"<<endl;
+             encode_box1->set_int_val(0);//cerr<<"1"<<endl;
+         }
+          updatevisible = true;
+          updaterender = true;
      }
      else if(control == LAYER_ID)
      {
         if(layerVisible)
         {
                  encode_visible = 0;
-                 box_encode->set_int_val(encode_visible);
+                 //box_encode->set_int_val(encode_visible);
                  symmetry_enable = 0; symmetrybox->set_int_val(symmetry_enable);
         }
      }
@@ -915,6 +1332,11 @@ void control_cb(int control)
 
          UpdateVisible();
         }
+     }
+     else if(control == LENGTH_VIS_ID)
+     {//cerr<<length_vis<<endl;
+           widget->SetHistoValues(splitglyph->GetMagProb(topmaglevel));
+           widget->SetValues(splitglyph->GetEntropyValues(), true);
      }
      else if(control == LENGTH_ID || control == ARROW_ID || control == TUBE_ID)
      {
@@ -945,12 +1367,43 @@ void control_cb(int control)
      {
           updatevisible = true;
      }
+     else if(control == COLORBY_CLUSTER_ID)
+     {
+          if(color_cluster)
+          {
+              colorby = ENCODE;
+              color_symmetry = 0;
+              color_box2->set_int_val(color_symmetry);
+          }
+          updatevisible = true;
+          updaterender = true;
+     }
+     else if(control == COLORBY_SYMMETRY_ID)
+     {
+          if(color_symmetry)
+          {
+             colorby = 1- ENCODE;
+             color_cluster = 0;
+             color_box1->set_int_val(color_cluster);
+          }
+          updatevisible = true;
+          updaterender = true;
+     }
      else if(control == UPDATE_ID)
      {
-          if(updatecluster)
-               UpdateCluster();
+          cout<<"Please wait ...."<<endl;
           if(updatevisible)
+          {
                UpdateVisible();
+          }
+          if(updatecluster)
+          {
+          }
+          if(updatevisible)
+          {
+               UpdateVisible();
+               UpdateSymmetryMesh();
+          }
           if(updaterender)
           {
                   UpdateColor(); UpdateRender(); 
@@ -960,6 +1413,7 @@ void control_cb(int control)
           updatevisible = false;
           updaterender = false;
           arrow_scale_up = false;
+          cout<<"Update done ..."<<endl;
      }
      else if(control == MESH_TYPE_ID || control == MESH_VIS_ID)
      {
@@ -971,12 +1425,36 @@ void control_cb(int control)
           }
           else
           {
-                mesh->GenerateSurface();//unique_region[1]);
+                mesh->GenerateSurfaces(1);//unique_region[1]);
           }
      }
      else if(control == ALPHA_ID)
      {
      }
+     else if(control == PICTURE_ID)
+     {
+          int x, y, w, h;
+          char *str = new char[200];
+          const char *picture = text_picture->get_text(); 
+          if(strlen(picture)>0)
+          {
+            sprintf(str,"%s/screenshots/%s.ppm", SRC_DIR, picture);
+          }
+          else
+          {
+             char buffer[80];
+             getTime(buffer);
+             sprintf(str,"%s/screenshots/%s.ppm", SRC_DIR,buffer);   
+          }//cerr<<str<<endl;
+          GLUI_Master.get_viewport_area(&x, &y, &w, &h);
+          CaptureScreen(str, x, y, w,h);
+
+          delete [] str;
+     }
+     else if(control == PICTURE_TEXT_ID)
+     {
+     }
+
   //   cerr<<sb_arrow->ifmouseup()<<endl;
   //   glutSetWindow(window);
 /*
@@ -1059,12 +1537,16 @@ void mouse(int button, int state, int x, int y)
        if(symmetry_enable && button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
        {
         bool flag = false;
-        for(int i=0;i<SYMMETRY_TYPE_NUM;i++)
+        for(int i=0;i<SYMMETRY_TYPE+1;i++)
         {
-             if(x > texture_pos[i][0] && x < texture_pos[i][0]+texture_size*1.5
+             if(x > texture_pos[i][0] && x < texture_pos[i][0]+texture_size *texture_ratio 
               && image_height-y>texture_pos[i][1] 
               && image_height-y<texture_pos[i][1]+texture_size)
-            {//cerr<<i<<" "<<texture_status[i]<<" ";
+            {
+            //    if(i%2==0 && texture_status[i+1] == SYMMETRY_DOWN)
+            //           continue;
+            //    if(i%2==1 && texture_status[i-1] == SYMMETRY_DOWN)
+            //           continue;
                  if(texture_status[i] == SYMMETRY_DOWN_SELECT)
                        texture_status[i] = SYMMETRY_UP;
                  else if (texture_status[i] == SYMMETRY_UP_SELECT)
@@ -1073,28 +1555,36 @@ void mouse(int button, int state, int x, int y)
                          texture_status[i] = SYMMETRY_DOWN_SELECT;
                  else if(texture_status[i] == SYMMETRY_DOWN)
                          texture_status[i] = SYMMETRY_UP_SELECT;
-                 flag = true;
+            //     flag = true;
                // cerr<<texture_status[i]<<endl;
+               flag = true;
+//               if(texture_status[i] == SYMMETRY_DOWN)
+//                     texture_status[i] = SYMMETRY_UP;
+//               else
+//                     texture_status[i] = SYMMETRY_DOWN;
             }     
         }
         if(flag){
-                  UpdateVisible(); updatevisible = true; updatecluster=true;
-                  updaterender = true;
+                  //UpdateVisible();  
+                  updatevisible = true; 
+                  updatecluster=true;
+            //      updaterender = true;
         }
-        //if(flag)
-        //SymmetryProcess();
       }
       else if(encode_visible && button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
        {//cerr<<"!"<<endl;
         bool flag = false;
         for(int i=0;i<VISUAL_TYPE-1;i++)
         {
-             if(x > texture_visual_pos[i][0] && x < texture_visual_pos[i][0]+texture_visual_size*1.5
+             if(x > texture_visual_pos[i][0] && x < texture_visual_pos[i][0]+texture_visual_size*texture_visual_ratio
               && image_height-y>texture_visual_pos[i][1]
               && image_height-y<texture_visual_pos[i][1]+texture_visual_size)
             {
                  if(texture_visual_status[i] == SYMMETRY_DOWN_SELECT)
-                       texture_visual_status[i] = SYMMETRY_UP;
+                 {
+                         texture_visual_status[i] = SYMMETRY_UP;
+                         texture_visual_status[1-i] = SYMMETRY_DOWN;
+                 }
                  else if (texture_visual_status[i] == SYMMETRY_UP_SELECT)
                  {
                       texture_visual_status[i] = SYMMETRY_DOWN;
@@ -1186,9 +1676,14 @@ void movement(int x, int y)
 {
        if(symmetry_enable)
        {
-           for(int i=0;i<SYMMETRY_TYPE_NUM;i++)
+           for(int i=0;i<SYMMETRY_TYPE+1;i++)
            {
-             if(x > texture_pos[i][0] && x < texture_pos[i][0]+texture_size *1.5
+//                if(i%2==0 && texture_status[i+1] == SYMMETRY_DOWN)
+//                       continue;
+//                if(i%2==1 && texture_status[i-1] == SYMMETRY_DOWN)
+//                       continue;
+
+             if(x > texture_pos[i][0] && x < texture_pos[i][0]+texture_size *texture_ratio
               && image_height-y>texture_pos[i][1]
               && image_height-y<texture_pos[i][1]+texture_size)
             {
@@ -1196,6 +1691,7 @@ void movement(int x, int y)
                          texture_status[i] = SYMMETRY_UP_SELECT;
                  else if(texture_status[i] == SYMMETRY_DOWN)
                          texture_status[i] = SYMMETRY_DOWN_SELECT;
+           //      cerr<<i<<" "<<texture_status[i]<<endl;
             } 
             else
             {
@@ -1210,7 +1706,7 @@ void movement(int x, int y)
        {
            for(int i=0;i<VISUAL_TYPE-1;i++)
            {
-             if(x > texture_visual_pos[i][0] && x < texture_visual_pos[i][0]+texture_visual_size *1.5
+             if(x > texture_visual_pos[i][0] && x < texture_visual_pos[i][0]+texture_visual_size*texture_visual_ratio
               && image_height-y>texture_visual_pos[i][1]
               && image_height-y<texture_visual_pos[i][1]+texture_visual_size)
             {
@@ -1247,7 +1743,9 @@ void InitField()
 
         sprintf(str, "%s/%s/", configproperty.storeDir,  configproperty.rawFile);				
         flow_field->NewMesh(str);
-	delete [] qdot_format;
+      delete [] str;
+      delete [] qdot_format;
+
 }
 /*void InitContour()
 {
@@ -1827,6 +2325,64 @@ void InitField()
   }
 }
 */
+void SymmetryConfig()//need to be fixed!!!!!!!!!!!!!!
+{
+          char *symmetrystr = new char[200];
+          for(int j=0;j<200;j++) symmetrystr[j] = '\0';
+        sprintf(configproperty.symmetryproperty.outputdir, "%s/%s/", 
+                 configproperty.storeDir, 
+                 configproperty.rawFile);
+            sprintf(symmetrystr, "%s(%0.2f%0.2f%0.2f%0.2f%0.2f%0.2f)", 
+                  symmetrystr,
+                  configproperty.symmetryproperty.pos[0], 
+                  configproperty.symmetryproperty.pos[1], 
+                  configproperty.symmetryproperty.pos[2],
+                  configproperty.symmetryproperty.dir[0], 
+                  configproperty.symmetryproperty.dir[1], 
+                  configproperty.symmetryproperty.dir[2]);
+           char *str = new char[400];
+           for(int i=0;i<SYMMETRY_TYPE;i++)
+           {
+              switch(i)
+              {
+                 case 0:  sprintf(str,"%s/%dxsyszs%s.txt",
+                     configproperty.symmetryproperty.outputdir, 
+                     configproperty.isContour,symmetrystr);
+                     break;
+                 case 1:  sprintf(str,"%s/%dxsysza%s.txt",
+                     configproperty.symmetryproperty.outputdir, 
+                     configproperty.isContour, symmetrystr);
+                     break;
+                 case 2:  sprintf(str,"%s/%dxsyazs%s.txt",
+                     configproperty.symmetryproperty.outputdir, 
+                     configproperty.isContour, symmetrystr);
+                     break;
+                 case 3:  sprintf(str,"%s/%dxsyaza%s.txt",
+                     configproperty.symmetryproperty.outputdir, 
+                     configproperty.isContour, symmetrystr); 
+                     break;
+                 case 4:  sprintf(str,"%s/%dxayszs%s.txt",
+                     configproperty.symmetryproperty.outputdir, 
+                     configproperty.isContour, symmetrystr);
+                     break;
+                 case 5:  sprintf(str,"%s/%dxaysza%s.txt",
+                     configproperty.symmetryproperty.outputdir, 
+                     configproperty.isContour, symmetrystr);
+                     break;
+                 case 6:  sprintf(str,"%s/%dxayazs%s.txt",
+                     configproperty.symmetryproperty.outputdir, 
+                     configproperty.isContour, symmetrystr);
+                     break;
+                 case 7:  sprintf(str,"%s/%dxayaza%s.txt",
+                     configproperty.symmetryproperty.outputdir, 
+                     configproperty.isContour,symmetrystr);
+                     break;
+              }
+              strcpy(configproperty.symmetryproperty.outputfile[i],str);              
+           }
+           delete []symmetrystr;
+           delete []str;
+}
 void ReadConfig(char *configfname, ConfigProperty &property)
 {
 	ifstream infile(configfname);
@@ -1852,23 +2408,23 @@ void ReadConfig(char *configfname, ConfigProperty &property)
 	infile>>property.plane_distance;
 	
 /*--------------initialization of QDOT field------------*/
-	char *qdot_format = new char[400];
-	sprintf(qdot_format,"%s/%s/format.txt", property.storeDir, 
-	            property.rawFile);
-        flow_field->SetVTK(property.rawDir, property.rawFile,
-	                   property.storeDir,
-					   "sort.txt", "format.txt", "density.txt",
-					   property.plane_center,
-					   property.plane_vector,
-					   property.plane_distance,
-                                           property.format);
-        flow_field->New(qdot_format);	
+//	char *qdot_format = new char[400];
+//	sprintf(qdot_format,"%s/%s/format.txt", property.storeDir, 
+//	            property.rawFile);
+//        flow_field->SetVTK(property.rawDir, property.rawFile,
+//	                   property.storeDir,
+//					   "sort.txt", "format.txt", "density.txt",
+//					   property.plane_center,
+//					   property.plane_vector,
+//					   property.plane_distance,
+//                                           property.format);
+//        flow_field->New(qdot_format);	
         char *str = new char[200];
-
+//
         sprintf(str, "%s/%s/", property.storeDir,  property.rawFile);				
-        flow_field->NewMesh(str);
-	delete [] qdot_format;
-	
+//        flow_field->NewMesh(str);
+//	delete [] qdot_format;
+        InitField();	
 /*------------------contour----------------------*/
 	infile>>tmp; //cerr<<tmp<<endl;
 	double store;
@@ -1882,7 +2438,8 @@ void ReadConfig(char *configfname, ConfigProperty &property)
         for(int i=0;i<flow_field->GetPlaneNum();i++)
                 property.contourproperty.isUpdate.add(0);
 	char linestr[5];
-
+        sprintf(str, "%s/%s/contourall.txt", property.storeDir, property.rawFile);
+        property.contourproperty.wholefile = strdup(str);
        property.contourname.clear();
 
 //       char *str = new char[200];
@@ -2052,6 +2609,8 @@ void ReadConfig(char *configfname, ConfigProperty &property)
         svVector3 dd;
         sprintf(str, "%s/%s/", property.storeDir, property.rawFile);
         property.symmetryproperty.datafile= strdup(str);
+        sprintf(str, "%s/%s/layerall.txt", property.storeDir, property.rawFile);
+        property.symmetryproperty.inputfile=strdup(str);
         //sprintf(str, "%s/symmetry.txt", property.storeDir);
         //property.symmetryproperty.outputfile = new char[200];
         //for(int i=0;i<(int)store;i++)
@@ -2072,7 +2631,12 @@ void ReadConfig(char *configfname, ConfigProperty &property)
         property.symmetryproperty.planepos = flow_field->GetMinPlane();
         property.symmetryproperty.planedir = flow_field->GetPlaneDir();
         property.symmetryproperty.planedistance = property.plane_distance;
-        delete [] str;	
+        infile>>tmp;
+        infile>>store;
+        property.symmetryproperty.angle_uncertain = store/180. * PI;
+        infile>>tmp;
+        infile>>store;
+        property.symmetryproperty.mag_uncertain = store;
 /*--------------------------ROI----------------------------------------*/
         infile>>tmp;
         infile>>num;
@@ -2080,9 +2644,55 @@ void ReadConfig(char *configfname, ConfigProperty &property)
         infile>>zmax; //cerr<<tmp<<" "<<num<<" "<<zmin<<" "<<zmax<<endl;
         if(num == 3) {infile>>nonz;layer_repeat = true;}
         else nonz = -1;
+/*-------------------------Neighbors----------------------------------*/
+//        infile>>tmp;
+//        sprintf(str, "%s/%s/layerall.txt", property.storeDir, property.rawFile);
+//        property.neighborproperty.inputfile = strdup(str);
+//        sprintf(str, "%s/%s/neighbors.txt", property.storeDir, property.rawFile);
+//        property.neighborproperty.outputfile = strdup(str);
+//        property.neighborproperty.svectors.free();
+//        num = property.neighborproperty.dvectors.size();
+//        for(int i=0;i<num;i++)
+//        {
+//           property.neighborproperty.dvectors[i].free();
+//        }
+//        property.neighborproperty.zvalues.free();
+//        infile>>num;
+//        for(int i=0;i<num;i++)
+//        {
+//             infile>>pp[0]>>pp[1]>>pp[2];
+    //         if(pp[1] <=0.)
+//             property.neighborproperty.svectors.add(pp);
+//        }
+//        infile>>num;
+//        property.neighborproperty.dvectors.resize(num);
+//        for(int i=0;i<num;i++)
+//        {
+//            infile>>store;
+//            property.neighborproperty.zvalues.add(store);
+//            int m;
+//            infile>>m;cerr<<store<<" "<<m<<endl;
+//            for(int j=0;j<m;j++)
+//            {
+//                infile>>pp[0]>>pp[1]>>pp[2];
+      //          if(pp[1] <=0. && pp[2]<=0.)
+//                   property.neighborproperty.dvectors[i].add(pp);
+//            }
+//        }
+//        property.neighborproperty.planepos = flow_field->GetMinPlane();
+//        property.neighborproperty.planedir = flow_field->GetPlaneDir();
+//        property.neighborproperty.planedistance = property.plane_distance; 
+
+    //    svNeighbor *testnei = new svNeighbor(flow_field);
+    //    testnei->ComputeNeighbors(property.neighborproperty);
      //   widget->SetIndex(zmin, zmax);
 /*-------------------------end----------------------------------------*/
         infile.close();
+        delete [] str;
+
+       if(!property.isContour)
+             SymmetryConfig();
+
        symmetrytype.clear();
 //       symmetrytype.push_back(0);
 //       symmetrytype.push_back(1);
@@ -2097,131 +2707,152 @@ void LoadTexture()
      glEnable(GL_LIGHT0);
      glEnable(GL_DEPTH_TEST);
 
-    texture = new GLuint[SYMMETRY_TYPE_NUM*SYMMETRY_STATUS_NUM];
+//     texture = new GLuint[1];
 
-    char *str = new char[200];
-    sprintf(str, "%s/media/figures/xsup.png",SRC_DIR);
-    SOILTexture(str, texture[0]);
-    sprintf(str, "%s/media/figures/xsdown.png",SRC_DIR);
-    SOILTexture(str, texture[1]);
-    sprintf(str, "%s/media/figures/xsdown.png",SRC_DIR);
-    SOILTexture(str, texture[2]);
-    sprintf(str, "%s/media/figures/xsup.png",SRC_DIR);
-    SOILTexture(str, texture[3]);
+//     char *str = new char[200];
+//     sprintf(str, "%s/media/figures/symmetry.png", SRC_DIR);
+//     SOILTexture(str, texture[0]);
+//    texture = new GLuint[SYMMETRY_TYPE_NUM*SYMMETRY_STATUS_NUM];
 
-    sprintf(str, "%s/media/figures/xaup.png",SRC_DIR);
-    SOILTexture(str, texture[4]);
-    sprintf(str, "%s/media/figures/xadown.png",SRC_DIR);
-    SOILTexture(str, texture[5]);
-    sprintf(str, "%s/media/figures/xadown.png",SRC_DIR);
-    SOILTexture(str, texture[6]);
-    sprintf(str, "%s/media/figures/xaup.png",SRC_DIR);
-    SOILTexture(str, texture[7]);
+//    char *str = new char[200];
+//    sprintf(str, "%s/media/figures/xsup.png",SRC_DIR);
+//    SOILTexture(str, texture[0]);
+//    sprintf(str, "%s/media/figures/xsdown.png",SRC_DIR);
+//    SOILTexture(str, texture[1]);
+//    sprintf(str, "%s/media/figures/xsdown.png",SRC_DIR);
+//    SOILTexture(str, texture[2]);
+//    sprintf(str, "%s/media/figures/xsup.png",SRC_DIR);
+//    SOILTexture(str, texture[3]);
 
-    sprintf(str, "%s/media/figures/ysup.png",SRC_DIR);
-    SOILTexture(str, texture[8]);
-    sprintf(str, "%s/media/figures/ysdown.png",SRC_DIR);
-    SOILTexture(str, texture[9]);
-    sprintf(str, "%s/media/figures/ysdown.png",SRC_DIR);
-    SOILTexture(str, texture[10]);
-    sprintf(str, "%s/media/figures/ysup.png",SRC_DIR);
-    SOILTexture(str, texture[11]);
+//    sprintf(str, "%s/media/figures/xaup.png",SRC_DIR);
+//    SOILTexture(str, texture[4]);
+//    sprintf(str, "%s/media/figures/xadown.png",SRC_DIR);
+//    SOILTexture(str, texture[5]);
+//    sprintf(str, "%s/media/figures/xadown.png",SRC_DIR);
+//    SOILTexture(str, texture[6]);
+//    sprintf(str, "%s/media/figures/xaup.png",SRC_DIR);
+//    SOILTexture(str, texture[7]);
 
-    sprintf(str, "%s/media/figures/yaup.png",SRC_DIR);
-    SOILTexture(str, texture[12]);
-    sprintf(str, "%s/media/figures/yadown.png",SRC_DIR);
-    SOILTexture(str, texture[13]);
-    sprintf(str, "%s/media/figures/yadown.png",SRC_DIR);
-    SOILTexture(str, texture[14]);
-    sprintf(str, "%s/media/figures/yaup.png",SRC_DIR);
-    SOILTexture(str, texture[15]);
+//    sprintf(str, "%s/media/figures/ysup.png",SRC_DIR);
+//    SOILTexture(str, texture[8]);
+//    sprintf(str, "%s/media/figures/ysdown.png",SRC_DIR);
+//    SOILTexture(str, texture[9]);
+//    sprintf(str, "%s/media/figures/ysdown.png",SRC_DIR);
+//    SOILTexture(str, texture[10]);
+//    sprintf(str, "%s/media/figures/ysup.png",SRC_DIR);
+//    SOILTexture(str, texture[11]);
 
-    sprintf(str, "%s/media/figures/zsup.png",SRC_DIR);
-    SOILTexture(str, texture[16]);
-    sprintf(str, "%s/media/figures/zsdown.png",SRC_DIR);
-    SOILTexture(str, texture[17]);
-    sprintf(str, "%s/media/figures/zsdown.png",SRC_DIR);
-    SOILTexture(str, texture[18]);
-    sprintf(str, "%s/media/figures/zsup.png",SRC_DIR);
-    SOILTexture(str, texture[19]);
+//    sprintf(str, "%s/media/figures/yaup.png",SRC_DIR);
+//    SOILTexture(str, texture[12]);
+//    sprintf(str, "%s/media/figures/yadown.png",SRC_DIR);
+//    SOILTexture(str, texture[13]);
+//    sprintf(str, "%s/media/figures/yadown.png",SRC_DIR);
+//    SOILTexture(str, texture[14]);
+//    sprintf(str, "%s/media/figures/yaup.png",SRC_DIR);
+//    SOILTexture(str, texture[15]);
 
-    sprintf(str, "%s/media/figures/zaup.png",SRC_DIR);
-    SOILTexture(str, texture[20]);
-    sprintf(str, "%s/media/figures/zadown.png",SRC_DIR);
-    SOILTexture(str, texture[21]);
-    sprintf(str, "%s/media/figures/zadown.png",SRC_DIR);
-    SOILTexture(str, texture[22]);
-    sprintf(str, "%s/media/figures/zaup.png",SRC_DIR);
-    SOILTexture(str, texture[23]);
+//    sprintf(str, "%s/media/figures/zsup.png",SRC_DIR);
+//    SOILTexture(str, texture[16]);
+//    sprintf(str, "%s/media/figures/zsdown.png",SRC_DIR);
+//    SOILTexture(str, texture[17]);
+//    sprintf(str, "%s/media/figures/zsdown.png",SRC_DIR);
+//    SOILTexture(str, texture[18]);
+//    sprintf(str, "%s/media/figures/zsup.png",SRC_DIR);
+//    SOILTexture(str, texture[19]);
+
+//    sprintf(str, "%s/media/figures/zaup.png",SRC_DIR);
+//    SOILTexture(str, texture[20]);
+//    sprintf(str, "%s/media/figures/zadown.png",SRC_DIR);
+//    SOILTexture(str, texture[21]);
+//    sprintf(str, "%s/media/figures/zadown.png",SRC_DIR);
+//    SOILTexture(str, texture[22]);
+//    sprintf(str, "%s/media/figures/zaup.png",SRC_DIR);
+//    SOILTexture(str, texture[23]);
 
 //---------------------------------------------------------
-    texture_visual = new GLuint[VISUAL_TYPE*SYMMETRY_STATUS_NUM];
-    sprintf(str, "%s/media/figures/linearup.png",SRC_DIR);
-    SOILTexture(str, texture_visual[0]);
-    sprintf(str, "%s/media/figures/lineardown.png",SRC_DIR);
-    SOILTexture(str, texture_visual[1]);
-    sprintf(str, "%s/media/figures/lineardown.png",SRC_DIR);
-    SOILTexture(str, texture_visual[2]);
-    sprintf(str, "%s/media/figures/linearup.png",SRC_DIR);
-    SOILTexture(str, texture_visual[3]);
+//    texture_visual = new GLuint[VISUAL_TYPE*SYMMETRY_STATUS_NUM];
+//    sprintf(str, "%s/media/figures/linearup.png",SRC_DIR);
+//    SOILTexture(str, texture_visual[0]);
+//    sprintf(str, "%s/media/figures/lineardown.png",SRC_DIR);
+//    SOILTexture(str, texture_visual[1]);
+//    sprintf(str, "%s/media/figures/lineardown.png",SRC_DIR);
+//    SOILTexture(str, texture_visual[2]);
+//    sprintf(str, "%s/media/figures/linearup.png",SRC_DIR);
+//    SOILTexture(str, texture_visual[3]);
 
-    sprintf(str, "%s/media/figures/colorup.png",SRC_DIR);
-    SOILTexture(str, texture_visual[4]);
-    sprintf(str, "%s/media/figures/colordown.png",SRC_DIR);
-    SOILTexture(str, texture_visual[5]);
-    sprintf(str, "%s/media/figures/colordown.png",SRC_DIR);
-    SOILTexture(str, texture_visual[6]);
-    sprintf(str, "%s/media/figures/colorup.png",SRC_DIR);
-    SOILTexture(str, texture_visual[7]);
+//    sprintf(str, "%s/media/figures/colorup.png",SRC_DIR);
+//    SOILTexture(str, texture_visual[4]);
+//    sprintf(str, "%s/media/figures/colordown.png",SRC_DIR);
+//   SOILTexture(str, texture_visual[5]);
+//    sprintf(str, "%s/media/figures/colordown.png",SRC_DIR);
+//    SOILTexture(str, texture_visual[6]);
+//    sprintf(str, "%s/media/figures/colorup.png",SRC_DIR);
+//    SOILTexture(str, texture_visual[7]);
 
-    sprintf(str, "%s/media/figures/textureup.png",SRC_DIR);
-    SOILTexture(str, texture_visual[8]);
-    sprintf(str, "%s/media/figures/texturedown.png",SRC_DIR);
-    SOILTexture(str, texture_visual[9]);
-    sprintf(str, "%s/media/figures/texturedown.png",SRC_DIR);
-    SOILTexture(str, texture_visual[10]);
-    sprintf(str, "%s/media/figures/textureup.png",SRC_DIR);
-    SOILTexture(str, texture_visual[11]);
+//    sprintf(str, "%s/media/figures/textureup.png",SRC_DIR);
+//    SOILTexture(str, texture_visual[8]);
+//    sprintf(str, "%s/media/figures/texturedown.png",SRC_DIR);
+//    SOILTexture(str, texture_visual[9]);
+//    sprintf(str, "%s/media/figures/texturedown.png",SRC_DIR);
+//    SOILTexture(str, texture_visual[10]);
+//    sprintf(str, "%s/media/figures/textureup.png",SRC_DIR);
+//    SOILTexture(str, texture_visual[11]);
 
-    delete [] str;
-
-    texture_pos = new svVector3[SYMMETRY_TYPE_NUM];
-    texture_status = new int[SYMMETRY_TYPE_NUM];
+//    delete [] str;
+//========================================================
+    texture_pos = new svVector3[SYMMETRY_TYPE+1];
+    texture_status = new int[SYMMETRY_TYPE+1];
     texture_visual_pos = new svVector3[VISUAL_TYPE];
     texture_visual_status = new int[VISUAL_TYPE];
 
-    texture_status[0] = SYMMETRY_UP;
-    texture_status[1] = SYMMETRY_UP;
-    texture_status[2] = SYMMETRY_UP;
-    texture_status[3] = SYMMETRY_UP;
-    texture_status[4] = SYMMETRY_UP;
-    texture_status[5] = SYMMETRY_UP;
+    for(int i=0;i<SYMMETRY_TYPE;i++)
+        texture_status[i] = SYMMETRY_DOWN;
+    texture_status[SYMMETRY_TYPE] = SYMMETRY_UP;
 
     texture_visual_status[0] = SYMMETRY_DOWN;
     texture_visual_status[1] = SYMMETRY_UP;
     texture_visual_status[2] = SYMMETRY_UP;
 
     LocateTexture();
-
 }
 
 void LocateTexture()
 {
-    texture_visual_size = 72;
-    texture_size = 72;//(svScalar)(image_height/15.);
+    //texture_visual_size = 90;//72
+    texture_size = 30.;//72*2.25;//(svScalar)(image_height/15.);
+    texture_ratio = 1.8;
+    texture_visual_ratio = 2.2;
     svScalar size = texture_size;//cerr<<size<<endl;
-    texture_pos[0][0]=325;          texture_pos[0][1]=image_height-size*1.2; 
-    texture_pos[1][0]=325+size*1.7; texture_pos[1][1]=image_height-size*1.2; 
-    texture_pos[2][0]=325+size*3.4; texture_pos[2][1]=image_height-size*1.2; 
-    texture_pos[3][0]=325+size*5.1; texture_pos[3][1]=image_height-size*1.2; 
-    texture_pos[4][0]=325+size*6.8; texture_pos[4][1]=image_height-size*1.2;
-    texture_pos[5][0]=325+size*8.5; texture_pos[5][1]=image_height-size*1.2;
+//    texture_pos[0][0]=325;          texture_pos[0][1]=image_height-size*1.2; 
+//    texture_pos[1][0]=325+size*1.7; texture_pos[1][1]=image_height-size*1.2; 
+//    texture_pos[2][0]=325+size*4.4; texture_pos[2][1]=image_height-size*1.2; 
+//    texture_pos[3][0]=325+size*6.1; texture_pos[3][1]=image_height-size*1.2; 
+//    texture_pos[4][0]=325+size*8.8; texture_pos[4][1]=image_height-size*1.2;
+//    texture_pos[5][0]=325+size*10.5; texture_pos[5][1]=image_height-size*1.2;
+
+//    texture_lbbox[0] = 340;
+//    texture_lbbox[1] = image_height - texture_size/2.*SYMMETRY_TYPE;
+//    texture_rbbox[0] = 340 + texture_size;
+//    texture_rbbox[1] = image_height - 10.;
+    for(int i=0;i<SYMMETRY_TYPE+1;i++)
+    {
+       texture_pos[i][0] = widget_tranx+50+texture_size*texture_ratio*1.25*(float)(i);
+       texture_pos[i][1] = widget_trany-10.;
+//image_height - texture_size*1.5*(svScalar)(i+1);//2.125 
+//       cerr<<texture_pos[i][0]<<" "<<texture_pos[i][1]<<endl;
+    }
+    int size2 = texture_size;
+//    texture_size = 10.;
+    texture_visual_size = 40;//texture_size;
 
     size = texture_visual_size;
-    texture_visual_pos[0][0]=325;          texture_visual_pos[0][1]=image_height-size*1.2;
-    texture_visual_pos[1][0]=325+size*1.7; texture_visual_pos[1][1]=image_height-size*1.2;
+    texture_visual_pos[0][0]= widget_tranx;
+//325;          
+    texture_visual_pos[0][1]= widget_trany;
+//image_height-size*1.5;///2.125;//*1.2;
+    texture_visual_pos[1][0]= widget_tranx+texture_visual_size*texture_visual_ratio*1.25; 
+    texture_visual_pos[1][1]=widget_trany;//image_height-size*1.5*2;///2.125 * 2;
     texture_visual_pos[2][0]=325+size*3.4; texture_visual_pos[2][1]=image_height-size*1.2;
-
 }
 
 void ComputeGLUIFactor()
@@ -2418,11 +3049,26 @@ void RenderDualPeeling()
         }
         if(summaryVisible)summaryglyph->Render();
         if(mesh_enable) mesh->Render();
+        if(symmetrymesh_enable) symmetrymesh->Render();
         glDisable(GL_LIGHTING);
         outline->DrawXYZ(splitglyph->GetLb(), splitglyph->GetRb(), viewproperty);
+        if(!configproperty.isContour&&symmetry_enable)
+        outline->DrawXYZPrime(configproperty.symmetryproperty.pos,
+                              configproperty.symmetryproperty.dir,
+                              configproperty.symmetryproperty.x,
+                              configproperty.symmetryproperty.y,
+                              splitglyph->GetRb());
         outline->DrawAxis(splitglyph->GetLb(), splitglyph->GetRb());
+        outline->DrawAxisSticks(splitglyph->GetLb(), splitglyph->GetRb(), viewproperty);
         glPopMatrix();
         outline->DrawXYZFont(splitglyph->GetLb(), splitglyph->GetRb(), viewproperty);
+        if(!configproperty.isContour&&symmetry_enable)
+        outline->DrawXYZPrimeFont(configproperty.symmetryproperty.pos,
+                              configproperty.symmetryproperty.dir,
+                              configproperty.symmetryproperty.x,
+                              configproperty.symmetryproperty.y,
+                              splitglyph->GetRb(),viewproperty);
+        outline->DrawAxisFont(splitglyph->GetLb(), splitglyph->GetRb(), viewproperty);
        // display();
         g_numGeoPasses++;
         g_shaderDualInit.unbind();
@@ -2485,12 +3131,28 @@ void RenderDualPeeling()
                  }
                  if(summaryVisible)summaryglyph->Render();
                  if(mesh_enable)mesh->Render();
+                 if(symmetrymesh_enable)symmetrymesh->Render();
                  glDisable(GL_LIGHTING);
+                 float solid = 1;
+                g_shaderDualPeel.setUniform("Alpha", (float*)&(solid),1);
                  outline->DrawXYZ(splitglyph->GetLb(), splitglyph->GetRb(),viewproperty);
+        if(!configproperty.isContour&&symmetry_enable)
+                 outline->DrawXYZPrime(configproperty.symmetryproperty.pos,
+                              configproperty.symmetryproperty.dir,
+                              configproperty.symmetryproperty.x,
+                              configproperty.symmetryproperty.y,
+                              splitglyph->GetRb());
                  outline->DrawAxis(splitglyph->GetLb(), splitglyph->GetRb());
+                 outline->DrawAxisSticks(splitglyph->GetLb(), splitglyph->GetRb(), viewproperty);
                  glPopMatrix();
-        outline->DrawXYZFont(splitglyph->GetLb(), splitglyph->GetRb(), viewproperty);
-
+                 outline->DrawXYZFont(splitglyph->GetLb(), splitglyph->GetRb(), viewproperty);
+        if(!configproperty.isContour&&symmetry_enable)
+                 outline->DrawXYZPrimeFont(configproperty.symmetryproperty.pos,
+                              configproperty.symmetryproperty.dir,
+                              configproperty.symmetryproperty.x,
+                              configproperty.symmetryproperty.y,
+                              splitglyph->GetRb(),viewproperty);
+                 outline->DrawAxisFont(splitglyph->GetLb(), splitglyph->GetRb(), viewproperty);
                  glEnable(GL_LIGHTING);
             //    glPopMatrix();
         //        display();
@@ -2575,6 +3237,11 @@ void InitGL(string shader)
 void init(char *configfname)//rbfname, char *cpname)
 {
   //LibConfig("/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/SplitTool/default.cfg", configproperty);
+cerr<<"start"<<endl;
+  // ccl = new svConnect();
+//   ccl->TwoPass("/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/tmp/spin_proj_norm_vs_pos_p_v_z_10z_newcolumn/neighbors.txt", "test_results");
+
+  symmetrycount = new svScalarArray[4];
 
   if(encode_type == LINEAR)
     length_scale = LINEAR_SCALE;
@@ -2589,6 +3256,7 @@ void init(char *configfname)//rbfname, char *cpname)
   configproperty.rawFile = new char[200];
   configproperty.storeDir = new char[200];
 
+  symmetrymesh_solid_list = 50;
   mesh_solid_list =30;
   render_list = 10;
   summary_list = 20;
@@ -2602,15 +3270,21 @@ void init(char *configfname)//rbfname, char *cpname)
   delete [] str;
 
   mesh = new svMesh();
+  symmetrymesh = new svMesh();
   outline = new svOutline();
   flow_field = new svQDOT();
   widget = new svWidget();
 
+  for(int i=0;i<SYMMETRY_TYPE;i++)
+  {
+     configproperty.symmetryproperty.outputfile[i] = new char[400];
+  }
+  
   configFile = strdup(configfname);
   configproperty.symmetryproperty.outputdir = new char[200];
   configproperty.symmetryproperty.inputfile = new char[200];
   ReadConfig(configfname, configproperty);
-
+//ccl->TwoPass("/home/davinci/Documents/henan/NIST/NIST_SPLIT/SPLIT_VIS2/tmp/spin_proj_norm_vs_pos_p_v_z_10z_newcolumn/neighbors.txt", "test_results");
   //zmin=0;
   //zmax = flow_field->GetPlaneNum()-1;
 
@@ -2633,11 +3307,17 @@ void init(char *configfname)//rbfname, char *cpname)
 
   LoadTexture();
 
+  svColors *color_object = new svColors();
+  for(int i=0;i<SYMMETRY_TYPE;i++)
+  {
+      buttoncolors[i] = color_object->Get8Colors(i);
+      buttoncolors[i][3] = 0.5;
+  }
+
   if(encode_type == LINEAR)
        length_scale = LINEAR_SCALE;
   else
        length_scale = SPLITVECTORS_SCALE;
-
 
   Update();
 }
@@ -2645,7 +3325,7 @@ void init(char *configfname)//rbfname, char *cpname)
 void Update()
 {
 //  Config(configfname, configproperty);
-  char *str = new char[400];
+  char *str = new char[200];
 /*
   for(int i=0;i<unique_region.size();i++)
   {
@@ -2674,36 +3354,85 @@ void Update()
          value[i]  = flow_field->GetPlanePosition(index[i]);
   }
    widget->SetValues(value);
+//   widget->SetValues(splitglyph->GetEntropyValues());
 
   summaryglyph->New(flow_field, flow_field->GetPlaneNum());
   directglyph->New(flow_field, flow_field->GetPlaneNum());
   splitglyph->New(flow_field, flow_field->GetPlaneNum());
+//cerr<<"=============="<<endl;
   if(configproperty.isContour)
   {
+//cerr<<"============="<<endl;
        splitglyph->GenerateContours(configproperty.contourproperty);
        directglyph->GenerateContours(configproperty.contourproperty);//cerr<<"done"<<endl;
        summaryglyph->GenerateContours(configproperty.contourproperty); 
+   splitglyph->GenerateEntropy();
+   directglyph->GenerateEntropy();
+   widget->SetHistoValues(splitglyph->GetMagProb(topmaglevel));
+   widget->SetValues(splitglyph->GetEntropyValues(),true);
   }
   else
    {
          for(int i=0;i<flow_field->GetPlaneNum();i++)
          {
                sprintf(str, "%s/%s/%d.txt", configproperty.storeDir, configproperty.rawFile, i);
+               //cerr<<str<<endl;
 	           directglyph->SetData(str, i);
                    summaryglyph->SetData(str, i);
                    splitglyph->SetData(str, i);
-               sprintf(str, "%s/%s/format%d.txt",configproperty.storeDir, configproperty.rawFile, i);
-                   directglyph->SetFormat(str,i);
-                   summaryglyph->SetFormat(str,i);
-                   splitglyph->SetFormat(str,i);
+          //     sprintf(str, "%s/%s/format%d.txt",configproperty.storeDir, configproperty.rawFile, i);
          }
+               char *format_fname = new char[400];
+               sprintf(format_fname,"%s/%s/zformat.txt",configproperty.storeDir, configproperty.rawFile);
+               char *index_fname = new char[400];
+               sprintf(index_fname,"%s/%s/reverseindex.txt",configproperty.storeDir, configproperty.rawFile);
+         cerr<<format_fname<<endl; 
+                   directglyph->SetFormat(format_fname, index_fname);
+                   summaryglyph->SetFormat(format_fname, index_fname);
+                   splitglyph->SetFormat(format_fname, index_fname);
+//SetFormat(char *format_fname, char *index_fname);
+           //        summaryglyph->SetFormat(str,i);
+             //      splitglyph->SetFormat(str,i);
+         //}
+               delete [] format_fname;            
+               delete [] index_fname;
+
+        cerr<<"format"<<endl;
+ 
+        splitglyph->GenerateEntropy();
+        directglyph->GenerateEntropy();
+        cerr<<"entropy"<< " "<<topmaglevel<<endl;
+
+        widget->SetHistoValues(splitglyph->GetMagProb(topmaglevel));
+        widget->SetValues(splitglyph->GetEntropyValues(),true);
+
+        cerr<<"entropy"<<endl;
         directglyph->SetContourLabel();
         summaryglyph->SetContourLabel();
         splitglyph->SetContourLabel();
+        cerr<<"setcontourlable"<<endl;
+
         directglyph->GenerateSymmetry(configproperty.symmetryproperty);//, frequency);
         splitglyph->GenerateSymmetry(configproperty.symmetryproperty);//, frequency);
         summaryglyph->GenerateSymmetry(configproperty.symmetryproperty);//, frequency);
-   }
+        symmetrycount = directglyph->GetSymmetryMagProb(symmetrytopvalue);
+     //   directglyph->GenerateNeighbors(configproperty.neighborproperty);
+     //   splitglyph->GenerateNeighbors(configproperty.neighborproperty);
+     //   summaryglyph->GenerateNeighbors(configproperty.neighborproperty);
+
+//   for(int i=0;i<SYMMETRY_TYPE;i++)
+//   {
+        //cerr<<directglyph->GetSymmetryCount(i)<<endl;
+//        if(directglyph->GetSymmetryCount(i)>0)
+//        {
+
+//        }
+//        else
+//        {
+//            texture_status[i] = SYMMETRY_UP;
+//        }
+//   }
+  }
 
    directglyph->ResetCluster();//cerr<<"done1"<<endl;
    directglyph->SetXdistance(flow_field->GetXdistance());//cerr<<"done1"<<endl;
@@ -2740,8 +3469,10 @@ void Update()
 
    UpdateVBOData();cerr<<"UpdateVBOData()"<<endl;
    UpdateVisible();cerr<<"UpdateVisible()"<<endl;
+   UpdateCluster();cerr<<"UpdateCluster()"<<endl;
    UpdateColor();cerr<<"UpdateColor()"<<endl;
    UpdateRender();cerr<<"UpdateRender()"<<endl;
+   UpdateSymmetryMesh();
 
    mesh->SetDisplayList(mesh_solid_list);
    mesh->New(unique_region);
@@ -2753,8 +3484,7 @@ void Update()
                unique_region[i]);
         mesh->SetData(str, i); 
    }
-   //cerr<<"region "<<unique_region[1]<<endl;
-   mesh->GenerateSurface();//unique_region[1]);
+   mesh->GenerateSurfaces(1);//unique_region[1]);
    delete [] str;
 
   svVector3 center = flow_field->GetCenter();//cerr<<"done"<<endl;
@@ -2785,22 +3515,42 @@ void glui_display()
   glui = GLUI_Master.create_glui_subwindow( window,
                                             GLUI_SUBWINDOW_LEFT );
   new GLUI_StaticText(glui, "Show me");
+
+
+// GLUI_Checkbox *symmetrycolor = glui->add_checkbox_to_panel(panel_symmetry,"Color by symmetry types", &colorby, COLORBY_ID, control_cb);
+
+  GLUI_Panel *panel_visual = glui->add_panel("Visual mapping");
+  panel_visual->set_alignment(GLUI_ALIGN_LEFT);
   
- symmetrybox = glui->add_checkbox( "Symmetry", &symmetry_enable, SYMMETRY_ID, control_cb);
-  box_encode = glui->add_checkbox("Visual mapping", &encode_visible, ENCODE_ID, control_cb);
+  if(encode_type == LINEAR)
+  {
+       encode_linear = 1;
+       encode_split = 0;
+  }
+
+  encode_box1 = glui->add_checkbox_to_panel(panel_visual,"Direct",&encode_linear, ENCODE_LINEAR_ID, control_cb);
+  encode_box2 = glui->add_checkbox_to_panel(panel_visual,"SplitVectors",&encode_split, ENCODE_SPLIT_ID, control_cb);
+//  box_encode = glui->add_checkbox("Visual mapping", &encode_visible, ENCODE_ID, control_cb);
+
+  new GLUI_Checkbox(glui, "Summary glyph", &summaryVisible, OVERVIEW_ID, control_cb);
+//  new GLUI_Checkbox(glui, "Color by symmetry types", &colorby, COLORBY_ID, control_cb);
+
   GLUI_Panel *panel_layer= glui->add_panel("");
   panel_layer->set_alignment(GLUI_ALIGN_LEFT);
   box_layer = glui->add_checkbox_to_panel(panel_layer,"Layers", &layerVisible, LAYER_ID, control_cb);
   glui->add_column_to_panel(panel_layer, true);
   new GLUI_Checkbox(panel_layer, "Repeat", &layer_repeat, LAYER_REPEAT_ID, control_cb);
-  new GLUI_Checkbox(glui, "Summary glyph", &summaryVisible, OVERVIEW_ID, control_cb);
+//  list_widget_vis = glui->add_listbox_to_panel(panel_layer, "Show",
+//                                        &length_vis, LENGTH_VIS_ID, control_cb);
+//  list_widget_vis->add_item(0, "Magnitude");
+//  list_widget_vis->add_item(1, "Orientation");
+
 //  (glui, "Visual mapping", &encode_visible, ENCODE_ID, control_cb);
   /// Mesh
   /// 
-  if(configproperty.isContour) symmetrybox->disable();
   GLUI_Panel *panel_mesh = glui->add_panel("");
   panel_mesh->set_alignment(GLUI_ALIGN_LEFT);
-  new GLUI_Checkbox(panel_mesh, "Mesh",&mesh_enable, MESH_ID,control_cb);
+  new GLUI_Checkbox(panel_mesh, "QDOT",&mesh_enable, MESH_ID,control_cb);
 //  list_mesh_type = glui->add_listbox_to_panel(panel_mesh, "Region type",
   //                                      &mesh_type, MESH_TYPE_ID, control_cb);//!!
 //  for(int i=0;i<unique_region.size();i++)
@@ -2853,10 +3603,57 @@ void glui_display()
   sb_alpha = new GLUI_Scrollbar(panel_alpha, "Transparency", GLUI_SCROLL_HORIZONTAL, &alpha, ALPHA_ID, control_cb);
   sb_alpha->set_float_limits(0.,1.);
 
-
   GLUI_EditText *text_freq = new GLUI_EditText(glui, "Spin sampling", &frequency, FREQ_ID, control_cb);
 
+ GLUI_Panel *panel_color = glui->add_panel("Color");
+ panel_color->set_alignment(GLUI_ALIGN_LEFT);
+ color_box1 = glui->add_checkbox_to_panel(panel_color, "By cluster", &color_cluster, COLORBY_CLUSTER_ID, control_cb);
+ color_box2 = glui->add_checkbox_to_panel(panel_color, "By symmetry", &color_symmetry, COLORBY_SYMMETRY_ID, control_cb);
+ color_box3 = glui->add_checkbox_to_panel(panel_color, "By magnitude (power)", &color_magnitude, COLORBY_ID, control_cb);
 
+ if(encode_type == LINEAR)
+ {
+    if(colorby == ENCODE)
+    {
+      color_cluster = 1;
+      color_symmetry = 0;
+    }
+    else
+    {
+      color_cluster = 0;
+      color_symmetry = 1;
+    }
+    color_magnitude = 0;
+    color_box3->disable();
+ }
+ else
+ {
+    color_cluster = 0;
+    color_symmetry = 0;
+    color_magnitude = 1;
+    color_box1->disable();
+    color_box2->disable();
+    color_box3->disable();
+ }
+
+ GLUI_Panel *panel_symmetry = glui->add_panel("Symmetry");
+ panel_symmetry->set_alignment(GLUI_ALIGN_LEFT);
+ symmetrybox = glui->add_checkbox_to_panel(panel_symmetry, "Types", &symmetry_enable, SYMMETRY_ID, control_cb);
+ GLUI_Checkbox *symmetrysurface =  glui->add_checkbox_to_panel(panel_symmetry, "Surface", &symmetrymesh_enable);
+
+  if(configproperty.isContour)
+  {
+    symmetrybox->disable();
+    symmetrysurface->disable();
+    color_box2->disable();
+    //symmetrycolor->disable();
+     }
+  GLUI_Panel *panel_picture = glui->add_panel("");
+  panel_picture->set_alignment(GLUI_ALIGN_LEFT);
+  text_picture = glui->add_edittext_to_panel(panel_picture, "Name", picture_name, PICTURE_TEXT_ID, control_cb);
+  text_picture->set_alignment(GLUI_ALIGN_LEFT);
+  glui->add_column_to_panel(panel_picture,true);
+  new GLUI_Button(panel_picture, "Screenshot", PICTURE_ID, control_cb);
 
   new GLUI_Button(glui, "Update", UPDATE_ID, control_cb);
 /*  GLUI_Panel *panel_show = glui->add_panel("Visibility");
@@ -2900,22 +3697,22 @@ int main(int argc, char** argv)
 {
    image_width  = IMAGE_WIDTH;
    image_height = IMAGE_HEIGHT;
-
+//cerr<<"start"<<endl;
    glutInit(&argc, argv);
    glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGBA
-                          | GLUT_DEPTH | GLUT_ACCUM);
-
+                          | GLUT_DEPTH | GLUT_ACCUM | GLUT_MULTISAMPLE);
+//cerr<<"start"<<endl;
         glutInitWindowSize(image_width, image_height);
            glutInitWindowPosition(0, 0);
         window = glutCreateWindow("QDOT");
- 
+//cerr<<"start"<<endl; 
         if (glewInit() != GLEW_OK)
         {
                 printf("glewInit failed. Exiting...\n");
                 exit(1);
         }
 
-
+//cerr<<"start"<<endl;
    GLUI_Master.set_glutReshapeFunc(Reshape);
    init(argv[1]);
    Init();

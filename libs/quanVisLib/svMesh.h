@@ -17,20 +17,24 @@ namespace __svl_lib {
 
 class svMesh {
   public:
-    svMesh(){mesh=new svVector3Array[1];dir = new svVector3Array[1];};
+    svMesh(){mesh=new svVector3Array[1];dir = new svVector3Array[1];
+             colors = new svVector4Array[1];}
 
     virtual void New(vector<int> region);
 
     virtual void SetData(char *file, int index);	
     virtual ~svMesh(){cleanup();};
 
+    virtual void SetColors();
+
     virtual void GenerateWireframe(char *dir);
     virtual void GenerateWiresolid(char *dir);
     virtual void GenerateWireframe(int region);
     virtual void GenerateSurface(int region);
 
+    virtual void GenerateSurfacesByColor();
     virtual void GenerateWireframe();
-    virtual void GenerateSurface();
+    virtual void GenerateSurfaces(int index);
 
     virtual void Render();
 
@@ -43,7 +47,9 @@ class svMesh {
      svInt display_list;
      svVector3Array *mesh;
      svVector3Array *dir;
+     svVector4Array *colors;
      vector<int> meshregion;
+
 };
 
 }
