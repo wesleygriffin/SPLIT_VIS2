@@ -6,3 +6,24 @@ Run the program:
     set OMP_NUM_THREADS=<number_of_threads_to _use>
     export OMP_NUM_THREADS=<number_of_threads_to _use>
     LD_LIBRARY_PATH=LOCATION_TO_VTK bin/splitToolkit <CONFIG_FILE>
+
+# Installation with HEV:
+
+$ cd <DIRECTORY TO PLACE CODE IN>
+$ wget https://github.com/wesleygriffin/SPLIT_VIS2/archive/master.zip
+$ unzip SPLIT_VIS2-master.zip
+$ cd SPLIT_VIS2-master
+$ hev
+$ VTK_DIR=$HEVROOT/external/vtk/installed cmake -H. -Bbuild
+$ cd build && make && make install && cd ..
+$ echo "OMP_NUM_THREADS=16 LD_LIBRARY_PATH=/usr/local/HEV/external/vtk/installed bin/splitToolkit SplitTool/config" > ./run
+
+- At this point you need to edit ./SplitTool/config and ensure the top of the file points to the correct data location and file
+  ```
+  #datadir:
+  /home/wng2/Active/Projects/SDoS/nobackup/spin_data
+  #dataname:
+  spin_proj_norm_vs_pos_p_v_xpy_10z
+  ```
+
+$ ./run
