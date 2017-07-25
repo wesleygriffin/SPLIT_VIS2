@@ -20,9 +20,10 @@ Run the program:
 
 - At this point you need to edit ./SplitTool/config and ensure the top of the file points to the correct data location and file
 
-  #datadir:
-  /home/wng2/Active/Projects/SDoS/nobackup/spin_data
-  #dataname:
-  spin_proj_norm_vs_pos_p_v_xpy_10z
+  $ cat ./SplitTool/config
+    #datadir:
+    /home/wng2/Active/Projects/SDoS/nobackup/spin_data
+    #dataname:
+    spin_proj_norm_vs_pos_p_v_xpy_10z
 
   $ ./run
