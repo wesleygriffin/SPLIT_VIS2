@@ -919,7 +919,7 @@ bool planeBox(svVector3 lb, svVector3 rb, svVector3 p, svVector3 n)
 
 svInt  getNumOfIntegerDigits(svScalar num)
 {
-          int multiplier = 0;
+          /*int multiplier = 0;
 
           double numCopy = num;
 
@@ -930,7 +930,21 @@ svInt  getNumOfIntegerDigits(svScalar num)
                        multiplier--;
                        numCopy *=10;
                 };
+          }*/
+	  int testExp =  floor(log10(fabs(num) ) );
+          float threshold = pow(10.,(double)testExp-2 );
+          int multiplier = 0;
+          double numCopy = num;
+          if(numCopy<1.&&numCopy!=0.)
+          {
+            while (numCopy<1.)//(fabs(numCopy-1.)>0.000001)&&(numCopy-1.)<0.000001)
+                {
+                       multiplier--;
+                       numCopy = numCopy * 10.;
+                       if(numCopy > 1. || fabs(numCopy-1)<threshold) break;
+                };
           }
+
           else if(numCopy==0)
                 multiplier=0;
           else if(numCopy>=1)
