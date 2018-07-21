@@ -59,7 +59,7 @@ void svContour::Get2DContour(char *infile,  double density) //density is only th
         iso->SetValue(0,density);
 
         vtkDataSetSurfaceFilter *filter = vtkDataSetSurfaceFilter::New();
-        filter->SetInput(iso->GetOutput());
+        filter->SetInputConnection(iso->GetOutputPort());
         //JC
   //      cerr<<"a"<<endl;
         //filter->SetInputData(iso->GetOutput());
