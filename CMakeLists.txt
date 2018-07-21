@@ -230,6 +230,7 @@ target_link_libraries(svl PUBLIC ${SOIL_LIBRARIES} ${GLEW_LIBRARIES})
 set(SVL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/quanVisLib CACHE STRING "" FORCE)
 
 add_executable(splitToolkit SplitTool/splitToolkit.cpp)
+add_dependencies(splitToolkit glui)
 target_link_libraries(splitToolkit svl ${SOIL_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUI_LIBRARIES} ${GLEW_LIBRARIES}
 )
 target_include_directories(splitToolkit PRIVATE ${SVL_INCLUDE_DIR}
